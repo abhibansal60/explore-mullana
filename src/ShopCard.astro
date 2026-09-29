@@ -5,33 +5,22 @@ const { shop } = Astro.props as { shop: Shop };
 const c = categories[shop.category];
 ---
 <article class="row" style={`--cat:${c.color}`} data-slug={shop.slug} data-cat={shop.category} data-search={searchText(shop)} data-lat={shop.lat} data-lng={shop.lng}>
-  <a class="head" href={`/shop/${shop.slug}/`}>
+  <a class="main" href={`/shop/${shop.slug}/`}>
     <h2 class="board">{shop.name}</h2>
-    <span class="cat">{c.en} <span lang="hi">{c.hi}</span></span>
+    <span class="sub">
+      <span class="catname">{c.en}</span>
+      <span class="open-badge" data-open={shop.hours.open} data-close={shop.hours.close}
+        data-open-label={time12(shop.hours.open)} data-close-label={time12(shop.hours.close)}></span>
+      <span class="dist" hidden></span>
+    </span>
   </a>
-  <span class="open-badge" data-open={shop.hours.open} data-close={shop.hours.close}
-    data-open-label={time12(shop.hours.open)} data-close-label={time12(shop.hours.close)}></span>
-  <span class="dist" hidden></span>
   <div class="acts">
-    <a class="btn primary" data-tap="call" href={`tel:+91${shop.phones[0]}`}><Icon name="call" />Call</a>
-    {shop.whatsapp && <a class="btn" data-tap="whatsapp" href={`https://wa.me/91${shop.phones[0]}`}><Icon name="chat" />WhatsApp</a>}
-    <a class="btn" data-tap="directions" href={directions(shop)}><Icon name="route" />Directions</a>
+    <a class="ib primary" data-tap="call" href={`tel:+91${shop.phones[0]}`} aria-label={`Call ${shop.name}`} title={`Call ${shop.name}`}><Icon name="call" /></a>
+    {shop.whatsapp && <a class="ib" data-tap="whatsapp" href={`https://wa.me/91${shop.phones[0]}`} aria-label={`WhatsApp ${shop.name}`} title={`WhatsApp ${shop.name}`}><Icon name="chat" /></a>}
+    <a class="ib" data-tap="directions" href={directions(shop)} aria-label={`Directions to ${shop.name}`} title={`Directions to ${shop.name}`}><Icon name="route" /></a>
   </div>
 </article>
 
 <style>
-  .row {
-    position: relative; padding: 16px 0 18px 16px;
-    border-bottom: 1px solid var(--line); scroll-margin-top: 30vh;
-  }
-  .row::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 20px; width: 4px; border-radius: 2px; background: var(--cat); }
-  .row.picked { background: color-mix(in srgb, var(--cat) 8%, transparent); }
-  .head { display: block; text-decoration: none; }
-  h2 { font-size: 25px; margin: 0; }
-  .cat { display: block; color: var(--muted); font-size: 15px; margin-top: 3px; }
-  .cat span { margin-left: 6px; font-family: "Anek Devanagari", var(--font); }
-  .open-badge { display: inline-block; margin-top: 4px; }
-  .dist { margin-left: 12px; font-size: 15px; font-weight: 600; }
-  .acts { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .acts .btn { flex: 1 1 auto; }
+  h2 { font-size: 21px; }
 </style>

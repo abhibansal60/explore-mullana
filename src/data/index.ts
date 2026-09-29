@@ -74,4 +74,6 @@ export const site = {
   url: "https://mullana.abhibansal.dev",
   // Where "Report" goes. Empty hides the link.
   reportWhatsApp: "917988979932",
+  // Google Form for suggesting a missing shop.
+  addFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScEuSJpiYXkC19pRzMMXokWsqeKQH_kKTj8GHhF5dtNIOTq1w/viewform",
 };

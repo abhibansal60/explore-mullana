@@ -4,10 +4,12 @@ import ShopCard from "../ShopCard.astro";
 import PlaceRow from "../PlaceRow.astro";
 import Credits from "../Credits.astro";
 import Icon from "../Icon.astro";
-import { categories, places, shops } from "../data";
+import { categories, places, shops, site } from "../data";
 
 const all = [...shops, ...places];
-const used = Object.keys(categories).filter((k) => all.some((s) => s.category === k));
+const count = (k: string) => all.filter((s) => s.category === k).length;
+// Only categories with places, biggest first.
+const used = Object.keys(categories).filter((k) => count(k) > 0).sort((a, b) => count(b) - count(a));
 const points = all.map((s) => ({
   slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng, v: "phones" in s ? 1 : 0,
 }));
@@ -35,28 +37,46 @@ const points = all.map((s) => ({
       <div class="cats" role="group" aria-label="Filters">
         <button class="tog" id="open-now" aria-pressed="false"><Icon name="clock" />Open now</button>
         <button class="tog" id="near-me" aria-pressed="false"><Icon name="locate" /><span>Near me</span></button>
-        <button class="cat on" data-cat="" aria-pressed="true">All</button>
-        {used.map((k) => (
-          <button class="cat" data-cat={k} aria-pressed="false" style={`--cat:${categories[k].color}`}>
-            <i></i>{categories[k].en}
-          </button>
-        ))}
       </div>
-      <div id="list" class="group">
-        {shops.map((shop) => <ShopCard shop={shop} />)}
+
+      <div id="home-view">
+        <h2 class="grid-h">What do you need?</h2>
+        <nav class="tiles" aria-label="Categories">
+          {used.map((k) => (
+            <a class="tile" href={`#${k}`} data-cat={k} style={`--cat:${categories[k].color}`}>
+              <span class="en"><i></i>{categories[k].en}</span>
+              <span class="hi" lang="hi">{categories[k].hi}</span>
+              <span class="meta"><span>{count(k)} {count(k) === 1 ? "place" : "places"}</span><span class="tile-open"></span></span>
+            </a>
+          ))}
+        </nav>
+        <div class="addcard">
+          <p>Know a shop that's missing? Add it in a minute. Only add numbers the owner agreed to share.</p>
+          <a class="btn primary" href={site.addFormUrl} target="_blank" rel="noopener">Add a shop</a>
+        </div>
       </div>
-      <h3 id="more-h" class="more-h">More around Mullana<span>Found on open map data. Not yet checked with the owner, so no phone numbers.</span></h3>
-      <div id="more" class="group">
-        {places.map((place) => <PlaceRow place={place} />)}
+
+      <div id="list-view" hidden>
+        <div class="lhead">
+          <a class="back" id="back" href="/"><Icon name="back" />All categories</a>
+          <div class="ltitle"><h2 id="l-title"></h2><span id="l-count" class="muted"></span></div>
+        </div>
+        <div id="list" class="group">
+          {shops.map((shop) => <ShopCard shop={shop} />)}
+        </div>
+        <h3 id="more-h" class="more-h">More around Mullana<span>Found on open map data. Not yet checked with the owner, so no phone numbers.</span></h3>
+        <div id="more" class="group">
+          {places.map((place) => <PlaceRow place={place} />)}
+        </div>
+        <p id="empty" class="empty" hidden>Nothing matches that yet. Try a shorter word, or clear the filters.</p>
       </div>
-      <p id="empty" class="empty" hidden>Nothing matches that yet. Try a shorter word, or clear the filters.</p>
       <Credits />
     </section>
   </div>
 </Layout>
 
 <style>
-  .stage { position: sticky; top: 0; height: 62svh; z-index: 0; }
+  .stage { position: sticky; top: 0; height: 42svh; z-index: 0; }
   #map { position: absolute; inset: 0; background: var(--line); }
   .sheet {
     position: relative; z-index: 1; margin-top: -28px; min-height: 60svh;
@@ -88,14 +108,7 @@ const points = all.map((s) => ({
   .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: 400 17px var(--font); }
   .search:focus-within { border-color: var(--ink); }
 
-  .cats { display: flex; gap: 8px; overflow-x: auto; margin: 12px -16px 4px; padding: 0 16px 6px; scrollbar-width: none; }
-  .cat {
-    flex: none; display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 12px;
-    border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); color: var(--ink);
-    font: 500 15px var(--font); cursor: pointer;
-  }
-  .cat i { width: 9px; height: 9px; border-radius: 50%; background: var(--cat); }
-  .cat.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .cats { display: flex; gap: 8px; margin: 12px 0 4px; flex-wrap: wrap; }
   .tog {
     flex: none; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px;
     border: 1px solid var(--ink); border-radius: 6px; background: var(--sheet); color: var(--ink);
@@ -103,12 +116,34 @@ const points = all.map((s) => ({
   }
   .tog :global(svg) { width: 17px; height: 17px; }
   .tog[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-  #near-me + .cat { margin-left: 8px; }
+
+  .grid-h { font-size: 22px; font-weight: 700; margin: 18px 0 10px; line-height: 1.2; }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tile {
+    display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 72px; padding: 10px 12px;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); color: var(--ink); text-decoration: none;
+  }
+  .tile:active { transform: translateY(1px); }
+  .tile .en { display: flex; align-items: center; gap: 8px; font-weight: 650; font-size: 16px; line-height: 1.25; }
+  .tile i { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--cat); }
+  .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari", var(--font); padding-left: 18px; }
+  .tile .meta { color: var(--muted); font-size: 13.5px; padding-left: 18px; }
+  .addcard { margin: 18px 0 8px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+  .addcard p { margin: 0 0 12px; max-width: 46ch; }
+
+  .lhead { margin: 14px 0 4px; }
+  .back { display: inline-flex; align-items: center; gap: 4px; min-height: 40px; font-weight: 600; font-size: 15px; text-underline-offset: 3px; }
+  .back :global(svg) { width: 18px; height: 18px; }
+  .ltitle { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .ltitle h2 { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .ltitle :global([lang="hi"]) { font: 400 17px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 8px; }
+  .muted { color: var(--muted); font-size: 14px; white-space: nowrap; }
   .stone .open { color: #1e7a3a; font-weight: 600; margin-top: 0; }
   .empty { color: var(--muted); padding: 24px 0; }
-  .more-h { font-size: 20px; font-weight: 700; margin: 30px 0 4px; }
+  .more-h { font-size: 20px; font-weight: 700; margin: 20px 0 4px; }
   .more-h span { display: block; font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 
+  @media (min-width: 560px) and (max-width: 899px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (min-width: 900px) {
     .app { display: grid; grid-template-columns: 420px 1fr; height: 100svh; }
     .stage { order: 2; position: relative; height: auto; }
@@ -116,6 +151,7 @@ const points = all.map((s) => ({
     .grip { display: none; }
     .map-btn { bottom: 24px; }
   }
+  #list-view.in-cat :global(.catname) { display: none; }
 </style>
 
 <script>
@@ -124,18 +160,30 @@ const points = all.map((s) => ({
   import { filterMap, initMap, set3D, showMe, showTown } from "../map";
 
   markOpenBadges();
-  const q = document.getElementById("q") as HTMLInputElement;
-  const moreH = document.getElementById("more-h")!;
+  const $ = (id: string) => document.getElementById(id)!;
+  const q = $("q") as HTMLInputElement;
+  const moreH = $("more-h");
   const rows = [...document.querySelectorAll<HTMLElement>(".row")];
-  const empty = document.getElementById("empty")!;
-  const stoneN = document.getElementById("stone-n")!;
-  const stoneOpen = document.getElementById("stone-open")!;
-  const openBtn = document.getElementById("open-now") as HTMLButtonElement;
-  const nearBtn = document.getElementById("near-me") as HTMLButtonElement;
+  const order = new Map(rows.map((r, i) => [r, i]));
+  const empty = $("empty");
+  const stoneN = $("stone-n");
+  const stoneOpen = $("stone-open");
+  const openBtn = $("open-now") as HTMLButtonElement;
+  const nearBtn = $("near-me") as HTMLButtonElement;
+  const nearLabel = nearBtn.querySelector("span")!;
+  const homeView = $("home-view");
+  const listView = $("list-view");
+  const sheet = document.querySelector<HTMLElement>(".sheet")!;
+  // Category names come from the tiles, so the client never imports the data module.
+  const categories: Record<string, { en: string; hi: string }> = {};
+  document.querySelectorAll<HTMLElement>(".tile").forEach((t) => {
+    categories[t.dataset.cat!] = { en: t.querySelector(".en")!.textContent!, hi: t.querySelector(".hi")!.textContent! };
+  });
   let cat = "";
   let openOnly = false;
   let me: [number, number] | undefined;
   let map: Awaited<ReturnType<typeof initMap>> | undefined;
+  let inList = false;
 
   // Unchecked places have no hours, so they never count as open.
   const rowOpen = (r: HTMLElement) => {
@@ -143,8 +191,15 @@ const points = all.map((s) => ({
     return !!b && isOpen(b.dataset.open!, b.dataset.close!);
   };
 
+  // Open counts on the category tiles.
+  document.querySelectorAll<HTMLElement>(".tile").forEach((t) => {
+    const n = rows.filter((r) => r.dataset.cat === t.dataset.cat && rowOpen(r)).length;
+    if (n) t.querySelector(".tile-open")!.textContent = `, ${n} open now`;
+  });
+
   function apply() {
-    const terms = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    const term = q.value.trim();
+    const terms = term.toLowerCase().split(/\s+/).filter(Boolean);
     const visible: string[] = [];
     let openCount = 0;
     for (const r of rows) {
@@ -162,18 +217,58 @@ const points = all.map((s) => ({
     stoneN.textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}`;
     stoneOpen.textContent = openCount ? `${openCount} open now` : "";
     if (map) filterMap(map, visible);
+
+    // Grid until there is a category, a search or a filter; then the list.
+    const list = !!(cat || term || openOnly || me);
+    homeView.hidden = list;
+    listView.hidden = !list;
+    // Inside one category its name on every row is noise.
+    listView.classList.toggle("in-cat", !!cat);
+    if (list) {
+      const c = categories[cat];
+      const title = $("l-title");
+      title.textContent = term ? `Results for “${term}”` : c ? c.en : openOnly ? "Open now" : "Nearest first";
+      if (!term && c) {
+        const hi = document.createElement("span");
+        hi.lang = "hi";
+        hi.textContent = c.hi;
+        title.append(hi);
+      }
+      $("l-count").textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}`;
+    }
+    if (list !== inList) {
+      inList = list;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      sheet.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   function sortByDistance() {
-    if (!me) return;
-    const d = new Map(rows.map((r) => [r, metres(me!, [+r.dataset.lat!, +r.dataset.lng!])]));
+    const d = me ? new Map(rows.map((r) => [r, metres(me!, [+r.dataset.lat!, +r.dataset.lng!])])) : undefined;
     for (const r of rows) {
       const el = r.querySelector<HTMLElement>(".dist")!;
-      el.textContent = distLabel(d.get(r)!);
-      el.hidden = false;
+      el.textContent = d ? distLabel(d.get(r)!) : "";
+      el.hidden = !d;
     }
-    [...rows].sort((a, b) => d.get(a)! - d.get(b)!).forEach((r) => r.parentElement!.append(r));
+    [...rows].sort((a, b) => (d ? d.get(a)! - d.get(b)! : order.get(a)! - order.get(b)!)).forEach((r) => r.parentElement!.append(r));
   }
+
+  function setNear(on: boolean) {
+    nearBtn.setAttribute("aria-pressed", String(on));
+    nearLabel.textContent = on ? "Nearest first" : "Near me";
+    if (!on) me = undefined;
+    sortByDistance();
+    apply();
+  }
+
+  // The hash is the category: #food opens it, no hash is the grid.
+  function fromHash() {
+    const h = location.hash.slice(1);
+    cat = h in categories ? h : "";
+    apply();
+  }
+  addEventListener("hashchange", fromHash);
+  const clearHash = () => history.pushState(null, "", location.pathname + location.search);
 
   q.addEventListener("input", apply);
   openBtn.addEventListener("click", () => {
@@ -182,62 +277,63 @@ const points = all.map((s) => ({
     apply();
   });
   nearBtn.addEventListener("click", () => {
-    const label = nearBtn.querySelector("span")!;
-    label.textContent = "Finding you…";
+    if (me) return setNear(false);
+    nearLabel.textContent = "Finding you…";
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         me = [pos.coords.latitude, pos.coords.longitude];
-        nearBtn.setAttribute("aria-pressed", "true");
-        label.textContent = "Nearest first";
-        sortByDistance();
+        setNear(true);
         if (map) showMe(map, me[1], me[0]);
       },
-      () => (label.textContent = "Location is off"),
+      () => (nearLabel.textContent = "Location is off"),
       { enableHighAccuracy: true, timeout: 10000 },
     );
   });
-  // The stone is the home button: clear everything and look at the whole town again.
-  document.getElementById("home")!.addEventListener("click", () => {
+
+  // Reset everything back to the grid. The stone also looks at the whole town again.
+  function reset() {
     q.value = "";
     cat = "";
     openOnly = false;
     openBtn.setAttribute("aria-pressed", "false");
-    document.querySelectorAll(".cat").forEach((x, i) => {
-      x.classList.toggle("on", i === 0);
-      x.setAttribute("aria-pressed", String(i === 0));
-    });
     rows.forEach((r) => r.classList.remove("picked"));
-    apply();
+    if (location.hash) clearHash();
+    setNear(false);
+  }
+  $("back").addEventListener("click", (e) => {
+    e.preventDefault();
+    reset();
+  });
+  $("home").addEventListener("click", () => {
+    reset();
     window.scrollTo({ top: 0, behavior: "smooth" });
-    document.querySelector(".sheet")!.scrollTo({ top: 0, behavior: "smooth" });
+    sheet.scrollTo({ top: 0, behavior: "smooth" });
     if (map) showTown(map);
   });
 
-  document.querySelectorAll<HTMLButtonElement>(".cat").forEach((b) =>
-    b.addEventListener("click", () => {
-      document.querySelectorAll(".cat").forEach((x) => {
-        x.classList.toggle("on", x === b);
-        x.setAttribute("aria-pressed", String(x === b));
-      });
-      cat = b.dataset.cat!;
-      apply();
-    }),
-  );
-  apply();
+  fromHash();
 
   function pick(slug: string) {
-    rows.forEach((r) => r.classList.toggle("picked", r.dataset.slug === slug));
-    document.querySelector(`.row[data-slug="${slug}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const row = document.querySelector<HTMLElement>(`.row[data-slug="${slug}"]`);
+    if (!row) return;
+    // From the grid, open the pin's category first so its row exists on screen.
+    if (listView.hidden) {
+      cat = row.dataset.cat!;
+      history.pushState(null, "", `#${cat}`);
+      apply();
+    }
+    rows.forEach((r) => r.classList.toggle("picked", r === row));
+    row.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  const el = document.getElementById("map")!;
+  const el = $("map");
   initMap(el, JSON.parse(el.dataset.points!), pick)
     .then((m) => {
       map = m;
       m.on("load", apply);
       // 3D pulls ~1 MB of buildings, so only offer it on phones that can take it.
       const mem = (navigator as any).deviceMemory;
-      const three = document.getElementById("three") as HTMLButtonElement;
+      const three = $("three") as HTMLButtonElement;
       if (!mem || mem >= 3) {
         three.hidden = false;
         three.setAttribute("aria-pressed", "false");

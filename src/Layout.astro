@@ -83,6 +83,30 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
   .btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .btn:active { transform: translateY(1px); }
 
+  /* Icon-only action button used in list rows. */
+  .ib {
+    display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex: none;
+    border-radius: 8px; border: 1px solid var(--line); background: var(--sheet); color: var(--ink);
+  }
+  .ib svg { width: 20px; height: 20px; }
+  .ib.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .ib:active { transform: translateY(1px); }
+
+  /* Compact list row: name and status on the left, icon buttons on the right. */
+  .row {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px;
+    padding: 12px 0 12px 16px; border-bottom: 1px solid var(--line); scroll-margin-top: 30vh;
+  }
+  .row::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 2px; background: var(--cat); }
+  .row.place::before { background: none; border: 1.5px solid var(--cat); }
+  .row.picked { background: color-mix(in srgb, var(--cat) 8%, transparent); }
+  .row .main { display: block; min-width: 0; text-decoration: none; }
+  .row h2 { margin: 0; overflow-wrap: anywhere; }
+  .row .sub { display: flex; flex-wrap: wrap; column-gap: 12px; align-items: baseline; font-size: 14px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+  .row .sub .open-badge { font-size: 14px; }
+  .row .sub .dist { font-weight: 600; color: var(--ink); }
+  .row .acts { display: flex; gap: 8px; }
+
   .open-badge { font-size: 15px; font-weight: 600; white-space: nowrap; }
   .open-badge.is-open { color: var(--open); }
   .open-badge.is-closed { color: var(--muted); }
