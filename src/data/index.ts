@@ -52,5 +52,5 @@ export const site = {
   name: "Explore Mullana",
   url: "https://mullana.abhibansal.dev",
   // Where "Report" goes. Empty hides the link.
-  reportWhatsApp: "",
+  reportWhatsApp: "917988979932",
 };
