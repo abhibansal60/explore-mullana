@@ -116,9 +116,12 @@ function doGet() {
       location: String(cell(r, Q.location)).trim(),
       open: hhmm(cell(r, Q.open)),
       close: hhmm(cell(r, Q.close)),
-      verified:
-        String(cell(r, "Verified (YYYY-MM)")).trim() ||
-        Utilities.formatDate(new Date(cell(r, "Timestamp")), "Asia/Kolkata", "yyyy-MM"),
+      // Sheets turns a typed "2026-09" into a date, so format whatever is there.
+      verified: Utilities.formatDate(
+        new Date(cell(r, "Verified (YYYY-MM)") || cell(r, "Timestamp")),
+        "Asia/Kolkata",
+        "yyyy-MM",
+      ),
       slug: String(cell(r, "Slug")).trim(),
     }));
   return ContentService.createTextOutput(JSON.stringify({ shops })).setMimeType(ContentService.MimeType.JSON);

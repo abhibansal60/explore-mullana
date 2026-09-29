@@ -102,6 +102,11 @@ const main = async () => {
     throw new Error(`${errors.length} bad row(s); not writing`);
   }
   const out = process.env.OUT || "src/data/shops.json";
+  // A shrinking list usually means an unticked box or a broken sheet, not closed shops.
+  const before = existsSync(out) ? JSON.parse(readFileSync(out, "utf8")).length : 0;
+  if (shops.length < before && !process.env.FORCE) {
+    throw new Error(`Sheet has ${shops.length} approved shops but ${out} has ${before}; not writing. Rerun with FORCE=1 if shops really were removed.`);
+  }
   writeFileSync(out, JSON.stringify(shops, null, 2) + "\n");
   console.log(`${shops.length} shops -> ${out.replace(/^.*\/(src\/data\/)/, "$1")}`);
 };
