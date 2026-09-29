@@ -1,0 +1,31 @@
+---
+import Layout from "../../Layout.astro";
+import ShopCard from "../../ShopCard.astro";
+import { categories, shops, site, type Shop } from "../../data";
+
+export function getStaticPaths() {
+  return shops.map((shop) => ({ params: { slug: shop.slug }, props: { shop } }));
+}
+const { shop } = Astro.props as { shop: Shop };
+const path = `/shop/${shop.slug}/`;
+const shareText = `${shop.name}, Mullana: ${site.url}${path}`;
+---
+<Layout
+  title={`${shop.name} · Explore Mullana`}
+  description={`${categories[shop.category].en} in Mullana. Open ${shop.hours.open}–${shop.hours.close}. ${shop.about}`}
+  path={path}
+>
+  <p><a href="/" class="muted">← All places</a></p>
+  <ShopCard shop={shop} full />
+  <div class="actions">
+    <a class="btn" href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}>Share on WhatsApp</a>
+    {site.reportWhatsApp && (
+      <a class="btn" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(`Report: ${shop.name} ${site.url}${path}`)}`}>Report a problem</a>
+    )}
+  </div>
+</Layout>
+
+<script>
+  import { markOpenBadges } from "../../open";
+  markOpenBadges();
+</script>

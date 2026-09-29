@@ -1,0 +1,37 @@
+---
+import { categories, directions, monthLabel, searchText, type Shop } from "./data";
+const { shop, full = false } = Astro.props as { shop: Shop; full?: boolean };
+const c = categories[shop.category];
+const H = full ? "h1" : "h2";
+---
+<article class="card" data-slug={shop.slug} data-cat={shop.category} data-search={searchText(shop)}>
+  <H class="name">{full ? shop.name : <a href={`/shop/${shop.slug}/`}>{shop.name}</a>}</H>
+  <p class="meta">
+    <span>{c.en} · {c.hi}</span>
+    <span class="open-badge" data-open={shop.hours.open} data-close={shop.hours.close}></span>
+  </p>
+  <p class="about">{shop.about}</p>
+  {full && shop.owner && <p class="muted">Owner: {shop.owner}</p>}
+  {full && <p class="muted">Open {shop.hours.open} to {shop.hours.close}, every day</p>}
+  <div class="actions">
+    <a class="btn primary" href={`tel:+91${shop.phones[0]}`}>Call</a>
+    {shop.whatsapp && <a class="btn" href={`https://wa.me/91${shop.phones[0]}`}>WhatsApp</a>}
+    <a class="btn" href={directions(shop)}>Directions</a>
+    {shop.googleMaps && <a class="btn" href={shop.googleMaps}>Reviews on Google</a>}
+  </div>
+  {full && shop.phones.length > 1 && (
+    <p class="muted">Also: {shop.phones.slice(1).map((p) => <a href={`tel:+91${p}`}>{p}</a>)}</p>
+  )}
+  <p class="verified">Verified {monthLabel(shop.verified)}</p>
+</article>
+
+<style>
+  .card { border-top: 1px solid var(--line); padding: 14px 0 16px; }
+  .name { font-size: 1.1rem; margin: 0; letter-spacing: -0.01em; }
+  h1.name { font-size: 1.6rem; }
+  .name a { text-decoration: none; }
+  .meta { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 0; font-size: 0.88rem; color: var(--muted); }
+  .about { margin: 6px 0 0; }
+  .verified { margin: 10px 0 0; font-size: 0.75rem; color: var(--muted); }
+  .card p.muted { margin: 6px 0 0; font-size: 0.9rem; }
+</style>

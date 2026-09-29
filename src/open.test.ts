@@ -1,0 +1,16 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { isOpen } from "./open.ts";
+
+// 12:00 UTC is 17:30 in Mullana.
+const noonUtc = new Date("2026-09-29T12:00:00Z");
+
+test("open during hours, in IST not UTC", () => {
+  assert.equal(isOpen("10:00", "21:00", noonUtc), true);
+  assert.equal(isOpen("09:00", "17:00", noonUtc), false);
+});
+
+test("overnight hours wrap past midnight", () => {
+  assert.equal(isOpen("18:00", "02:00", new Date("2026-09-29T19:00:00Z")), true); // 00:30 IST
+  assert.equal(isOpen("18:00", "02:00", noonUtc), false);
+});

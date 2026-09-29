@@ -1,0 +1,65 @@
+---
+import { site } from "./data";
+const { title, description, path = "/" } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={site.url + path} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#ffffff" />
+  </head>
+  <body>
+    <header>
+      <a href="/" class="brand">{site.name}</a>
+      <span class="tag">Shops and places in Mullana</span>
+    </header>
+    <main><slot /></main>
+    <footer>
+      <p>Free and non-commercial. Shop details are added with the owner's consent.</p>
+      <p>
+        Map © <a href="https://openfreemap.org">OpenFreeMap</a>{", "}<a href="https://www.openmaptiles.org/">OpenMapTiles</a>{", data © "}<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+        Buildings: <a href="https://overturemaps.org">Overture Maps Foundation</a>, including
+        Google Open Buildings (CDLA-Permissive-2.0) and Microsoft (ODbL).
+      </p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #ffffff; --ink: #16181d; --muted: #5d6470; --line: #e3e5e8;
+    --accent: #b4441b; --open: #1d7a45; --card: #fafafa;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121417; --ink: #eceef1; --muted: #9aa1ab; --line: #2a2e34; --accent: #e8794f; --open: #4cc783; --card: #191c20; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  a { color: inherit; }
+  header, main, footer { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 18px; padding-bottom: 10px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .brand { font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; text-decoration: none; border-top: 3px solid var(--accent); padding-top: 4px; }
+  .tag { color: var(--muted); font-size: 0.9rem; }
+  footer { color: var(--muted); font-size: 0.78rem; padding-top: 28px; padding-bottom: 32px; border-top: 1px solid var(--line); margin-top: 32px; }
+  .btn {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px;
+    border: 1px solid var(--line); text-decoration: none; font-weight: 600; font-size: 0.9rem; background: var(--bg);
+  }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .muted { color: var(--muted); }
+  .open-badge { font-size: 0.8rem; font-weight: 700; }
+  .open-badge.is-open { color: var(--open); }
+  .open-badge.is-closed { color: var(--muted); }
+</style>

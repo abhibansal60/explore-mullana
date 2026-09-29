@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.astro/
+# Real shop data (phone numbers) never enters the repo.
+src/data/shops.json

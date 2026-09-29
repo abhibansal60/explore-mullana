@@ -1,0 +1,89 @@
+---
+import Layout from "../Layout.astro";
+import ShopCard from "../ShopCard.astro";
+import { categories, shops } from "../data";
+
+const used = Object.keys(categories).filter((k) => shops.some((s) => s.category === k));
+const points = shops.map((s) => ({ slug: s.slug, name: s.name, cat: s.category, lat: s.lat, lng: s.lng }));
+---
+<Layout title="Explore Mullana" description="Shops, food and places in Mullana and around MMDU: open hours, call, WhatsApp and directions.">
+  <input id="q" type="search" placeholder="Search: chai, xerox, bakery, दवाई…" aria-label="Search shops" />
+  <div class="chips" role="group" aria-label="Categories">
+    <button class="chip on" data-cat="">All</button>
+    {used.map((k) => <button class="chip" data-cat={k}>{categories[k].en}</button>)}
+  </div>
+
+  <div class="map-wrap">
+    <div id="map" data-points={JSON.stringify(points)}></div>
+    <button id="three" class="btn" hidden>3D buildings</button>
+  </div>
+
+  <p id="count" class="muted"></p>
+  <section id="list">
+    {shops.map((shop) => <ShopCard shop={shop} />)}
+  </section>
+</Layout>
+
+<style>
+  #q { width: 100%; font: inherit; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0; scrollbar-width: none; }
+  .chip { flex: none; font: inherit; font-size: 0.85rem; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+  .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .map-wrap { position: relative; }
+  #map { height: 46vh; min-height: 280px; border-radius: 12px; overflow: hidden; background: var(--card); }
+  #three { position: absolute; left: 10px; bottom: 10px; }
+  #count { font-size: 0.85rem; margin: 14px 0 0; }
+</style>
+
+<script>
+  import { markOpenBadges } from "../open";
+  import { filterMap, initMap, toggle3D } from "../map";
+
+  markOpenBadges();
+  const q = document.getElementById("q") as HTMLInputElement;
+  const cards = [...document.querySelectorAll<HTMLElement>(".card")];
+  const count = document.getElementById("count")!;
+  let cat = "";
+  let map: Awaited<ReturnType<typeof initMap>> | undefined;
+
+  function apply() {
+    const terms = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    const visible: string[] = [];
+    for (const c of cards) {
+      const show = (!cat || c.dataset.cat === cat) && terms.every((t) => c.dataset.search!.includes(t));
+      c.hidden = !show;
+      if (show) visible.push(c.dataset.slug!);
+    }
+    count.textContent = `${visible.length} of ${cards.length} places`;
+    if (map) filterMap(map, visible);
+  }
+  q.addEventListener("input", apply);
+  document.querySelectorAll<HTMLButtonElement>(".chip").forEach((b) =>
+    b.addEventListener("click", () => {
+      document.querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === b));
+      cat = b.dataset.cat!;
+      apply();
+    }),
+  );
+  apply();
+
+  const el = document.getElementById("map")!;
+  initMap(el, JSON.parse(el.dataset.points!))
+    .then((m) => {
+      map = m;
+      m.on("load", apply);
+      // 3D pulls ~1.5 MB of buildings, so only offer it on phones that can take it.
+      const mem = (navigator as any).deviceMemory;
+      const three = document.getElementById("three") as HTMLButtonElement;
+      if (!mem || mem >= 3) {
+        three.hidden = false;
+        three.addEventListener("click", async () => {
+          three.textContent = (await toggle3D(m)) ? "2D map" : "3D buildings";
+        });
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+      el.innerHTML = '<p class="muted" style="padding:16px">Map could not load on this device. The list below has everything.</p>';
+    });
+</script>

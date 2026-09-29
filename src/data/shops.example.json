@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "sample-chai-stall",
+    "name": "Sample Chai Stall",
+    "category": "food",
+    "about": "Replace with a real shop. Copy this file to shops.json.",
+    "owner": "",
+    "phones": ["9999999999"],
+    "whatsapp": false,
+    "lat": 30.2752,
+    "lng": 77.0470,
+    "hours": { "open": "08:00", "close": "20:00" },
+    "googleMaps": "",
+    "verified": "2026-09"
+  }
+]

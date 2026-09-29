@@ -1,0 +1,23 @@
+{
+  "name": "explore-mullana",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "buildings": "python3 scripts/buildings.py",
+    "test": "tsx --test src/*.test.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "astro": "^7.3.5",
+    "maplibre-gl": "^6.11.2"
+  },
+  "type": "module",
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}
