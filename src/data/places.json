@@ -1,0 +1,378 @@
+[
+ {
+  "slug": "aggarwal-brothers-yokohama-tyres",
+  "name": "Aggarwal Brothers (Yokohama Tyres)",
+  "category": "auto",
+  "lat": 30.260607,
+  "lng": 77.07058,
+  "source": "Overture Maps (Microsoft, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "alang-motor",
+  "name": "Alang Motor",
+  "category": "auto",
+  "lat": 30.25909,
+  "lng": 77.072441,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "ambala-trading-co",
+  "name": "Ambala Trading Co",
+  "category": "hardware",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "arushi-csc-centre",
+  "name": "Arushi CSC Centre",
+  "category": "services",
+  "lat": 30.277012,
+  "lng": 77.072174,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "arya-senior-secondary-school",
+  "name": "Arya Senior Secondary School",
+  "category": "education",
+  "lat": 30.271307,
+  "lng": 77.036514,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "axis-bank",
+  "name": "Axis Bank",
+  "category": "bank",
+  "lat": 30.2733,
+  "lng": 77.041,
+  "source": "Overture Maps (DAC, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "axis-bank-atm",
+  "name": "Axis Bank ATM",
+  "category": "bank",
+  "lat": 30.275282,
+  "lng": 77.047577,
+  "source": "Overture Maps (DAC, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "bharat-trading-company-apollo-tyres",
+  "name": "Bharat Trading Company (Apollo Tyres)",
+  "category": "auto",
+  "lat": 30.274807,
+  "lng": 77.042542,
+  "source": "Overture Maps (Microsoft, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "c3-cake-cafe-crunch",
+  "name": "C3 Cake, Cafe & Crunch",
+  "category": "food",
+  "lat": 30.2689,
+  "lng": 77.057137,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "dbmci",
+  "name": "DBMCI",
+  "category": "education",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "devi-mandir",
+  "name": "Devi Mandir",
+  "category": "places",
+  "lat": 30.273579,
+  "lng": 77.047798,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "devraj-fitness-club",
+  "name": "Devraj Fitness Club",
+  "category": "sports",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "friend-s-caf-burger",
+  "name": "Friend's Café & Burger",
+  "category": "food",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "glamour-india",
+  "name": "Glamour India",
+  "category": "salon",
+  "lat": 30.273552,
+  "lng": 77.047668,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "gulati-sweet-corner",
+  "name": "Gulati Sweet Corner",
+  "category": "food",
+  "lat": 30.274635,
+  "lng": 77.045395,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "guru-nanak-institutions",
+  "name": "Guru Nanak Institutions",
+  "category": "education",
+  "lat": 30.276251,
+  "lng": 77.047371,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "gurudwara-shri-guru-ravidas",
+  "name": "Gurudwara Shri Guru Ravidas",
+  "category": "places",
+  "lat": 30.264275,
+  "lng": 77.066643,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "hindustan-petroleum-petrol-pump",
+  "name": "Hindustan Petroleum petrol pump",
+  "category": "fuel",
+  "lat": 30.268187,
+  "lng": 77.05793,
+  "source": "Overture Maps (AllThePlaces, CC0-1.0)"
+ },
+ {
+  "slug": "indianoil-petrol-pump",
+  "name": "IndianOil petrol pump",
+  "category": "fuel",
+  "lat": 30.259701,
+  "lng": 77.070847,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "innovation-media",
+  "name": "Innovation Media",
+  "category": "services",
+  "lat": 30.272192,
+  "lng": 77.04129,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "inspire-coaching-centre",
+  "name": "Inspire Coaching Centre",
+  "category": "education",
+  "lat": 30.272854,
+  "lng": 77.049858,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "jain-metal-plastic-store",
+  "name": "Jain Metal & Plastic Store",
+  "category": "general",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "jio-bp-petrol-pump",
+  "name": "Jio-bp petrol pump",
+  "category": "fuel",
+  "lat": 30.270885,
+  "lng": 77.040192,
+  "source": "Overture Maps (Microsoft, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "k-l-resorts",
+  "name": "K.L. Resorts",
+  "category": "places",
+  "lat": 30.271847,
+  "lng": 77.052338,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "khushboo-dental-care",
+  "name": "Khushboo Dental Care",
+  "category": "medical",
+  "lat": 30.275,
+  "lng": 77.045273,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "lucky-jewellers",
+  "name": "Lucky Jewellers",
+  "category": "jewellery",
+  "lat": 30.277617,
+  "lng": 77.04821,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mm-continental-hotel",
+  "name": "MM Continental hotel",
+  "category": "places",
+  "lat": 30.270927,
+  "lng": 77.049019,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mm-fitness-gym",
+  "name": "MM Fitness Gym",
+  "category": "sports",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mmdu-department-of-law",
+  "name": "MMDU Department of Law",
+  "category": "education",
+  "lat": 30.27463,
+  "lng": 77.045067,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mmdu-academic-block",
+  "name": "MMDU academic block",
+  "category": "education",
+  "lat": 30.271847,
+  "lng": 77.052338,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mmimsr-hospital",
+  "name": "MMIMSR Hospital",
+  "category": "medical",
+  "lat": 30.271797,
+  "lng": 77.052689,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "maharana-pratap-national-college",
+  "name": "Maharana Pratap National College",
+  "category": "education",
+  "lat": 30.266451,
+  "lng": 77.064896,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "maharishi-markandeshwar-university-mmdu",
+  "name": "Maharishi Markandeshwar University (MMDU)",
+  "category": "education",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mata-bala-sundari-mandir",
+  "name": "Mata Bala Sundari Mandir",
+  "category": "places",
+  "lat": 30.273119,
+  "lng": 77.047516,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mavericks-international-school",
+  "name": "Mavericks International School",
+  "category": "education",
+  "lat": 30.277861,
+  "lng": 77.061394,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "new-grain-market-anaj-mandi",
+  "name": "New Grain Market (Anaj Mandi)",
+  "category": "places",
+  "lat": 30.266638,
+  "lng": 77.057404,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "patanjali-chikitsalay",
+  "name": "Patanjali Chikitsalay",
+  "category": "medical",
+  "lat": 30.274685,
+  "lng": 77.044762,
+  "source": "Overture Maps (Microsoft, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "rnpd-public-school",
+  "name": "RNPD Public School",
+  "category": "education",
+  "lat": 30.274244,
+  "lng": 77.053993,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "saini-flower-decoration",
+  "name": "Saini Flower Decoration",
+  "category": "services",
+  "lat": 30.273666,
+  "lng": 77.048035,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "sameer-dental-lab",
+  "name": "Sameer Dental Lab",
+  "category": "medical",
+  "lat": 30.271936,
+  "lng": 77.052032,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "savita-bharat-gas-agency",
+  "name": "Savita Bharat Gas agency",
+  "category": "services",
+  "lat": 30.277185,
+  "lng": 77.057938,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "school-times-books-and-stationery",
+  "name": "School Times Books and Stationery",
+  "category": "print",
+  "lat": 30.275618,
+  "lng": 77.045746,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "shiva-statue",
+  "name": "Shiva statue",
+  "category": "places",
+  "lat": 30.272839,
+  "lng": 77.047913,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "shri-siddhi-vinayak-jewellers",
+  "name": "Shri Siddhi Vinayak Jewellers",
+  "category": "jewellery",
+  "lat": 30.274679,
+  "lng": 77.045807,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "singla-traders",
+  "name": "Singla Traders",
+  "category": "hardware",
+  "lat": 30.276402,
+  "lng": 77.047966,
+  "source": "Overture Maps (Foursquare, Apache-2.0)"
+ },
+ {
+  "slug": "verma-auto-center",
+  "name": "Verma Auto Center",
+  "category": "auto",
+  "lat": 30.258795,
+  "lng": 77.074905,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "yuvraj-jewellers",
+  "name": "Yuvraj Jewellers",
+  "category": "jewellery",
+  "lat": 30.274414,
+  "lng": 77.045593,
+  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ }
+]

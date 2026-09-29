@@ -26,6 +26,11 @@ export const categories: Record<string, { en: string; hi: string; keys: string; 
   medical: { en: "Medical & pharmacy", hi: "दवाई", keys: "dawai chemist doctor clinic hospital", color: "#0d7672" },
   mobile: { en: "Mobile & repairs", hi: "मोबाइल", keys: "phone recharge repair charger", color: "#4a4a4a" },
   clothing: { en: "Clothing & tailoring", hi: "कपड़े", keys: "kapde darzi tailor cloth", color: "#a86a12" },
+  jewellery: { en: "Jewellers", hi: "ज्वेलर्स", keys: "jewellers jewelry sunar gold silver gehne", color: "#9a7b0a" },
+  education: { en: "Schools & coaching", hi: "पढ़ाई", keys: "school college coaching tuition mmdu university padhai", color: "#2f5d8a" },
+  hardware: { en: "Hardware", hi: "हार्डवेयर", keys: "hardware cement sariya paint pipe", color: "#5d5347" },
+  auto: { en: "Auto & tyres", hi: "गाड़ी", keys: "tyre tire mechanic car bike garage puncture spare parts", color: "#3d3d5c" },
+  fuel: { en: "Petrol pumps", hi: "पेट्रोल पंप", keys: "petrol diesel pump fuel cng", color: "#8a2f2f" },
   bank: { en: "Banks & ATMs", hi: "बैंक", keys: "atm paisa cash", color: "#34506e" },
   transport: { en: "Transport", hi: "सवारी", keys: "auto bus station taxi rickshaw", color: "#c79500" },
   sports: { en: "Gym & sports", hi: "जिम", keys: "gym khel sports", color: "#4d7a1e" },
@@ -46,15 +51,21 @@ const file = "src/data/shops.json";
 const fallback = "src/data/shops.example.json";
 export const shops: Shop[] = JSON.parse(readFileSync(existsSync(file) ? file : fallback, "utf8"));
 
+// Places seeded from open map data. Name and location only, no phone, until the owner checks them.
+export type Place = { slug: string; name: string; category: string; lat: number; lng: number; source: string };
+export const places: Place[] = JSON.parse(readFileSync("src/data/places.json", "utf8")).filter(
+  (p: Place) => !shops.some((s) => s.name.toLowerCase() === p.name.toLowerCase()),
+);
+
 export const monthLabel = (ym: string) =>
   new Date(`${ym}-01T00:00:00`).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 
-export const searchText = (s: Shop) => {
+export const searchText = (s: Shop | Place) => {
   const c = categories[s.category];
-  return [s.name, s.about, s.owner, c.en, c.hi, c.keys].join(" ").toLowerCase();
+  return [s.name, "about" in s ? s.about : "", "owner" in s ? s.owner : "", c.en, c.hi, c.keys].join(" ").toLowerCase();
 };
 
-export const directions = (s: Shop) =>
+export const directions = (s: { lat: number; lng: number }) =>
   `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`;
 
 export const site = {

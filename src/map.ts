@@ -1,6 +1,7 @@
 import type { Map as MLMap } from "maplibre-gl";
 
-type Point = { slug: string; name: string; color: string; lat: number; lng: number };
+// v: 1 for shops checked with the owner, 0 for places from open map data.
+type Point = { slug: string; name: string; color: string; lat: number; lng: number; v: number };
 
 const CENTER: [number, number] = [77.047, 30.2755];
 const dark = () => matchMedia("(prefers-color-scheme: dark)").matches;
@@ -31,7 +32,7 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
         type: "FeatureCollection",
         features: points.map((p) => ({
           type: "Feature",
-          properties: { slug: p.slug, name: p.name, color: p.color },
+          properties: { slug: p.slug, name: p.name, color: p.color, v: p.v },
           geometry: { type: "Point", coordinates: [p.lng, p.lat] },
         })),
       },
@@ -41,16 +42,18 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
       type: "circle",
       source: "shops",
       paint: {
-        "circle-radius": ["case", ["boolean", ["feature-state", "picked"], false], 11, 8],
-        "circle-color": ["get", "color"],
-        "circle-stroke-width": 2.5,
-        "circle-stroke-color": "#ffffff",
+        // Checked shops are solid; unchecked places are rings in the category colour.
+        "circle-radius": ["case", ["boolean", ["feature-state", "picked"], false], 11, ["==", ["get", "v"], 1], 8, 5.5],
+        "circle-color": ["case", ["==", ["get", "v"], 1], ["get", "color"], "#ffffff"],
+        "circle-stroke-width": ["case", ["==", ["get", "v"], 1], 2.5, 2],
+        "circle-stroke-color": ["case", ["==", ["get", "v"], 1], "#ffffff", ["get", "color"]],
       },
     });
     map.addLayer({
       id: "shop-names",
       type: "symbol",
       source: "shops",
+      filter: ["==", ["get", "v"], 1],
       layout: {
         "text-field": ["get", "name"],
         "text-size": 12.5,
@@ -89,6 +92,10 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
   return map;
 }
 
+export function showTown(map: MLMap) {
+  map.flyTo({ center: CENTER, zoom: 15.8, bearing: map.getPitch() > 0 ? -28 : 0 });
+}
+
 export function showMe(map: MLMap, lng: number, lat: number) {
   const data: any = { type: "Point", coordinates: [lng, lat] };
   const src = map.getSource("me") as any;
@@ -105,7 +112,8 @@ export function filterMap(map: MLMap, visible: string[]) {
   if (!map.getLayer("shops")) return;
   const f: any = ["in", ["get", "slug"], ["literal", visible]];
   map.setFilter("shops", f);
-  map.setFilter("shop-names", f);
+  // Unchecked places stay unlabelled to keep the map calm; tapping one shows it in the list.
+  map.setFilter("shop-names", ["all", f, ["==", ["get", "v"], 1]]);
 }
 
 export function set3D(map: MLMap, on: boolean) {

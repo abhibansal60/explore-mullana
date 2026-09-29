@@ -1,24 +1,28 @@
 ---
 import Layout from "../Layout.astro";
 import ShopCard from "../ShopCard.astro";
+import PlaceRow from "../PlaceRow.astro";
 import Credits from "../Credits.astro";
 import Icon from "../Icon.astro";
-import { categories, shops } from "../data";
+import { categories, places, shops } from "../data";
 
-const used = Object.keys(categories).filter((k) => shops.some((s) => s.category === k));
-const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng }));
+const all = [...shops, ...places];
+const used = Object.keys(categories).filter((k) => all.some((s) => s.category === k));
+const points = all.map((s) => ({
+  slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng, v: "phones" in s ? 1 : 0,
+}));
 ---
 <Layout title="Explore Mullana" description="Shops, food and places in Mullana and around MMDU, with opening hours, call, WhatsApp and directions.">
   <div class="app">
     <div class="stage">
       <div id="map" data-points={JSON.stringify(points)}></div>
-      <div class="stone">
+      <button class="stone" id="home" aria-label="Show all of Mullana">
         <span class="dome"></span>
-        <a class="hi" lang="hi" href="https://hi.wikipedia.org/wiki/मुलाना">मुलाना</a>
-        <a class="en" href="https://en.wikipedia.org/wiki/Mullana">Mullana</a>
-        <span class="n" id="stone-n">{shops.length} places</span>
+        <span class="hi" lang="hi">मुलाना</span>
+        <span class="en">Mullana</span>
+        <span class="n" id="stone-n">{all.length} places</span>
         <span class="n open" id="stone-open"></span>
-      </div>
+      </button>
       <button id="three" class="btn map-btn" hidden><Icon name="cube" /><span>3D</span></button>
     </div>
 
@@ -38,8 +42,12 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
           </button>
         ))}
       </div>
-      <div id="list">
+      <div id="list" class="group">
         {shops.map((shop) => <ShopCard shop={shop} />)}
+      </div>
+      <h3 id="more-h" class="more-h">More around Mullana<span>Found on open map data. Not yet checked with the owner, so no phone numbers.</span></h3>
+      <div id="more" class="group">
+        {places.map((place) => <PlaceRow place={place} />)}
       </div>
       <p id="empty" class="empty" hidden>Nothing matches that yet. Try a shorter word, or clear the filters.</p>
       <Credits />
@@ -60,12 +68,11 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
   /* The one flourish: a Haryana kilometre stone holding the town's name. */
   .stone {
     position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; z-index: 2;
-    width: 92px; padding: 0 0 8px; text-align: center; overflow: hidden;
+    width: 92px; padding: 0 0 8px; text-align: center; overflow: hidden; border: 0; cursor: pointer; font: inherit;
     background: #fff; color: #1c1b19; border-radius: 46px 46px 6px 6px;
     box-shadow: 0 1px 0 rgb(0 0 0 / 0.12), 0 6px 18px rgb(0 0 0 / 0.14);
   }
   .dome { display: block; height: 30px; background: var(--stone); margin-bottom: 6px; }
-  .stone a { text-decoration: none; }
   .stone .hi { display: block; font: 700 17px/1.1 "Anek Devanagari", var(--font); }
   .stone .en { display: block; font-weight: 700; font-size: 15px; font-variation-settings: "wdth" 80; }
   .stone .n { display: block; font-size: 12.5px; color: #68645c; margin-top: 3px; }
@@ -99,6 +106,8 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
   #near-me + .cat { margin-left: 8px; }
   .stone .open { color: #1e7a3a; font-weight: 600; margin-top: 0; }
   .empty { color: var(--muted); padding: 24px 0; }
+  .more-h { font-size: 20px; font-weight: 700; margin: 30px 0 4px; }
+  .more-h span { display: block; font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 
   @media (min-width: 900px) {
     .app { display: grid; grid-template-columns: 420px 1fr; height: 100svh; }
@@ -112,11 +121,11 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
 <script>
   import { isOpen, markOpenBadges } from "../open";
   import { distLabel, metres } from "../geo";
-  import { filterMap, initMap, set3D, showMe } from "../map";
+  import { filterMap, initMap, set3D, showMe, showTown } from "../map";
 
   markOpenBadges();
   const q = document.getElementById("q") as HTMLInputElement;
-  const list = document.getElementById("list")!;
+  const moreH = document.getElementById("more-h")!;
   const rows = [...document.querySelectorAll<HTMLElement>(".row")];
   const empty = document.getElementById("empty")!;
   const stoneN = document.getElementById("stone-n")!;
@@ -128,9 +137,10 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
   let me: [number, number] | undefined;
   let map: Awaited<ReturnType<typeof initMap>> | undefined;
 
+  // Unchecked places have no hours, so they never count as open.
   const rowOpen = (r: HTMLElement) => {
-    const b = r.querySelector<HTMLElement>(".open-badge")!;
-    return isOpen(b.dataset.open!, b.dataset.close!);
+    const b = r.querySelector<HTMLElement>(".open-badge");
+    return !!b && isOpen(b.dataset.open!, b.dataset.close!);
   };
 
   function apply() {
@@ -148,6 +158,7 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
       }
     }
     empty.hidden = visible.length > 0;
+    moreH.hidden = !rows.some((r) => r.classList.contains("place") && !r.hidden);
     stoneN.textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}`;
     stoneOpen.textContent = openCount ? `${openCount} open now` : "";
     if (map) filterMap(map, visible);
@@ -161,7 +172,7 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
       el.textContent = distLabel(d.get(r)!);
       el.hidden = false;
     }
-    [...rows].sort((a, b) => d.get(a)! - d.get(b)!).forEach((r) => list.append(r));
+    [...rows].sort((a, b) => d.get(a)! - d.get(b)!).forEach((r) => r.parentElement!.append(r));
   }
 
   q.addEventListener("input", apply);
@@ -185,6 +196,23 @@ const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories
       { enableHighAccuracy: true, timeout: 10000 },
     );
   });
+  // The stone is the home button: clear everything and look at the whole town again.
+  document.getElementById("home")!.addEventListener("click", () => {
+    q.value = "";
+    cat = "";
+    openOnly = false;
+    openBtn.setAttribute("aria-pressed", "false");
+    document.querySelectorAll(".cat").forEach((x, i) => {
+      x.classList.toggle("on", i === 0);
+      x.setAttribute("aria-pressed", String(i === 0));
+    });
+    rows.forEach((r) => r.classList.remove("picked"));
+    apply();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.querySelector(".sheet")!.scrollTo({ top: 0, behavior: "smooth" });
+    if (map) showTown(map);
+  });
+
   document.querySelectorAll<HTMLButtonElement>(".cat").forEach((b) =>
     b.addEventListener("click", () => {
       document.querySelectorAll(".cat").forEach((x) => {
