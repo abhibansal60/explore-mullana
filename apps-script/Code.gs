@@ -6,8 +6,8 @@
 //   2. Deploy > New deployment > Web app, execute as me, access: anyone.
 //      Put the /exec URL in .sheet-url and run `npm run sheet`.
 // To publish a listing, tick its "Approved" box in the Sheet. Only approved
-// rows, and only the public columns, ever leave the Sheet. Contributor names
-// and numbers stay private.
+// rows, and only the public columns, ever leave the Sheet. A contributor's name
+// is shown as a credit; their number stays private.
 
 // Keys must match `categories` in src/data/index.ts.
 const CATEGORIES = [
@@ -123,6 +123,7 @@ function doGet() {
         "yyyy-MM",
       ),
       slug: String(cell(r, "Slug")).trim(),
+      by: String(cell(r, Q.by)).trim(),
     }));
   return ContentService.createTextOutput(JSON.stringify({ shops })).setMimeType(ContentService.MimeType.JSON);
 }
