@@ -16,6 +16,7 @@ Don't deploy, push, or change DNS without asking me first.
 ## How it works
 
 - `src/data/shops.json` holds the real listings. It's git-ignored so phone numbers stay out of the repo. `shops.example.json` shows the format.
+- `scripts/og.mjs` renders the 1200x630 link previews (`public/og/`, git-ignored) with Playwright before each build, so WhatsApp shows a picture. Run `npm run og` on its own to redraw them.
 - Categories, with the Hindi labels and Hinglish search words, live in `src/data/index.ts`.
 - The list is plain HTML and works without the map. MapLibre loads afterwards, and the 3D buildings (about 1 MB) load only when someone taps "3D buildings".
 - `public/buildings.geojson` comes from Overture Maps building footprints. Overture has no heights for Mullana, so `scripts/buildings.py` estimates floors from footprint area. Put floor counts you've checked on foot into `scripts/height_overrides.json` (Overture id → floors), then run:

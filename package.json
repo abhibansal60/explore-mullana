@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "tsx scripts/og.mjs && astro build",
+    "og": "tsx scripts/og.mjs",
     "preview": "astro preview",
     "buildings": "python3 scripts/buildings.py",
     "test": "tsx --test src/*.test.ts"
@@ -18,6 +19,7 @@
   },
   "type": "module",
   "devDependencies": {
+    "playwright": "^1.63.0",
     "tsx": "^4.23.15"
   }
 }

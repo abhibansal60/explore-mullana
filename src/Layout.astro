@@ -1,6 +1,6 @@
 ---
 import { site } from "./data";
-const { title, description, path = "/" } = Astro.props;
+const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -13,6 +13,10 @@ const { title, description, path = "/" } = Astro.props;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={site.url + path} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content={site.url + image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1b1b19" media="(prefers-color-scheme: dark)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

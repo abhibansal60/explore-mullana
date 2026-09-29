@@ -13,7 +13,7 @@ const path = `/shop/${shop.slug}/`;
 const hours = `${time12(shop.hours.open)} to ${time12(shop.hours.close)}`;
 const share = `${shop.name}, Mullana. Open ${hours}. ${site.url}${path}`;
 ---
-<Layout title={`${shop.name}, Mullana`} description={`${c.en} in Mullana. Open ${hours}. ${shop.about}`} path={path}>
+<Layout title={`${shop.name}, Mullana`} description={`${c.en} in Mullana. Open ${hours}. ${shop.about}`} path={path} image={`/og/${shop.slug}.png`}>
   <main style={`--cat:${c.color}`}>
     <a class="back" href="/"><Icon name="back" />All of Mullana</a>
 
