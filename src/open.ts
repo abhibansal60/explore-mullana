@@ -7,10 +7,11 @@ export function isOpen(open: string, close: string, now = new Date()) {
   return close > open ? t >= open && t < close : t >= open || t < close;
 }
 
+// The badge carries preformatted times (data-open-label, data-close-label).
 export function markOpenBadges() {
   document.querySelectorAll<HTMLElement>(".open-badge").forEach((el) => {
     const open = isOpen(el.dataset.open!, el.dataset.close!);
-    el.textContent = open ? "Open now" : `Closed · opens ${el.dataset.open}`;
+    el.textContent = open ? `Open, closes ${el.dataset.closeLabel}` : `Closed, opens ${el.dataset.openLabel}`;
     el.classList.toggle("is-open", open);
     el.classList.toggle("is-closed", !open);
   });

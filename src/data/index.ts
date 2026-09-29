@@ -16,19 +16,28 @@ export type Shop = {
 };
 
 // `keys` holds Hindi and Hinglish spellings people actually type.
-export const categories: Record<string, { en: string; hi: string; keys: string }> = {
-  food: { en: "Food & chai", hi: "खाना और चाय", keys: "khana chai dhaba bakery cake restaurant nashta" },
-  grocery: { en: "Groceries", hi: "किराना", keys: "kirana general store cosmetics ration" },
-  print: { en: "Stationery & print", hi: "स्टेशनरी", keys: "photocopy xerox print copy stationary" },
-  salon: { en: "Salon & grooming", hi: "सैलून", keys: "nai barber parlour parlor haircut" },
-  medical: { en: "Medical & pharmacy", hi: "दवाई", keys: "dawai chemist doctor clinic hospital" },
-  mobile: { en: "Mobile & repairs", hi: "मोबाइल", keys: "phone recharge repair charger" },
-  clothing: { en: "Clothing & tailoring", hi: "कपड़े", keys: "kapde darzi tailor cloth" },
-  bank: { en: "Banks & ATMs", hi: "बैंक", keys: "atm paisa cash" },
-  transport: { en: "Transport", hi: "सवारी", keys: "auto bus station taxi rickshaw" },
-  sports: { en: "Gym & sports", hi: "जिम", keys: "gym khel sports" },
-  services: { en: "Services", hi: "सेवाएँ", keys: "laundry dhobi electrician plumber light tent decorator" },
-  places: { en: "Places", hi: "जगहें", keys: "mandir temple park gurudwara gate" },
+// `color` marks the category on map pins and cards.
+export const categories: Record<string, { en: string; hi: string; keys: string; color: string }> = {
+  food: { en: "Food & chai", hi: "खाना और चाय", keys: "khana chai dhaba bakery cake restaurant nashta", color: "#b8322a" },
+  grocery: { en: "Groceries", hi: "किराना", keys: "kirana ration atta dal sabzi", color: "#2e6b3a" },
+  general: { en: "General store", hi: "जनरल स्टोर", keys: "general store cosmetics gift household bangles makeup", color: "#6f6a1c" },
+  print: { en: "Stationery & print", hi: "स्टेशनरी", keys: "photocopy xerox print copy stationary", color: "#5b4a94" },
+  salon: { en: "Salon & grooming", hi: "सैलून", keys: "nai barber parlour parlor haircut", color: "#a2366a" },
+  medical: { en: "Medical & pharmacy", hi: "दवाई", keys: "dawai chemist doctor clinic hospital", color: "#0d7672" },
+  mobile: { en: "Mobile & repairs", hi: "मोबाइल", keys: "phone recharge repair charger", color: "#4a4a4a" },
+  clothing: { en: "Clothing & tailoring", hi: "कपड़े", keys: "kapde darzi tailor cloth", color: "#a86a12" },
+  bank: { en: "Banks & ATMs", hi: "बैंक", keys: "atm paisa cash", color: "#34506e" },
+  transport: { en: "Transport", hi: "सवारी", keys: "auto bus station taxi rickshaw", color: "#c79500" },
+  sports: { en: "Gym & sports", hi: "जिम", keys: "gym khel sports", color: "#4d7a1e" },
+  services: { en: "Services", hi: "सेवाएँ", keys: "laundry dhobi electrician plumber light tent decorator", color: "#1f5aa6" },
+  places: { en: "Places", hi: "जगहें", keys: "mandir temple park gurudwara gate", color: "#7a5a3c" },
+};
+
+// "08:00" -> "8 am", "21:30" -> "9:30 pm"
+export const time12 = (hhmm: string) => {
+  const [h, m] = hhmm.split(":").map(Number);
+  const h12 = h % 12 || 12;
+  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${h < 12 ? "am" : "pm"}`;
 };
 
 // shops.json is git-ignored so phone numbers stay out of the public repo.

@@ -1,0 +1,20 @@
+---
+import { site } from "./data";
+---
+<footer class="credits">
+  <p>
+    A free guide to Mullana, made by <a href="https://abhibansal.dev">Abhinav Bansal</a>. Shops are listed with
+    their owner's consent. Something wrong? <a href={`https://wa.me/${site.reportWhatsApp}`}>Tell us on WhatsApp</a>.
+  </p>
+  <p class="small">
+    Map © <a href="https://openfreemap.org">OpenFreeMap</a>{", "}<a href="https://www.openmaptiles.org/">OpenMapTiles</a>{", data © "}<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+    Buildings from <a href="https://overturemaps.org">Overture Maps Foundation</a>, including Google Open Buildings
+    (CDLA-Permissive-2.0) and Microsoft (ODbL). <a href="https://github.com/abhibansal60/explore-mullana">Source code</a>.
+  </p>
+</footer>
+
+<style>
+  .credits { color: var(--muted); font-size: 14px; padding: 28px 0 40px; }
+  .credits p { margin: 0 0 10px; max-width: 60ch; }
+  .small { font-size: 12.5px; }
+</style>

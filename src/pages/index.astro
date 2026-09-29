@@ -1,89 +1,228 @@
 ---
 import Layout from "../Layout.astro";
 import ShopCard from "../ShopCard.astro";
+import Credits from "../Credits.astro";
+import Icon from "../Icon.astro";
 import { categories, shops } from "../data";
 
 const used = Object.keys(categories).filter((k) => shops.some((s) => s.category === k));
-const points = shops.map((s) => ({ slug: s.slug, name: s.name, cat: s.category, lat: s.lat, lng: s.lng }));
+const points = shops.map((s) => ({ slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng }));
 ---
-<Layout title="Explore Mullana" description="Shops, food and places in Mullana and around MMDU: open hours, call, WhatsApp and directions.">
-  <input id="q" type="search" placeholder="Search: chai, xerox, bakery, दवाई…" aria-label="Search shops" />
-  <div class="chips" role="group" aria-label="Categories">
-    <button class="chip on" data-cat="">All</button>
-    {used.map((k) => <button class="chip" data-cat={k}>{categories[k].en}</button>)}
-  </div>
+<Layout title="Explore Mullana" description="Shops, food and places in Mullana and around MMDU, with opening hours, call, WhatsApp and directions.">
+  <div class="app">
+    <div class="stage">
+      <div id="map" data-points={JSON.stringify(points)}></div>
+      <div class="stone">
+        <span class="dome"></span>
+        <a class="hi" lang="hi" href="https://hi.wikipedia.org/wiki/मुलाना">मुलाना</a>
+        <a class="en" href="https://en.wikipedia.org/wiki/Mullana">Mullana</a>
+        <span class="n" id="stone-n">{shops.length} places</span>
+        <span class="n open" id="stone-open"></span>
+      </div>
+      <button id="three" class="btn map-btn" hidden><Icon name="cube" /><span>3D</span></button>
+    </div>
 
-  <div class="map-wrap">
-    <div id="map" data-points={JSON.stringify(points)}></div>
-    <button id="three" class="btn" hidden>3D buildings</button>
+    <section class="sheet" aria-label="Places">
+      <div class="grip" aria-hidden="true"></div>
+      <label class="search">
+        <Icon name="search" />
+        <input id="q" type="search" placeholder="Try chai, xerox, दवाई" aria-label="Search places" autocomplete="off" />
+      </label>
+      <div class="cats" role="group" aria-label="Filters">
+        <button class="tog" id="open-now" aria-pressed="false"><Icon name="clock" />Open now</button>
+        <button class="tog" id="near-me" aria-pressed="false"><Icon name="locate" /><span>Near me</span></button>
+        <button class="cat on" data-cat="" aria-pressed="true">All</button>
+        {used.map((k) => (
+          <button class="cat" data-cat={k} aria-pressed="false" style={`--cat:${categories[k].color}`}>
+            <i></i>{categories[k].en}
+          </button>
+        ))}
+      </div>
+      <div id="list">
+        {shops.map((shop) => <ShopCard shop={shop} />)}
+      </div>
+      <p id="empty" class="empty" hidden>Nothing matches that yet. Try a shorter word, or clear the filters.</p>
+      <Credits />
+    </section>
   </div>
-
-  <p id="count" class="muted"></p>
-  <section id="list">
-    {shops.map((shop) => <ShopCard shop={shop} />)}
-  </section>
 </Layout>
 
 <style>
-  #q { width: 100%; font: inherit; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
-  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0; scrollbar-width: none; }
-  .chip { flex: none; font: inherit; font-size: 0.85rem; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
-  .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .map-wrap { position: relative; }
-  #map { height: 46vh; min-height: 280px; border-radius: 12px; overflow: hidden; background: var(--card); }
-  #three { position: absolute; left: 10px; bottom: 10px; }
-  #count { font-size: 0.85rem; margin: 14px 0 0; }
+  .stage { position: sticky; top: 0; height: 62svh; z-index: 0; }
+  #map { position: absolute; inset: 0; background: var(--line); }
+  .sheet {
+    position: relative; z-index: 1; margin-top: -28px; min-height: 60svh;
+    background: var(--sheet); border-radius: 18px 18px 0 0; padding: 6px 16px 0;
+    box-shadow: 0 -1px 0 var(--line), 0 -8px 24px rgb(0 0 0 / 0.06);
+  }
+  .grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 4px auto 12px; }
+
+  /* The one flourish: a Haryana kilometre stone holding the town's name. */
+  .stone {
+    position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; z-index: 2;
+    width: 92px; padding: 0 0 8px; text-align: center; overflow: hidden;
+    background: #fff; color: #1c1b19; border-radius: 46px 46px 6px 6px;
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.12), 0 6px 18px rgb(0 0 0 / 0.14);
+  }
+  .dome { display: block; height: 30px; background: var(--stone); margin-bottom: 6px; }
+  .stone a { text-decoration: none; }
+  .stone .hi { display: block; font: 700 17px/1.1 "Anek Devanagari", var(--font); }
+  .stone .en { display: block; font-weight: 700; font-size: 15px; font-variation-settings: "wdth" 80; }
+  .stone .n { display: block; font-size: 12.5px; color: #68645c; margin-top: 3px; }
+
+  .map-btn { position: absolute; right: 12px; bottom: 44px; z-index: 2; box-shadow: 0 4px 14px rgb(0 0 0 / 0.14); }
+  .map-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .search {
+    display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 50px;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--muted);
+  }
+  .search :global(svg) { width: 20px; height: 20px; flex: none; }
+  .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: 400 17px var(--font); }
+  .search:focus-within { border-color: var(--ink); }
+
+  .cats { display: flex; gap: 8px; overflow-x: auto; margin: 12px -16px 4px; padding: 0 16px 6px; scrollbar-width: none; }
+  .cat {
+    flex: none; display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 12px;
+    border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); color: var(--ink);
+    font: 500 15px var(--font); cursor: pointer;
+  }
+  .cat i { width: 9px; height: 9px; border-radius: 50%; background: var(--cat); }
+  .cat.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tog {
+    flex: none; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px;
+    border: 1px solid var(--ink); border-radius: 6px; background: var(--sheet); color: var(--ink);
+    font: 600 15px var(--font); cursor: pointer;
+  }
+  .tog :global(svg) { width: 17px; height: 17px; }
+  .tog[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  #near-me + .cat { margin-left: 8px; }
+  .stone .open { color: #1e7a3a; font-weight: 600; margin-top: 0; }
+  .empty { color: var(--muted); padding: 24px 0; }
+
+  @media (min-width: 900px) {
+    .app { display: grid; grid-template-columns: 420px 1fr; height: 100svh; }
+    .stage { order: 2; position: relative; height: auto; }
+    .sheet { order: 1; margin: 0; border-radius: 0; overflow-y: auto; box-shadow: 1px 0 0 var(--line); padding-top: 18px; }
+    .grip { display: none; }
+    .map-btn { bottom: 24px; }
+  }
 </style>
 
 <script>
-  import { markOpenBadges } from "../open";
-  import { filterMap, initMap, toggle3D } from "../map";
+  import { isOpen, markOpenBadges } from "../open";
+  import { distLabel, metres } from "../geo";
+  import { filterMap, initMap, set3D, showMe } from "../map";
 
   markOpenBadges();
   const q = document.getElementById("q") as HTMLInputElement;
-  const cards = [...document.querySelectorAll<HTMLElement>(".card")];
-  const count = document.getElementById("count")!;
+  const list = document.getElementById("list")!;
+  const rows = [...document.querySelectorAll<HTMLElement>(".row")];
+  const empty = document.getElementById("empty")!;
+  const stoneN = document.getElementById("stone-n")!;
+  const stoneOpen = document.getElementById("stone-open")!;
+  const openBtn = document.getElementById("open-now") as HTMLButtonElement;
+  const nearBtn = document.getElementById("near-me") as HTMLButtonElement;
   let cat = "";
+  let openOnly = false;
+  let me: [number, number] | undefined;
   let map: Awaited<ReturnType<typeof initMap>> | undefined;
+
+  const rowOpen = (r: HTMLElement) => {
+    const b = r.querySelector<HTMLElement>(".open-badge")!;
+    return isOpen(b.dataset.open!, b.dataset.close!);
+  };
 
   function apply() {
     const terms = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
     const visible: string[] = [];
-    for (const c of cards) {
-      const show = (!cat || c.dataset.cat === cat) && terms.every((t) => c.dataset.search!.includes(t));
-      c.hidden = !show;
-      if (show) visible.push(c.dataset.slug!);
+    let openCount = 0;
+    for (const r of rows) {
+      const open = rowOpen(r);
+      const show =
+        (!cat || r.dataset.cat === cat) && (!openOnly || open) && terms.every((t) => r.dataset.search!.includes(t));
+      r.hidden = !show;
+      if (show) {
+        visible.push(r.dataset.slug!);
+        if (open) openCount++;
+      }
     }
-    count.textContent = `${visible.length} of ${cards.length} places`;
+    empty.hidden = visible.length > 0;
+    stoneN.textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}`;
+    stoneOpen.textContent = openCount ? `${openCount} open now` : "";
     if (map) filterMap(map, visible);
   }
+
+  function sortByDistance() {
+    if (!me) return;
+    const d = new Map(rows.map((r) => [r, metres(me!, [+r.dataset.lat!, +r.dataset.lng!])]));
+    for (const r of rows) {
+      const el = r.querySelector<HTMLElement>(".dist")!;
+      el.textContent = distLabel(d.get(r)!);
+      el.hidden = false;
+    }
+    [...rows].sort((a, b) => d.get(a)! - d.get(b)!).forEach((r) => list.append(r));
+  }
+
   q.addEventListener("input", apply);
-  document.querySelectorAll<HTMLButtonElement>(".chip").forEach((b) =>
+  openBtn.addEventListener("click", () => {
+    openOnly = !openOnly;
+    openBtn.setAttribute("aria-pressed", String(openOnly));
+    apply();
+  });
+  nearBtn.addEventListener("click", () => {
+    const label = nearBtn.querySelector("span")!;
+    label.textContent = "Finding you…";
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        me = [pos.coords.latitude, pos.coords.longitude];
+        nearBtn.setAttribute("aria-pressed", "true");
+        label.textContent = "Nearest first";
+        sortByDistance();
+        if (map) showMe(map, me[1], me[0]);
+      },
+      () => (label.textContent = "Location is off"),
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  });
+  document.querySelectorAll<HTMLButtonElement>(".cat").forEach((b) =>
     b.addEventListener("click", () => {
-      document.querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === b));
+      document.querySelectorAll(".cat").forEach((x) => {
+        x.classList.toggle("on", x === b);
+        x.setAttribute("aria-pressed", String(x === b));
+      });
       cat = b.dataset.cat!;
       apply();
     }),
   );
   apply();
 
+  function pick(slug: string) {
+    rows.forEach((r) => r.classList.toggle("picked", r.dataset.slug === slug));
+    document.querySelector(`.row[data-slug="${slug}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   const el = document.getElementById("map")!;
-  initMap(el, JSON.parse(el.dataset.points!))
+  initMap(el, JSON.parse(el.dataset.points!), pick)
     .then((m) => {
       map = m;
       m.on("load", apply);
-      // 3D pulls ~1.5 MB of buildings, so only offer it on phones that can take it.
+      // 3D pulls ~1 MB of buildings, so only offer it on phones that can take it.
       const mem = (navigator as any).deviceMemory;
       const three = document.getElementById("three") as HTMLButtonElement;
       if (!mem || mem >= 3) {
         three.hidden = false;
-        three.addEventListener("click", async () => {
-          three.textContent = (await toggle3D(m)) ? "2D map" : "3D buildings";
+        three.setAttribute("aria-pressed", "false");
+        three.addEventListener("click", () => {
+          const on = three.getAttribute("aria-pressed") !== "true";
+          set3D(m, on);
+          three.setAttribute("aria-pressed", String(on));
+          three.querySelector("span")!.textContent = on ? "2D" : "3D";
         });
       }
     })
     .catch((e) => {
       console.error(e);
-      el.innerHTML = '<p class="muted" style="padding:16px">Map could not load on this device. The list below has everything.</p>';
+      el.innerHTML = '<p style="padding:90px 20px 0 120px;color:var(--muted)">The map needs a newer browser. Every place is listed below.</p>';
     });
 </script>

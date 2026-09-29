@@ -1,29 +1,87 @@
 ---
 import Layout from "../../Layout.astro";
-import ShopCard from "../../ShopCard.astro";
-import { categories, shops, site, type Shop } from "../../data";
+import Credits from "../../Credits.astro";
+import Icon from "../../Icon.astro";
+import { categories, directions, monthLabel, shops, site, time12, type Shop } from "../../data";
 
 export function getStaticPaths() {
   return shops.map((shop) => ({ params: { slug: shop.slug }, props: { shop } }));
 }
 const { shop } = Astro.props as { shop: Shop };
+const c = categories[shop.category];
 const path = `/shop/${shop.slug}/`;
-const shareText = `${shop.name}, Mullana: ${site.url}${path}`;
+const hours = `${time12(shop.hours.open)} to ${time12(shop.hours.close)}`;
+const share = `${shop.name}, Mullana. Open ${hours}. ${site.url}${path}`;
 ---
-<Layout
-  title={`${shop.name} · Explore Mullana`}
-  description={`${categories[shop.category].en} in Mullana. Open ${shop.hours.open}–${shop.hours.close}. ${shop.about}`}
-  path={path}
->
-  <p><a href="/" class="muted">← All places</a></p>
-  <ShopCard shop={shop} full />
-  <div class="actions">
-    <a class="btn" href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}>Share on WhatsApp</a>
-    {site.reportWhatsApp && (
-      <a class="btn" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(`Report: ${shop.name} ${site.url}${path}`)}`}>Report a problem</a>
-    )}
-  </div>
+<Layout title={`${shop.name}, Mullana`} description={`${c.en} in Mullana. Open ${hours}. ${shop.about}`} path={path}>
+  <main style={`--cat:${c.color}`}>
+    <a class="back" href="/"><Icon name="back" />All of Mullana</a>
+
+    <header class="sign">
+      <h1 class="board">{shop.name}</h1>
+      <p class="cat">{c.en} <span lang="hi">{c.hi}</span></p>
+    </header>
+
+    <p class="about">{shop.about}</p>
+
+    <div class="acts">
+      <a class="btn primary" href={`tel:+91${shop.phones[0]}`}><Icon name="call" />Call {shop.phones[0]}</a>
+      {shop.whatsapp && <a class="btn" href={`https://wa.me/91${shop.phones[0]}`}><Icon name="chat" />WhatsApp</a>}
+      <a class="btn" href={directions(shop)}><Icon name="route" />Directions</a>
+      {shop.googleMaps && <a class="btn" href={shop.googleMaps}><Icon name="star" />Google reviews</a>}
+    </div>
+
+    <dl class="facts">
+      <div>
+        <dt>Hours</dt>
+        <dd>
+          Every day, {hours}
+          <span class="open-badge" data-open={shop.hours.open} data-close={shop.hours.close}
+            data-open-label={time12(shop.hours.open)} data-close-label={time12(shop.hours.close)}></span>
+        </dd>
+      </div>
+      {shop.owner && <div><dt>Owner</dt><dd>{shop.owner}</dd></div>}
+      {shop.phones.length > 1 && (
+        <div><dt>Other numbers</dt><dd>{shop.phones.slice(1).map((p) => <a href={`tel:+91${p}`}>{p}</a>)}</dd></div>
+      )}
+      <div><dt>Checked</dt><dd>{monthLabel(shop.verified)}, with the owner</dd></div>
+    </dl>
+
+    <div class="acts quiet">
+      <a class="btn" href={`https://wa.me/?text=${encodeURIComponent(share)}`}><Icon name="share" />Share</a>
+      <a class="btn" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(`Something is wrong on ${site.url}${path}: `)}`}><Icon name="flag" />Report a mistake</a>
+    </div>
+
+    <Credits />
+  </main>
 </Layout>
+
+<style>
+  main { max-width: 560px; margin: 0 auto; padding: max(12px, env(safe-area-inset-top)) 16px 0; }
+  .back { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; color: var(--muted); text-decoration: none; font-size: 16px; }
+  .back :global(svg) { width: 18px; height: 18px; }
+
+  /* The shop name set like its own signboard: category colour as the board's top band. */
+  .sign { margin-top: 10px; border-top: 10px solid var(--cat); border-radius: 4px 4px 0 0; padding-top: 14px; }
+  h1 { font-size: clamp(40px, 12vw, 60px); margin: 0; }
+  .cat { margin: 8px 0 0; color: var(--muted); font-size: 17px; }
+  .cat span { margin-left: 8px; font-family: "Anek Devanagari", var(--font); }
+  .about { font-size: 19px; margin: 16px 0 0; max-width: 40ch; }
+
+  .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 22px; }
+  .acts .primary { grid-column: 1 / -1; min-height: 52px; font-size: 17px; }
+  /* An odd last button takes the full row instead of leaving a hole. */
+  .acts > :last-child:nth-child(even) { grid-column: 1 / -1; }
+  .acts.quiet { display: flex; margin-top: 26px; }
+  .acts.quiet .btn { flex: 1; }
+
+  .facts { margin: 26px 0 0; border-top: 1px solid var(--line); }
+  .facts div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  dd a { margin-right: 12px; }
+  .facts .open-badge { display: block; margin-top: 2px; }
+</style>
 
 <script>
   import { markOpenBadges } from "../../open";
