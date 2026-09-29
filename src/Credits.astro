@@ -1,11 +1,18 @@
 ---
-import { site } from "./data";
+import { shops, site } from "./data";
+
+const counts = new Map<string, number>();
+for (const s of shops) if (s.by) counts.set(s.by, (counts.get(s.by) ?? 0) + 1);
+const names = [...counts].sort((a, b) => b[1] - a[1]).map(([n]) => n);
+const list = names.length > 8 ? [...names.slice(0, 8), "others"] : names;
+const thanks = list.length > 1 ? `${list.slice(0, -1).join(", ")} and ${list.at(-1)}` : list[0];
 ---
 <footer class="credits">
   <p>
     A free guide to Mullana, made by <a href="https://abhibansal.dev">Abhinav Bansal</a>. Phone numbers are shown
     only with the owner's consent. Something wrong? <a href={`https://wa.me/${site.reportWhatsApp}`}>Tell us on WhatsApp</a>.
   </p>
+  {names.length > 0 && <p>Listings added by {thanks}.</p>}
   <p class="small">
     Map © <a href="https://openfreemap.org">OpenFreeMap</a>{", "}<a href="https://www.openmaptiles.org/">OpenMapTiles</a>{", data © "}<a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
     Buildings from <a href="https://overturemaps.org">Overture Maps Foundation</a>, including Google Open Buildings

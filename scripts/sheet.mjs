@@ -70,6 +70,7 @@ export const rowToShop = (row, location = row.location) => {
     hours: { open: row.open, close: row.close },
     googleMaps: isUrl(String(row.location)) ? String(row.location).trim() : "",
     verified: row.verified,
+    by: String(row.by ?? "").trim(),
   };
 };
 

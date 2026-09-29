@@ -44,6 +44,7 @@ const share = `${shop.name}, Mullana. Open ${hours}. ${site.url}${path}`;
       {shop.phones.length > 1 && (
         <div><dt>Other numbers</dt><dd>{shop.phones.slice(1).map((p) => <a href={`tel:+91${p}`}>{p}</a>)}</dd></div>
       )}
+      {shop.by && <div><dt>Added by</dt><dd>{shop.by}</dd></div>}
       <div><dt>Checked</dt><dd>{monthLabel(shop.verified)}, with the owner</dd></div>
     </dl>
 

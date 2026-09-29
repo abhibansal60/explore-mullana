@@ -36,3 +36,8 @@ test("rejects bad rows", () => {
   assert.throws(() => rowToShop({ ...row, phones: "123" }), /phone/);
   assert.throws(() => rowToShop({ ...row, open: "9am" }), /HH:MM/);
 });
+
+test("by: trimmed credit, empty when absent", () => {
+  assert.equal(rowToShop({ ...row, by: "  Rohit " }).by, "Rohit");
+  assert.equal(rowToShop(row).by, "");
+});

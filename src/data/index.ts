@@ -13,6 +13,7 @@ export type Shop = {
   hours: { open: string; close: string };
   googleMaps: string;
   verified: string; // YYYY-MM
+  by?: string; // contributor credit
 };
 
 // `keys` holds Hindi and Hinglish spellings people actually type.

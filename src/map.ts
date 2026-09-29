@@ -1,10 +1,11 @@
 import type { Map as MLMap } from "maplibre-gl";
+import { isNight } from "./open";
 
 // v: 1 for shops checked with the owner, 0 for places from open map data.
 type Point = { slug: string; name: string; color: string; lat: number; lng: number; v: number };
 
 const CENTER: [number, number] = [77.047, 30.2755];
-const dark = () => matchMedia("(prefers-color-scheme: dark)").matches;
+const dark = () => matchMedia("(prefers-color-scheme: dark)").matches || isNight();
 
 export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: string) => void) {
   // Loaded only after the list is on screen, so the list never waits on WebGL.

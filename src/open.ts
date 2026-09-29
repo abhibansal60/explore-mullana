@@ -16,3 +16,12 @@ export function markOpenBadges() {
     el.classList.toggle("is-closed", !open);
   });
 }
+
+// ponytail: fixed 18:30-06:00 IST. Real sunset varies ~17:30-19:15 by season; suncalc is the upgrade.
+export function isNight(now = new Date()) {
+  const [h, m] = now
+    .toLocaleTimeString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: false })
+    .split(":");
+  const t = `${h}:${m}`;
+  return t >= "18:30" || t < "06:00";
+}
