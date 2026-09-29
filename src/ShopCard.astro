@@ -13,9 +13,9 @@ const c = categories[shop.category];
     data-open-label={time12(shop.hours.open)} data-close-label={time12(shop.hours.close)}></span>
   <span class="dist" hidden></span>
   <div class="acts">
-    <a class="btn primary" href={`tel:+91${shop.phones[0]}`}><Icon name="call" />Call</a>
-    {shop.whatsapp && <a class="btn" href={`https://wa.me/91${shop.phones[0]}`}><Icon name="chat" />WhatsApp</a>}
-    <a class="btn" href={directions(shop)}><Icon name="route" />Directions</a>
+    <a class="btn primary" data-tap="call" href={`tel:+91${shop.phones[0]}`}><Icon name="call" />Call</a>
+    {shop.whatsapp && <a class="btn" data-tap="whatsapp" href={`https://wa.me/91${shop.phones[0]}`}><Icon name="chat" />WhatsApp</a>}
+    <a class="btn" data-tap="directions" href={directions(shop)}><Icon name="route" />Directions</a>
   </div>
 </article>
 

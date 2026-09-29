@@ -10,8 +10,8 @@ const claim = `Hi, I run ${place.name} in Mullana. I'd like to add our phone num
   <h2>{place.name}</h2>
   <span class="cat">{c.en} <span lang="hi">{c.hi}</span></span>
   <div class="links">
-    <a href={directions(place)}><Icon name="route" />Directions</a>
-    <a href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(claim)}`}>Own this place?</a>
+    <a data-tap="directions" href={directions(place)}><Icon name="route" />Directions</a>
+    <a data-tap="claim" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(claim)}`}>Own this place?</a>
     <span class="dist" hidden></span>
   </div>
 </article>

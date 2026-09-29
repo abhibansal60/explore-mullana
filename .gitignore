@@ -4,3 +4,5 @@ dist/
 # Real shop data (phone numbers) never enters the repo.
 src/data/shops.json
 public/og/
+.sheet-url
+.wrangler/

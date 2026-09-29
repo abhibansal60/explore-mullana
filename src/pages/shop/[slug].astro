@@ -14,7 +14,7 @@ const hours = `${time12(shop.hours.open)} to ${time12(shop.hours.close)}`;
 const share = `${shop.name}, Mullana. Open ${hours}. ${site.url}${path}`;
 ---
 <Layout title={`${shop.name}, Mullana`} description={`${c.en} in Mullana. Open ${hours}. ${shop.about}`} path={path} image={`/og/${shop.slug}.png`}>
-  <main style={`--cat:${c.color}`}>
+  <main data-slug={shop.slug} style={`--cat:${c.color}`}>
     <a class="back" href="/"><Icon name="back" />All of Mullana</a>
 
     <header class="sign">
@@ -25,10 +25,10 @@ const share = `${shop.name}, Mullana. Open ${hours}. ${site.url}${path}`;
     <p class="about">{shop.about}</p>
 
     <div class="acts">
-      <a class="btn primary" href={`tel:+91${shop.phones[0]}`}><Icon name="call" />Call {shop.phones[0]}</a>
-      {shop.whatsapp && <a class="btn" href={`https://wa.me/91${shop.phones[0]}`}><Icon name="chat" />WhatsApp</a>}
-      <a class="btn" href={directions(shop)}><Icon name="route" />Directions</a>
-      {shop.googleMaps && <a class="btn" href={shop.googleMaps}><Icon name="star" />Google reviews</a>}
+      <a class="btn primary" data-tap="call" href={`tel:+91${shop.phones[0]}`}><Icon name="call" />Call {shop.phones[0]}</a>
+      {shop.whatsapp && <a class="btn" data-tap="whatsapp" href={`https://wa.me/91${shop.phones[0]}`}><Icon name="chat" />WhatsApp</a>}
+      <a class="btn" data-tap="directions" href={directions(shop)}><Icon name="route" />Directions</a>
+      {shop.googleMaps && <a class="btn" data-tap="reviews" href={shop.googleMaps}><Icon name="star" />Google reviews</a>}
     </div>
 
     <dl class="facts">
@@ -48,7 +48,7 @@ const share = `${shop.name}, Mullana. Open ${hours}. ${site.url}${path}`;
     </dl>
 
     <div class="acts quiet">
-      <a class="btn" href={`https://wa.me/?text=${encodeURIComponent(share)}`}><Icon name="share" />Share</a>
+      <a class="btn" data-tap="share" href={`https://wa.me/?text=${encodeURIComponent(share)}`}><Icon name="share" />Share</a>
       <a class="btn" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(`Something is wrong on ${site.url}${path}: `)}`}><Icon name="flag" />Report a mistake</a>
     </div>
 

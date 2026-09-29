@@ -6,9 +6,11 @@
     "dev": "astro dev",
     "build": "tsx scripts/og.mjs && astro build",
     "og": "tsx scripts/og.mjs",
+    "sheet": "tsx scripts/sheet.mjs",
     "preview": "astro preview",
     "buildings": "python3 scripts/buildings.py",
-    "test": "tsx --test src/*.test.ts"
+    "test": "tsx --test src/*.test.ts",
+    "taps": "node scripts/taps.mjs"
   },
   "keywords": [],
   "author": "",

@@ -16,6 +16,7 @@ Don't deploy, push, or change DNS without asking me first.
 ## How it works
 
 - `src/data/shops.json` holds the real listings. It's git-ignored so phone numbers stay out of the repo. `shops.example.json` shows the format.
+- `npm run sheet` pulls the listings: Google Form -> Sheet -> approved rows -> `src/data/shops.json`. The web app URL goes in `SHEET_URL` or a git-ignored `.sheet-url`. Nothing is published until a row is approved, and a bad row aborts the run without touching the existing file.
 - `scripts/og.mjs` renders the 1200x630 link previews (`public/og/`, git-ignored) with Playwright before each build, so WhatsApp shows a picture. Run `npm run og` on its own to redraw them.
 - Categories, with the Hindi labels and Hinglish search words, live in `src/data/index.ts`.
 - The list is plain HTML and works without the map. MapLibre loads afterwards, and the 3D buildings (about 1 MB) load only when someone taps "3D buildings".
@@ -36,3 +37,8 @@ npm run build    # static site in dist/
 ## Data and credits
 
 Basemap: OpenFreeMap / OpenMapTiles, © OpenStreetMap contributors. Buildings: Overture Maps Foundation, including Google Open Buildings (CDLA-Permissive-2.0) and Microsoft ML Buildings (ODbL). Code is MIT licensed.
+
+## Adding shops and counting taps
+
+- Shops are added through a Google Form. Its responses land in a private Sheet, and a listing goes live only after its "Approved" box is ticked. `apps-script/Code.gs` creates the Form and Sheet and serves the approved rows. `npm run sheet` pulls them into `shops.json`.
+- `npm run taps` prints this month's Call, WhatsApp, Directions, Reviews, Share and Claim taps per shop (`npm run taps -- 2026-09` for another month). Only the shop and the kind of tap are counted, no IP or device. Counts live in the Cloudflare KV namespace `explore-mullana-taps`, bound as `TAPS` in `wrangler.toml`.

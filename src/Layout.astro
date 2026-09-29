@@ -28,6 +28,16 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
   </head>
   <body>
     <slot />
+    <script is:inline>
+      // Anonymous tap counter: sends only {slug, kind}. Never blocks navigation.
+      document.addEventListener("click", (e) => {
+        try {
+          const el = e.target.closest("[data-tap]");
+          const slug = el && el.closest("[data-slug]")?.dataset.slug;
+          if (slug) navigator.sendBeacon("/api/tap", new Blob([JSON.stringify({ slug, kind: el.dataset.tap })], { type: "application/json" }));
+        } catch {}
+      });
+    </script>
   </body>
 </html>
 

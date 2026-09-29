@@ -1,0 +1,7 @@
+name = "explore-mullana"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-09-01"
+
+[[kv_namespaces]]
+binding = "TAPS"
+id = "69037c3a8de846b5bfbb5791fa6b3fce"
