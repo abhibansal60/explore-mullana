@@ -1,0 +1,51 @@
+[
+  {
+    "id": "sample-aarti",
+    "title": "Evening aarti",
+    "date": "2026-09-30",
+    "time": "19:00",
+    "place": "Mata Bala Sundari Mandir",
+    "slug": "mata-bala-sundari-mandir",
+    "kind": "religious",
+    "source": { "name": "@mata.bala.sunderi.mandir", "url": "https://www.instagram.com/mata.bala.sunderi.mandir/" },
+    "sample": true
+  },
+  {
+    "id": "sample-kirtan",
+    "title": "Kirtan at the mandir",
+    "date": "2026-10-01",
+    "time": "18:30",
+    "place": "Shiv Mandir",
+    "kind": "religious",
+    "source": { "name": "@_shiv_mandir_mullana", "url": "https://www.instagram.com/_shiv_mandir_mullana/" },
+    "sample": true
+  },
+  {
+    "id": "sample-campus",
+    "title": "Campus event at MMDU",
+    "date": "2026-10-02",
+    "place": "MMDU, Mullana",
+    "slug": "maharishi-markandeshwar-university-mmdu",
+    "kind": "campus",
+    "source": { "name": "@mmdumullana", "url": "https://www.instagram.com/mmdumullana/" },
+    "sample": true
+  },
+  {
+    "id": "sample-bazaar",
+    "title": "Weekly bazaar",
+    "date": "2026-10-03",
+    "place": "New Grain Market",
+    "slug": "new-grain-market-anaj-mandi",
+    "kind": "market",
+    "sample": true
+  },
+  {
+    "id": "sample-new",
+    "title": "New on the map: Bansal Bakery",
+    "date": "2026-10-04",
+    "place": "Mullana",
+    "slug": "bansal-bakery",
+    "kind": "community",
+    "sample": true
+  }
+]

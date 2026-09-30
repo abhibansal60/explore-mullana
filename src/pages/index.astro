@@ -4,12 +4,20 @@ import ShopCard from "../ShopCard.astro";
 import PlaceRow from "../PlaceRow.astro";
 import Credits from "../Credits.astro";
 import Icon from "../Icon.astro";
-import { categories, places, shops, site } from "../data";
+import { categories, events, places, shops, site, time12 } from "../data";
 
 const all = [...shops, ...places];
 const count = (k: string) => all.filter((s) => s.category === k).length;
 // Only categories with places, biggest first.
 const used = Object.keys(categories).filter((k) => count(k) > 0).sort((a, b) => count(b) - count(a));
+const kinds = {
+  religious: { name: "Temple", color: "#d9822b" },
+  campus: { name: "Campus", color: "#2f5d8a" },
+  market: { name: "Market", color: "#2e6b3a" },
+  community: { name: "Community", color: "var(--ink)" },
+};
+const whenSort = [...events].sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? "")));
+const spot = (slug?: string) => all.find((s) => s.slug === slug);
 const points = all.map((s) => ({
   slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng, v: "phones" in s ? 1 : 0,
 }));
@@ -30,6 +38,32 @@ const points = all.map((s) => ({
 
     <section class="sheet" aria-label="Places">
       <div class="grip" aria-hidden="true"></div>
+      <section class="today" id="today" aria-labelledby="today-h" hidden>
+        <h2 id="today-h" class="grid-h">Today in Mullana <span id="today-date" class="muted"></span></h2>
+        <div class="tcards">
+          {whenSort.map((ev) => {
+            const k = kinds[ev.kind];
+            const at = spot(ev.slug);
+            return (
+              <article class="tcard" data-date={ev.date} data-end={ev.endDate ?? ev.date} data-time={ev.time} data-time-label={ev.time ? time12(ev.time) : undefined} hidden>
+                <div class="tmeta">
+                  <span class="tkind"><i style={`background:${k.color}`}></i>{k.name}</span>
+                  {ev.sample && <span class="tsample">Sample</span>}
+                </div>
+                <p class="twhen"></p>
+                <h3 class="board">{ev.title}</h3>
+                {ev.titleHi && <p class="thi" lang="hi">{ev.titleHi}</p>}
+                <p class="tplace">{ev.place}</p>
+                <div class="tlinks">
+                  {at && <button class="btn tmap" data-pin={at.slug} data-lat={at.lat} data-lng={at.lng}>Show on map</button>}
+                  {ev.source && <a class="tsrc" href={ev.source.url} target="_blank" rel="noopener">Source</a>}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <p class="tadd"><a href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us on WhatsApp</a></p>
+      </section>
       <label class="search">
         <Icon name="search" />
         <input id="q" type="search" placeholder="Try chai, xerox, दवाई" aria-label="Search places" autocomplete="off" />
@@ -117,6 +151,32 @@ const points = all.map((s) => ({
   .tog :global(svg) { width: 17px; height: 17px; }
   .tog[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 
+  .today .grid-h { margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .today .muted { font-size: 14px; font-weight: 400; white-space: normal; }
+  .tcards {
+    display: flex; gap: 10px; margin: 0 -16px; padding: 0 16px 4px; overflow-x: auto;
+    scroll-snap-type: x mandatory; scroll-padding-left: 16px; scrollbar-width: none;
+  }
+  .tcards::-webkit-scrollbar { display: none; }
+  .tcard {
+    flex: none; width: 78%; scroll-snap-align: start; display: flex; flex-direction: column; gap: 4px;
+    padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper);
+  }
+  .tmeta { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; color: var(--muted); }
+  .tkind { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
+  .tkind i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .tsample { padding: 1px 7px; border: 1px solid var(--muted); border-radius: 4px; font-size: 12.5px; line-height: 1.4; }
+  .tcard p { margin: 0; }
+  .twhen { font-size: 15px; font-weight: 600; margin-top: 6px !important; }
+  .tcard h3 { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+  .thi { font: 400 15px/1.3 "Anek Devanagari", var(--font); color: var(--muted); }
+  .tplace { font-size: 14.5px; color: var(--muted); }
+  .tlinks { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 10px; }
+  .tmap { min-height: 40px; font-size: 14.5px; }
+  .tsrc { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; font-size: 14.5px; text-underline-offset: 3px; }
+  .tadd { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+  .tadd a { display: inline-block; padding: 6px 0; text-underline-offset: 3px; }
+
   .grid-h { font-size: 22px; font-weight: 700; margin: 18px 0 10px; line-height: 1.2; }
   .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .tile {
@@ -149,6 +209,7 @@ const points = all.map((s) => ({
     .stage { order: 2; position: relative; height: auto; }
     .sheet { order: 1; margin: 0; border-radius: 0; overflow-y: auto; box-shadow: 1px 0 0 var(--line); padding-top: 18px; }
     .grip { display: none; }
+    .tcard { width: 260px; }
     .map-btn { bottom: 24px; }
   }
   #list-view.in-cat :global(.catname) { display: none; }
@@ -157,10 +218,37 @@ const points = all.map((s) => ({
 <script>
   import { isOpen, markOpenBadges } from "../open";
   import { distLabel, metres } from "../geo";
-  import { filterMap, initMap, set3D, showMe, showTown } from "../map";
+  import { filterMap, initMap, set3D, showMe, showPin, showTown } from "../map";
 
   markOpenBadges();
   const $ = (id: string) => document.getElementById(id)!;
+
+  // Today in Mullana: all dates in IST. Past events hide, and no upcoming event hides the section.
+  (() => {
+    const ist = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", ...o });
+    const now = new Date();
+    const ymd = (d: Date) => ist(d, { year: "numeric", month: "2-digit", day: "2-digit" }).split("/").reverse().join("-");
+    const today = ymd(now);
+    const day = (s: string) => Date.parse(s + "T00:00:00Z") / 864e5;
+    const hhmm = ist(now, { hour: "2-digit", minute: "2-digit", hour12: false }).replace(/^24/, "00");
+    let shown = 0;
+    document.querySelectorAll<HTMLElement>(".tcard").forEach((c) => {
+      const { date, end, time, timeLabel } = c.dataset;
+      // A timed event stays up for two hours after it starts.
+      const [h, m] = (time ?? "23:59").split(":").map(Number);
+      const cutoff = `${String(Math.min(h + 2, 23)).padStart(2, "0")}:${h + 2 > 23 ? "59" : String(m).padStart(2, "0")}`;
+      const past = end! < today || (end! === today && date === end && hhmm > cutoff);
+      c.hidden = past;
+      if (past) return;
+      shown++;
+      const n = Math.max(0, day(date!) - day(today));
+      const at = timeLabel ? `, ${timeLabel}` : "";
+      const label = n === 0 ? "Today" : n === 1 ? "Tomorrow" : ist(new Date(Date.parse(date! + "T06:00:00Z")), { weekday: "long" });
+      c.querySelector(".twhen")!.textContent = label + at;
+    });
+    $("today").hidden = !shown;
+    $("today-date").textContent = ist(now, { weekday: "long", day: "numeric", month: "long" }).replace(",", "");
+  })();
   const q = $("q") as HTMLInputElement;
   const moreH = $("more-h");
   const rows = [...document.querySelectorAll<HTMLElement>(".row")];
@@ -325,6 +413,13 @@ const points = all.map((s) => ({
     rows.forEach((r) => r.classList.toggle("picked", r === row));
     row.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  document.querySelectorAll<HTMLElement>(".tmap").forEach((b) =>
+    b.addEventListener("click", () => {
+      const slug = b.dataset.pin!;
+      if (!(map && showPin(map, slug, +b.dataset.lng!, +b.dataset.lat!))) pick(slug);
+    }),
+  );
 
   const el = $("map");
   initMap(el, JSON.parse(el.dataset.points!), pick)
