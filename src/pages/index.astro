@@ -38,6 +38,7 @@ const points = all.map((s) => ({
           <span class="wt" id="wx-t"></span>
           <span class="wd"><b id="wx-sky"></b><span id="wx-more"></span><span id="wx-air"></span></span>
         </div>
+        <p class="pc" id="pc"><b lang="hi" id="pc-hi"></b> <span id="pc-en"></span><span id="pc-next" class="muted"></span></p>
         <div class="tcards">
           {whenSort.map((ev) => {
             const k = kinds[ev.kind];
@@ -190,6 +191,9 @@ const points = all.map((s) => ({
   .wt { font-weight: 750; font-variation-settings: "wdth" 78; font-size: 44px; line-height: 1; }
   .wd { display: flex; flex-direction: column; font-size: 14.5px; color: var(--muted); line-height: 1.35; }
   .wd b { color: var(--ink); font-weight: 600; font-size: 15.5px; }
+  .pc { margin: 0 0 12px; font-size: 15px; line-height: 1.4; }
+  .pc b { font: 600 17px "Anek Devanagari", var(--font); }
+  .pc .muted { display: block; font-size: 14.5px; white-space: normal; }
   .tadd { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
   .tadd a { display: inline-block; padding: 6px 0; text-underline-offset: 3px; }
 
@@ -244,12 +248,13 @@ const points = all.map((s) => ({
   import { isOpen, istDate, markOpenBadges, time12 } from "../open";
   import { distLabel, metres } from "../geo";
   import { airBand, loadWeather } from "../weather";
+  import { panchang, tithiName } from "../panchang";
   import { filterMap, initMap, set3D, showMe, showPin, showTown } from "../map";
 
   markOpenBadges();
   const $ = (id: string) => document.getElementById(id)!;
 
-  // Today in Mullana: all dates in IST. Past events hide, and no upcoming event hides the section.
+  // Today in Mullana: all dates in IST. Past events hide.
   // Runs again when the app comes back to the front, so an app left open overnight moves on to the new day.
   function renderToday() {
     const ist = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", ...o });
@@ -274,7 +279,18 @@ const points = all.map((s) => ({
       const label = n === 0 ? (date! < today ? "On now" : "Today") : n === 1 ? "Tomorrow" : n < 7 ? ist(d, { weekday: "long" }) : ist(d, { weekday: "short", day: "numeric", month: "short" }).replace(",", "");
       c.querySelector(".twhen")!.textContent = label + at;
     });
-    $("today").hidden = !shown;
+    // Tithi for the day: the section always has this, so it never hides.
+    const p = panchang(today);
+    const t = tithiName(p.tithi);
+    $("pc-hi").textContent = t.hi;
+    $("pc-en").textContent = t.en;
+    const short = (s: string) => ist(new Date(Date.parse(s + "T06:00:00Z")), { weekday: "short", day: "numeric", month: "short" }).replace(",", "");
+    const coming = ([["Ekadashi", p.ekadashi], ["Amavasya", p.amavasya], ["Purnima", p.purnima]] as [string, string | undefined][])
+      .filter((x): x is [string, string] => !!x[1])
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([n, d]) => `${n} ${short(d)}`);
+    $("pc-next").textContent = `Next: ${coming.join(", ")}`;
+    $("today").hidden = false;
     loadWeather()
       .then((w) => {
         $("wx-t").textContent = `${w.temp}°`;
