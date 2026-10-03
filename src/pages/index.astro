@@ -4,7 +4,7 @@ import ShopCard from "../ShopCard.astro";
 import PlaceRow from "../PlaceRow.astro";
 import Credits from "../Credits.astro";
 import Icon from "../Icon.astro";
-import { categories, events, places, shops, site, time12 } from "../data";
+import { categories, events, guide, places, shops, site, time12 } from "../data";
 
 const all = [...shops, ...places];
 const count = (k: string) => all.filter((s) => s.category === k).length;
@@ -18,15 +18,6 @@ const kinds = {
 };
 const whenSort = [...events].sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? "")));
 const spot = (slug?: string) => all.find((s) => s.slug === slug);
-// The guide pages, in the order a newcomer needs them.
-const guide = [
-  ["/helplines/", "Helplines", "ज़रूरी नंबर", "112, ambulance, women, cyber fraud, bijli"],
-  ["/festivals/", "Festivals and melas", "त्योहार और मेले", "Navratri at Mata Bala Sundari, and the year ahead"],
-  ["/mmdu/", "New at MMDU", "एमएमडीयू में नए हैं?", "Your first week: SIM, bank, xerox, food, doctor"],
-  ["/getting-here/", "Getting here", "कैसे पहुँचें", "Trains, buses and distances to nearby cities"],
-  ["/around/", "Day trips", "आसपास घूमें", "Kurukshetra, Kalesar, Adi Badri and more"],
-  ["/about/", "About Mullana", "मुलाना के बारे में", "The town, its temple and its university"],
-];
 const points = all.map((s) => ({
   slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng, v: "phones" in s ? 1 : 0,
 }));
@@ -99,8 +90,8 @@ const points = all.map((s) => ({
         </nav>
         <h2 class="grid-h">Know Mullana</h2>
         <nav class="guide" aria-label="Guide">
-          {guide.map(([href, en, hi, what]) => (
-            <a href={href}><span class="en">{en} <span lang="hi">{hi}</span></span><span class="what">{what}</span></a>
+          {guide.map(({ slug, en, hi, what }) => (
+            <a href={`/${slug}/`}><span class="en">{en} <span lang="hi">{hi}</span></span><span class="what">{what}</span></a>
           ))}
         </nav>
         <div class="addcard">

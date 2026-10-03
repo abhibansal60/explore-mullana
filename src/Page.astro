@@ -3,14 +3,14 @@
 import Layout from "./Layout.astro";
 import Credits from "./Credits.astro";
 import Icon from "./Icon.astro";
-import { site } from "./data";
+import { guide, site } from "./data";
 
-const { title, hi, intro, description, path, color = "var(--stone)" } = Astro.props as {
-  title: string; hi?: string; intro?: string; description: string; path: string; color?: string;
-};
+const { slug, intro, description } = Astro.props as { slug: string; intro?: string; description: string };
+const { en: title, hi, color } = guide.find((g) => g.slug === slug)!;
+const path = `/${slug}/`;
 const share = `${title}, Mullana: ${site.url}${path}`;
 ---
-<Layout title={`${title}, Mullana`} description={description} path={path}>
+<Layout title={`${title}, Mullana`} description={description} path={path} image={`/og/${slug}.png`}>
   <main class="page" style={`--cat:${color}`}>
     <a class="back" href="/"><Icon name="back" />All of Mullana</a>
     <header class="sign">

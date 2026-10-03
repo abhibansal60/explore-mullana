@@ -53,12 +53,9 @@ const groups: { h: string; items: [string, string, string][] }[] = [
 const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)} ${n.slice(7)}` : n);
 ---
 <Page
-  title="Helplines"
-  hi="ज़रूरी नंबर"
+  slug="helplines"
   intro="Tap a number to call. All of these are free."
   description="Emergency and helpline numbers for Mullana and Haryana: 112, ambulance, women, child, cyber fraud, electricity and more."
-  path="/helplines/"
-  color="#b8322a"
 >
   {groups.map((g) => (
     <>

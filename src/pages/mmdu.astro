@@ -1,6 +1,6 @@
 ---
 import Page from "../Page.astro";
-import { categories, places, shops } from "../data";
+import { places, shops } from "../data";
 
 // Link to a category only when it has places, else to a search on the home page.
 const used = new Set([...shops, ...places].map((s) => s.category));
@@ -40,12 +40,9 @@ const steps: { h: string; body: string; link?: [string, string] }[] = [
 ];
 ---
 <Page
-  title="New at MMDU"
-  hi="एमएमडीयू में नए हैं?"
+  slug="mmdu"
   intro="Your first week in Mullana, sorted. Six things every new student needs, and where to find them in town."
   description="A first-week guide for new MMDU students in Mullana: SIM, bank, xerox, doctor, food and getting home."
-  path="/mmdu/"
-  color={categories.education.color}
 >
   <ol class="steps">
     {steps.map((s) => (

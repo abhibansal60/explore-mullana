@@ -1,7 +1,7 @@
 // Renders 1200x630 Open Graph previews into public/og/ (git-ignored: they carry local shop data).
 import { mkdirSync } from "node:fs";
 import { chromium } from "playwright";
-import { categories, shops, time12 } from "../src/data/index.ts";
+import { categories, guide, shops, time12 } from "../src/data/index.ts";
 
 const fonts =
   "https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@75..100,400..700&family=Anek+Latin:wdth,wght@75..100,400..800&display=swap";
@@ -54,10 +54,20 @@ const shopPage = (s) => {
   );
 };
 
+const guidePage = (g) =>
+  page(
+    g.color,
+    `<div class="main">
+      <div class="title" style="font-size:120px">${esc(g.en)}</div>
+      <p style="margin-top:24px;font-size:44px;font-family:'Anek Devanagari'">${esc(g.hi)}</p>
+      <p class="muted" style="margin-top:10px;font-size:34px">${esc(g.what)}</p>
+    </div>${stone(1)}`,
+  );
+
 mkdirSync("public/og", { recursive: true });
 const browser = await chromium.launch();
 const tab = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-const jobs = [["home", homePage], ...shops.map((s) => [s.slug, shopPage(s)])];
+const jobs = [["home", homePage], ...shops.map((s) => [s.slug, shopPage(s)]), ...guide.map((g) => [g.slug, guidePage(g)])];
 for (const [name, html] of jobs) {
   await tab.setContent(html, { waitUntil: "networkidle" });
   await tab.evaluate(() => document.fonts.ready);

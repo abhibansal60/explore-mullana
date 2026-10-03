@@ -88,3 +88,13 @@ export const site = {
   // Google Form for suggesting a missing shop.
   addFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScEuSJpiYXkC19pRzMMXokWsqeKQH_kKTj8GHhF5dtNIOTq1w/viewform",
 };
+
+// The guide pages, in the order a newcomer needs them. `color` is the page's top band.
+export const guide = [
+  { slug: "helplines", en: "Helplines", hi: "ज़रूरी नंबर", what: "112, ambulance, women, cyber fraud, bijli", color: "#b8322a" },
+  { slug: "festivals", en: "Festivals and melas", hi: "त्योहार और मेले", what: "Navratri at Mata Bala Sundari, and the year ahead", color: "#d9822b" },
+  { slug: "mmdu", en: "New at MMDU", hi: "एमएमडीयू में नए हैं?", what: "Your first week: SIM, bank, xerox, food, doctor", color: "#2f5d8a" },
+  { slug: "getting-here", en: "Getting here", hi: "कैसे पहुँचें", what: "Trains, buses and distances to nearby cities", color: "#c79500" },
+  { slug: "around", en: "Day trips", hi: "आसपास घूमें", what: "Kurukshetra, Kalesar, Adi Badri and more", color: "#2e6b3a" },
+  { slug: "about", en: "About Mullana", hi: "मुलाना के बारे में", what: "The town, its temple and its university", color: "#7a5a3c" },
+];
