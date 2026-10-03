@@ -58,6 +58,22 @@ export const places: Place[] = JSON.parse(readFileSync("src/data/places.json", "
   (p: Place) => !shops.some((s) => s.name.toLowerCase() === p.name.toLowerCase()),
 );
 
+// Public info only. `sample` items are placeholders for previews.
+export type Event = {
+  id: string;
+  title: string;
+  titleHi?: string;
+  date: string; // YYYY-MM-DD
+  time?: string; // HH:MM
+  endDate?: string;
+  place: string;
+  slug?: string;
+  kind: "religious" | "campus" | "market" | "community";
+  source?: { name: string; url: string };
+  sample?: true;
+};
+export const events: Event[] = JSON.parse(readFileSync("src/data/events.json", "utf8"));
+
 export const monthLabel = (ym: string) =>
   new Date(`${ym}-01T00:00:00`).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 
