@@ -1,51 +1,327 @@
 [
-  {
-    "id": "sample-aarti",
-    "title": "Evening aarti",
-    "date": "2026-09-30",
-    "time": "19:00",
-    "place": "Mata Bala Sundari Mandir",
-    "slug": "mata-bala-sundari-mandir",
-    "kind": "religious",
-    "source": { "name": "@mata.bala.sunderi.mandir", "url": "https://www.instagram.com/mata.bala.sunderi.mandir/" },
-    "sample": true
-  },
-  {
-    "id": "sample-kirtan",
-    "title": "Kirtan at the mandir",
-    "date": "2026-10-01",
-    "time": "18:30",
-    "place": "Shiv Mandir",
-    "kind": "religious",
-    "source": { "name": "@_shiv_mandir_mullana", "url": "https://www.instagram.com/_shiv_mandir_mullana/" },
-    "sample": true
-  },
-  {
-    "id": "sample-campus",
-    "title": "Campus event at MMDU",
-    "date": "2026-10-02",
-    "place": "MMDU, Mullana",
-    "slug": "maharishi-markandeshwar-university-mmdu",
-    "kind": "campus",
-    "source": { "name": "@mmdumullana", "url": "https://www.instagram.com/mmdumullana/" },
-    "sample": true
-  },
-  {
-    "id": "sample-bazaar",
-    "title": "Weekly bazaar",
-    "date": "2026-10-03",
-    "place": "New Grain Market",
-    "slug": "new-grain-market-anaj-mandi",
-    "kind": "market",
-    "sample": true
-  },
-  {
-    "id": "sample-new",
-    "title": "New on the map: Bansal Bakery",
-    "date": "2026-10-04",
-    "place": "Mullana",
-    "slug": "bansal-bakery",
-    "kind": "community",
-    "sample": true
+ {
+  "id": "navratri-2026",
+  "title": "Sharad Navratri",
+  "titleHi": "शारदीय नवरात्रि",
+  "date": "2026-10-11",
+  "endDate": "2026-10-19",
+  "place": "Mata Bala Sundari Mandir",
+  "slug": "mata-bala-sundari-mandir",
+  "kind": "religious",
+  "note": "Nine nights of the Devi. The mandir is at its busiest; go early for darshan.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-october.html?year=2026"
   }
+ },
+ {
+  "id": "ashtami-navami-2026",
+  "title": "Durga Ashtami and Maha Navami",
+  "titleHi": "दुर्गा अष्टमी और महानवमी",
+  "date": "2026-10-19",
+  "place": "Devi temples across Mullana",
+  "kind": "religious",
+  "note": "Kanjak puja in homes in the morning.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-october.html?year=2026"
+  }
+ },
+ {
+  "id": "dussehra-2026",
+  "title": "Dussehra",
+  "titleHi": "दशहरा",
+  "date": "2026-10-20",
+  "place": "Barara, 4 km",
+  "kind": "festival",
+  "note": "Barara, next door, is known for one of the tallest Ravan effigies in the country. Check the time locally.",
+  "source": {
+   "name": "Wikipedia: Barara",
+   "url": "https://en.wikipedia.org/wiki/Barara"
+  }
+ },
+ {
+  "id": "karwa-chauth-2026",
+  "title": "Karwa Chauth",
+  "titleHi": "करवा चौथ",
+  "date": "2026-10-29",
+  "kind": "festival",
+  "note": "Moonrise is the moment everyone waits for.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-october.html?year=2026"
+  }
+ },
+ {
+  "id": "dhanteras-2026",
+  "title": "Dhanteras",
+  "titleHi": "धनतेरस",
+  "date": "2026-11-06",
+  "place": "Mullana market",
+  "kind": "festival",
+  "note": "The busiest day of the year at the jewellers and utensil shops.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-november.html?year=2026"
+  }
+ },
+ {
+  "id": "diwali-2026",
+  "title": "Diwali",
+  "titleHi": "दीवाली",
+  "date": "2026-11-08",
+  "kind": "festival",
+  "note": "Lakshmi puja in the evening. Sweet shops sell out early, so order ahead.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-november.html?year=2026"
+  }
+ },
+ {
+  "id": "govardhan-2026",
+  "title": "Govardhan Puja",
+  "titleHi": "गोवर्धन पूजा",
+  "date": "2026-11-10",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-november.html?year=2026"
+  }
+ },
+ {
+  "id": "bhai-dooj-2026",
+  "title": "Bhai Dooj",
+  "titleHi": "भाई दूज",
+  "date": "2026-11-11",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-november.html?year=2026"
+  }
+ },
+ {
+  "id": "chhath-2026",
+  "title": "Chhath Puja",
+  "titleHi": "छठ पूजा",
+  "date": "2026-11-15",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-november.html?year=2026"
+  }
+ },
+ {
+  "id": "gurpurab-2026",
+  "title": "Guru Nanak Jayanti",
+  "titleHi": "गुरु नानक जयंती",
+  "date": "2026-11-24",
+  "kind": "festival",
+  "note": "Gurpurab: prabhat pheris in the days before, langar on the day.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-november.html?year=2026"
+  }
+ },
+ {
+  "id": "kapal-mochan-2026",
+  "title": "Kapal Mochan Mela",
+  "titleHi": "कपाल मोचन मेला",
+  "date": "2026-11-24",
+  "place": "Bilaspur, Yamunanagar, 45 km",
+  "kind": "festival",
+  "note": "Kartik Purnima fair at the sacred tanks, with lakhs of pilgrims. Expect heavy traffic toward Bilaspur.",
+  "source": {
+   "name": "Wikipedia: Kapal Mochan",
+   "url": "https://en.wikipedia.org/wiki/Kapal_Mochan"
+  }
+ },
+ {
+  "id": "lohri-2027",
+  "title": "Lohri",
+  "titleHi": "लोहड़ी",
+  "date": "2027-01-14",
+  "kind": "festival",
+  "note": "Bonfires in the evening, rewari and moongphali.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-january.html?year=2027"
+  }
+ },
+ {
+  "id": "sankranti-2027",
+  "title": "Makar Sankranti",
+  "titleHi": "मकर संक्रांति",
+  "date": "2027-01-15",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-january.html?year=2027"
+  }
+ },
+ {
+  "id": "republic-2027",
+  "title": "Republic Day",
+  "titleHi": "गणतंत्र दिवस",
+  "date": "2027-01-26",
+  "kind": "community",
+  "note": "Flag hoisting at schools and at MMDU.",
+  "source": {
+   "name": "National holiday",
+   "url": "https://www.india.gov.in/"
+  }
+ },
+ {
+  "id": "basant-2027",
+  "title": "Vasant Panchami",
+  "titleHi": "वसंत पंचमी",
+  "date": "2027-02-11",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-february.html?year=2027"
+  }
+ },
+ {
+  "id": "shivratri-2027",
+  "title": "Maha Shivratri",
+  "titleHi": "महाशिवरात्रि",
+  "date": "2027-03-06",
+  "place": "Shiv mandirs across Mullana",
+  "kind": "religious",
+  "note": "Jalabhishek from early morning.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-march.html?year=2027"
+  }
+ },
+ {
+  "id": "holika-2027",
+  "title": "Holika Dahan",
+  "titleHi": "होलिका दहन",
+  "date": "2027-03-21",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-march.html?year=2027"
+  }
+ },
+ {
+  "id": "holi-2027",
+  "title": "Holi",
+  "titleHi": "होली",
+  "date": "2027-03-22",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-march.html?year=2027"
+  }
+ },
+ {
+  "id": "chaitra-navratri-2027",
+  "title": "Chaitra Navratri",
+  "titleHi": "चैत्र नवरात्रि",
+  "date": "2027-04-07",
+  "endDate": "2027-04-15",
+  "place": "Mata Bala Sundari Mandir",
+  "slug": "mata-bala-sundari-mandir",
+  "kind": "religious",
+  "note": "The spring Navratri, ending on Ram Navami.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-april.html?year=2027"
+  }
+ },
+ {
+  "id": "baisakhi-2027",
+  "title": "Baisakhi",
+  "titleHi": "बैसाखी",
+  "date": "2027-04-14",
+  "kind": "festival",
+  "note": "Harvest festival. The wheat starts reaching the grain market around now.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-april.html?year=2027"
+  }
+ },
+ {
+  "id": "ram-navami-2027",
+  "title": "Ram Navami",
+  "titleHi": "राम नवमी",
+  "date": "2027-04-15",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-april.html?year=2027"
+  }
+ },
+ {
+  "id": "hanuman-2027",
+  "title": "Hanuman Jayanti",
+  "titleHi": "हनुमान जयंती",
+  "date": "2027-04-20",
+  "kind": "religious",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-april.html?year=2027"
+  }
+ },
+ {
+  "id": "teej-2027",
+  "title": "Hariyali Teej",
+  "titleHi": "हरियाली तीज",
+  "date": "2027-08-04",
+  "kind": "festival",
+  "note": "Haryana's own festival of the monsoon: swings, ghevar and mehndi.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-august.html?year=2027"
+  }
+ },
+ {
+  "id": "independence-2027",
+  "title": "Independence Day",
+  "titleHi": "स्वतंत्रता दिवस",
+  "date": "2027-08-15",
+  "kind": "community",
+  "source": {
+   "name": "National holiday",
+   "url": "https://www.india.gov.in/"
+  }
+ },
+ {
+  "id": "rakhi-2027",
+  "title": "Raksha Bandhan",
+  "titleHi": "रक्षा बंधन",
+  "date": "2027-08-17",
+  "kind": "festival",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-august.html?year=2027"
+  }
+ },
+ {
+  "id": "janmashtami-2027",
+  "title": "Janmashtami",
+  "titleHi": "जन्माष्टमी",
+  "date": "2027-08-25",
+  "kind": "religious",
+  "note": "Midnight celebrations and jhankis at the mandirs.",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-august.html?year=2027"
+  }
+ },
+ {
+  "id": "navratri-2027",
+  "title": "Sharad Navratri",
+  "titleHi": "शारदीय नवरात्रि",
+  "date": "2027-09-30",
+  "place": "Mata Bala Sundari Mandir",
+  "slug": "mata-bala-sundari-mandir",
+  "kind": "religious",
+  "source": {
+   "name": "Drik Panchang",
+   "url": "https://www.drikpanchang.com/festivals/month/festivals-september.html?year=2027"
+  }
+ }
 ]

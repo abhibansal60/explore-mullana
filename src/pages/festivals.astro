@@ -1,0 +1,59 @@
+---
+import Page from "../Page.astro";
+import { events, kinds, time12 } from "../data";
+
+const sorted = events.filter((e) => !e.sample).sort((a, b) => a.date.localeCompare(b.date));
+const month = (ymd: string) => new Date(ymd + "T06:00:00Z").toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
+const months = [...new Set(sorted.map((e) => month(e.date)))];
+const dd = (ymd: string) => new Date(ymd + "T06:00:00Z");
+const day = (ymd: string) => dd(ymd).toLocaleDateString("en-IN", { day: "numeric", timeZone: "UTC" });
+const wk = (ymd: string) => dd(ymd).toLocaleDateString("en-IN", { weekday: "short", timeZone: "UTC" });
+const span = (a: string, b?: string) =>
+  b && b !== a ? `to ${dd(b).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).replace(",", "")}` : "";
+---
+<Page
+  slug="festivals"
+  intro="Festivals, melas and big days in Mullana for the year ahead. Dates follow the Hindu calendar, so check with the mandir close to the day."
+  description="Festivals and melas in Mullana: Navratri at Mata Bala Sundari Mandir, Dussehra, Diwali, Lohri, Holi, Baisakhi, Teej and more, with dates."
+>
+  {months.map((m) => (
+    <section class="month" data-month>
+      <h2>{m}</h2>
+      <ul class="rows">
+        {sorted.filter((e) => month(e.date) === m).map((e) => (
+          <li class="ev" data-end={e.endDate ?? e.date} style={`--k:${kinds[e.kind].color}`}>
+            <span class="d"><b class="board">{day(e.date)}</b><span>{wk(e.date)}</span></span>
+            <span class="t">
+              <b>{e.title}</b>
+              {e.titleHi && <span class="hi" lang="hi">{e.titleHi}</span>}
+              <span class="muted">{[span(e.date, e.endDate), e.time && time12(e.time), e.place].filter(Boolean).join(", ")}</span>
+              {e.note && <span class="note">{e.note}</span>}
+              {e.source && <a class="src" href={e.source.url} target="_blank" rel="noopener">{e.source.name}</a>}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+  <p class="src">Festival dates from the Government of India holiday list and the Hindu calendar (drikpanchang.com) for Ambala. Something missing, like a jagran or a mela in your mohalla? Tell us with "Report a mistake" below.</p>
+</Page>
+
+<style>
+  .ev { display: grid; grid-template-columns: 52px 1fr; gap: 12px; }
+  .d { display: flex; flex-direction: column; align-items: center; border-top: 4px solid var(--k); padding-top: 4px; }
+  .d b { font-size: 30px; }
+  .d span { font-size: 13px; color: var(--muted); }
+  .t { display: flex; flex-direction: column; gap: 1px; }
+  .t b { font-weight: 650; font-size: 17px; }
+  .t .hi { font: 400 15px/1.3 "Anek Devanagari", var(--font); color: var(--muted); }
+  .t .muted { font-size: 14.5px; }
+  .note { font-size: 15px; margin-top: 4px; }
+  .t .src { margin-top: 2px; }
+</style>
+
+<script>
+  // Hide what's over (IST). The page is built ahead of time, so this runs on the phone.
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  document.querySelectorAll<HTMLElement>(".ev").forEach((e) => (e.hidden = e.dataset.end! < today));
+  document.querySelectorAll<HTMLElement>("[data-month]").forEach((m) => (m.hidden = !m.querySelector(".ev:not([hidden])")));
+</script>

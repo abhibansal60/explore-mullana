@@ -1,0 +1,78 @@
+---
+import Page from "../Page.astro";
+
+const facts: [string, string][] = [
+  ["District", "Ambala, Haryana"],
+  ["Tehsil and block", "Mullana tehsil, Barara block"],
+  ["Run by", "Mullana Gram Panchayat"],
+  ["Assembly seat", "Mulana (Vidhan Sabha), Ambala (Lok Sabha)"],
+  ["PIN and STD code", "133203, 01731"],
+  ["Vehicle numbers", "HR-54"],
+  ["People", "4,956 in the 2011 census, in 910 households, before counting the thousands of students at MMDU"],
+  ["Literacy", "85% (men 91%, women 78%)"],
+  ["Height above sea", "About 264 m"],
+];
+// Ambala IMD normals 1991-2020; Mullana is 30 km away and much the same.
+const climate: [string, number, number, number][] = [
+  ["Jan", 18, 7, 31], ["Feb", 23, 10, 36], ["Mar", 28, 14, 29], ["Apr", 35, 20, 20],
+  ["May", 38, 24, 35], ["Jun", 38, 26, 111], ["Jul", 35, 26, 257], ["Aug", 34, 25, 228],
+  ["Sep", 33, 23, 137], ["Oct", 32, 18, 14], ["Nov", 27, 12, 7], ["Dec", 21, 8, 15],
+];
+const maxRain = Math.max(...climate.map((c) => c[3]));
+---
+<Page
+  slug="about"
+  intro="A village on the Ambala to Jagadhri highway that became a university town. Its old name was Devi Garh, after the temples around it."
+  description="About Mullana, Ambala: its old name Devi Garh, Mata Bala Sundari Mandir, Maharishi Markandeshwar University, census facts and the weather through the year."
+>
+  <h2>The town</h2>
+  <p>
+    Mullana sits in the flat, green wheat-and-sugarcane country between Ambala and Yamunanagar. For most of its history it was a farming village with a grain market. In 1993 an
+    engineering college opened on the highway outside the village; it grew into Maharishi Markandeshwar University, with a
+    medical college and hospital, and Mullana became the place thousands of students from across India call home for four or
+    five years.
+  </p>
+  <p>
+    The market, the <a href="/place/new-grain-market-anaj-mandi/">anaj mandi</a> and
+    the <a href="/place/mata-bala-sundari-mandir/">Mata Bala Sundari Mandir</a> are still the heart of the village. The mandi buys
+    wheat, mustard, maize and sunflower from farms around Mullana.
+  </p>
+
+  <h2>Mullana in numbers</h2>
+  <ul class="rows facts">
+    {facts.map(([k, v]) => <li><span class="k">{k}</span><span>{v}</span></li>)}
+  </ul>
+
+  <h2>Weather through the year</h2>
+  <p>Hot summers, a wet monsoon from late June to September, and cold, foggy winter mornings in December and January.</p>
+  <div class="clim" role="table" aria-label="Average high, low and rain by month">
+    {climate.map(([m, hi, lo, rain]) => (
+      <div role="row">
+        <span role="cell" class="m">{m}</span>
+        <span role="cell" class="t"><b>{hi}°</b> {lo}°</span>
+        <span role="cell" class="bar"><i style={`width:${Math.max(2, (rain / maxRain) * 100)}%`}></i></span>
+        <span role="cell" class="mm">{rain} mm</span>
+      </div>
+    ))}
+  </div>
+  <p class="src">Average high, low and rain at Ambala (IMD 1991 to 2020). Census 2011 figures via villageinfo.in; old name and other facts from Wikipedia.</p>
+
+  <h2>Help write this page</h2>
+  <p>
+    The story of Mata Bala Sundari Mandir, how Mullana got its name, the old families and the old shops: none of this is written down
+    anywhere online. If you know it, tell us with "Report a mistake" below, and we'll add it with your name.
+  </p>
+</Page>
+
+<style>
+  .facts li { display: grid; grid-template-columns: 130px 1fr; gap: 12px; }
+  .facts .k { color: var(--muted); }
+  .clim { margin-top: 12px; display: grid; gap: 4px; }
+  .clim > div { display: grid; grid-template-columns: 36px 70px 1fr 56px; align-items: center; gap: 8px; font-size: 15px; }
+  .clim .m { color: var(--muted); }
+  .clim .t b { font-weight: 650; }
+  .clim .t { white-space: nowrap; }
+  .bar { height: 10px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--focus); }
+  .mm { text-align: right; color: var(--muted); font-size: 14px; }
+</style>

@@ -4,18 +4,12 @@ import ShopCard from "../ShopCard.astro";
 import PlaceRow from "../PlaceRow.astro";
 import Credits from "../Credits.astro";
 import Icon from "../Icon.astro";
-import { categories, events, guide, places, shops, site, time12 } from "../data";
+import { categories, events, guide, kinds, places, shops, site, time12 } from "../data";
 
 const all = [...shops, ...places];
 const count = (k: string) => all.filter((s) => s.category === k).length;
 // Only categories with places, biggest first.
 const used = Object.keys(categories).filter((k) => count(k) > 0).sort((a, b) => count(b) - count(a));
-const kinds = {
-  religious: { name: "Temple", color: "#d9822b" },
-  campus: { name: "Campus", color: "#2f5d8a" },
-  market: { name: "Market", color: "#2e6b3a" },
-  community: { name: "Community", color: "var(--ink)" },
-};
 const whenSort = [...events].sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? "")));
 const spot = (slug?: string) => all.find((s) => s.slug === slug);
 const points = all.map((s) => ({
@@ -57,7 +51,7 @@ const points = all.map((s) => ({
                 <p class="twhen"></p>
                 <h3 class="board">{ev.title}</h3>
                 {ev.titleHi && <p class="thi" lang="hi">{ev.titleHi}</p>}
-                <p class="tplace">{ev.place}</p>
+                {ev.place && <p class="tplace">{ev.place}</p>}
                 <div class="tlinks">
                   {at && <button class="btn tmap" data-pin={at.slug} data-lat={at.lat} data-lng={at.lng}>Show on map</button>}
                   {ev.source && <a class="tsrc" href={ev.source.url} target="_blank" rel="noopener">Source</a>}
@@ -66,7 +60,7 @@ const points = all.map((s) => ({
             );
           })}
         </div>
-        <p class="tadd"><a href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us on WhatsApp</a></p>
+        <p class="tadd"><a href="/festivals/">All festivals and melas this year</a><br /><a href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us on WhatsApp</a></p>
       </section>
       <label class="search">
         <Icon name="search" />
@@ -258,12 +252,14 @@ const points = all.map((s) => ({
       const [h, m] = (time ?? "23:59").split(":").map(Number);
       const cutoff = `${String(Math.min(h + 2, 23)).padStart(2, "0")}:${h + 2 > 23 ? "59" : String(m).padStart(2, "0")}`;
       const past = end! < today || (end! === today && date === end && hhmm > cutoff);
-      c.hidden = past;
-      if (past) return;
-      shown++;
+      // The next two weeks only; the festivals page has the rest of the year.
       const n = Math.max(0, day(date!) - day(today));
+      c.hidden = past || n > 14 || shown >= 6;
+      if (c.hidden) return;
+      shown++;
       const at = timeLabel ? `, ${timeLabel}` : "";
-      const label = n === 0 ? "Today" : n === 1 ? "Tomorrow" : ist(new Date(Date.parse(date! + "T06:00:00Z")), { weekday: "long" });
+      const d = new Date(Date.parse(date! + "T06:00:00Z"));
+      const label = n === 0 ? (date! < today ? "On now" : "Today") : n === 1 ? "Tomorrow" : n < 7 ? ist(d, { weekday: "long" }) : ist(d, { weekday: "short", day: "numeric", month: "short" }).replace(",", "");
       c.querySelector(".twhen")!.textContent = label + at;
     });
     $("today").hidden = !shown;

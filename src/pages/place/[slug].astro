@@ -2,7 +2,7 @@
 import Layout from "../../Layout.astro";
 import Credits from "../../Credits.astro";
 import Icon from "../../Icon.astro";
-import { categories, directions, landmarks, places, shops, site, type Place } from "../../data";
+import { categories, directions, events, landmarks, places, shops, site, type Place } from "../../data";
 import { distLabel, metres } from "../../geo";
 
 export function getStaticPaths() {
@@ -21,6 +21,9 @@ const near = [...shops, ...places]
   .map((p) => ({ p, m: metres(here, [p.lat, p.lng]) }))
   .sort((a, b) => a.m - b.m)
   .slice(0, 5);
+const here_events = events.filter((e) => e.slug === place.slug).sort((a, b) => a.date.localeCompare(b.date));
+const fmt = (ymd: string) =>
+  new Date(ymd + "T06:00:00Z").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).replace(/,/g, "");
 const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/place/${p.slug}/`);
 ---
 <Layout title={`${place.name}, Mullana`} description={note?.about ?? `${c.en} in Mullana, with directions.`} path={path}>
@@ -47,6 +50,17 @@ const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/pl
       </div>
     )}
 
+    {here_events.length > 0 && (
+      <section id="soon">
+        <h2>Coming up here</h2>
+        <ul class="near">
+          {here_events.map((e) => (
+            <li class="ev" data-end={e.endDate ?? e.date}><b>{e.title}</b><span>{fmt(e.date)}{e.endDate && ` to ${fmt(e.endDate)}`}</span></li>
+          ))}
+        </ul>
+      </section>
+    )}
+
     <h2>Nearby</h2>
     <ul class="near">
       {near.map(({ p, m }) => (
@@ -56,10 +70,21 @@ const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/pl
       ))}
     </ul>
 
+    <a class="btn report" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(`About ${site.url}${path}: `)}`}><Icon name="flag" />Report a mistake or add something</a>
+
     <p class="src">Location: {place.source}.{note?.source && <> About: <a href={note.source}>source</a>.</>}</p>
     <Credits />
   </main>
 </Layout>
+
+<script>
+  // Hide what's over (IST); drop the section when nothing is left.
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const evs = [...document.querySelectorAll<HTMLElement>(".ev")];
+  evs.forEach((e) => (e.hidden = e.dataset.end! < today));
+  const soon = document.getElementById("soon");
+  if (soon) soon.hidden = evs.every((e) => e.hidden);
+</script>
 
 <style>
   main { max-width: 560px; margin: 0 auto; padding: max(12px, env(safe-area-inset-top)) 16px 0; }
@@ -84,5 +109,8 @@ const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/pl
   .near li::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 2px; background: var(--cat); }
   .near a { font-weight: 600; text-underline-offset: 3px; }
   .near span { color: var(--muted); font-size: 14.5px; white-space: nowrap; }
+  .near .ev { flex-direction: column; gap: 0; }
+  .near .ev::before { background: var(--stone); }
+  .report { width: 100%; margin-top: 22px; }
   .src { color: var(--muted); font-size: 13.5px; margin-top: 18px; }
 </style>

@@ -61,11 +61,19 @@ export type Event = {
   date: string; // YYYY-MM-DD
   time?: string; // HH:MM
   endDate?: string;
-  place: string;
+  place?: string; // left out when it's all of Mullana
   slug?: string;
-  kind: "religious" | "campus" | "market" | "community";
+  kind: keyof typeof kinds;
+  note?: string; // one line of what to expect
   source?: { name: string; url: string };
   sample?: true;
+};
+export const kinds = {
+  festival: { name: "Festival", color: "#a86a12" },
+  religious: { name: "Temple", color: "#d9822b" },
+  campus: { name: "Campus", color: "#2f5d8a" },
+  market: { name: "Market", color: "#2e6b3a" },
+  community: { name: "Community", color: "var(--ink)" },
 };
 export const events: Event[] = JSON.parse(readFileSync("src/data/events.json", "utf8"));
 
