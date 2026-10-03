@@ -39,12 +39,7 @@ export const categories: Record<string, { en: string; hi: string; keys: string; 
   places: { en: "Places", hi: "जगहें", keys: "mandir temple park gurudwara gate", color: "#7a5a3c" },
 };
 
-// "08:00" -> "8 am", "21:30" -> "9:30 pm"
-export const time12 = (hhmm: string) => {
-  const [h, m] = hhmm.split(":").map(Number);
-  const h12 = h % 12 || 12;
-  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${h < 12 ? "am" : "pm"}`;
-};
+export { time12 } from "../open";
 
 // shops.json is git-ignored so phone numbers stay out of the public repo.
 // Resolved from the project root: import.meta.url points into the build output.

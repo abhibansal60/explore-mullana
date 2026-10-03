@@ -1,0 +1,80 @@
+---
+import Page from "../Page.astro";
+import { categories, places, shops } from "../data";
+
+// Link to a category only when it has places, else to a search on the home page.
+const used = new Set([...shops, ...places].map((s) => s.category));
+const find = (cat: string, q: string) => (used.has(cat) ? `/#${cat}` : `/?q=${encodeURIComponent(q)}`);
+
+const steps: { h: string; body: string; link?: [string, string] }[] = [
+  {
+    h: "Get a local SIM",
+    body: "Carry your Aadhaar; the shop does an e-KYC with your thumbprint. A new SIM can take a few hours to start working. Ask seniors which network works best in your hostel block.",
+    link: [find("mobile", "mobile"), "Mobile and recharge shops"],
+  },
+  {
+    h: "Open a bank account, or find an ATM",
+    body: "Your fee receipts and scholarships often need a bank account. Take your Aadhaar, PAN (or Form 60), admission letter and two photos. Axis Bank has a branch and ATM in town.",
+    link: [find("bank", "atm"), "Banks and ATMs"],
+  },
+  {
+    h: "Find your xerox shop",
+    body: "You will print and photocopy more than you expect: forms, assignments, notes before exams. The shops near the gate get a queue in exam week, so print the day before.",
+    link: [find("print", "xerox"), "Stationery and print"],
+  },
+  {
+    h: "Know where to go when you're unwell",
+    body: "MMIMSR, the university's own hospital, is on campus with a 24-hour emergency. The government community health centre (CHC Mullana) is in town. In an emergency, call 112 or 108.",
+    link: [find("medical", "dawai"), "Doctors, hospitals and chemists"],
+  },
+  {
+    h: "Eat something that isn't mess food",
+    body: "Chai stalls, bakeries and cafes around the market and the gate.",
+    link: [find("food", "chai"), "Food and chai"],
+  },
+  {
+    h: "Work out how you'll get home",
+    body: "Ambala Cantt is the big railway station and the usual way home. Buses and shared autos run along the Ambala to Jagadhri road.",
+    link: ["/getting-here/", "Getting here and away"],
+  },
+];
+---
+<Page
+  title="New at MMDU"
+  hi="एमएमडीयू में नए हैं?"
+  intro="Your first week in Mullana, sorted. Six things every new student needs, and where to find them in town."
+  description="A first-week guide for new MMDU students in Mullana: SIM, bank, xerox, doctor, food and getting home."
+  path="/mmdu/"
+  color={categories.education.color}
+>
+  <ol class="steps">
+    {steps.map((s) => (
+      <li>
+        <h2>{s.h}</h2>
+        <p>{s.body}</p>
+        {s.link && <a class="go" href={s.link[0]}>{s.link[1]}</a>}
+      </li>
+    ))}
+  </ol>
+
+  <h2>Stay safe</h2>
+  <ul class="rows">
+    <li><b>Ragging is a crime.</b> Call the national anti-ragging helpline, <a href="tel:18001805522">1800 180 5522</a>, any time. It is free and the complaint reaches the UGC as well as the university.</li>
+    <li><b>Scam calls target students.</b> Nobody from the police, a courier or "customs" will ask you to pay on a call. Lost money to a scam? Call <a href="tel:1930">1930</a> straight away.</li>
+    <li><b>Save one number:</b> <a href="tel:112">112</a> reaches police, fire and ambulance.</li>
+  </ul>
+  <p><a href="/helplines/">All helpline numbers</a></p>
+</Page>
+
+<style>
+  .steps { list-style: none; padding: 0; margin: 10px 0 0; counter-reset: step; }
+  .steps li { position: relative; padding: 2px 0 14px 46px; border-bottom: 1px solid var(--line); counter-increment: step; }
+  .steps li::before {
+    content: counter(step); position: absolute; left: 0; top: 28px; width: 32px; height: 32px; border-radius: 16px 16px 4px 4px;
+    background: var(--cat); color: #fff; font-weight: 750; font-size: 17px; display: grid; place-items: center; padding-top: 3px;
+  }
+  .steps h2 { margin-top: 26px; font-size: 21px; }
+  .steps p { margin: 0 0 8px; }
+  .go { display: inline-block; padding: 6px 0; font-weight: 600; text-underline-offset: 3px; }
+  .rows b { font-weight: 650; }
+</style>

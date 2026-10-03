@@ -72,6 +72,14 @@
   "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
  },
  {
+  "slug": "chc-mullana-government-health-centre",
+  "name": "CHC Mullana (government health centre)",
+  "category": "medical",
+  "lat": 30.27179,
+  "lng": 77.0546,
+  "source": "OpenStreetMap contributors (ODbL)"
+ },
+ {
   "slug": "dbmci",
   "name": "DBMCI",
   "category": "education",
@@ -240,12 +248,28 @@
   "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
  },
  {
+  "slug": "mmimsr-blood-bank",
+  "name": "MMIMSR Blood Bank",
+  "category": "medical",
+  "lat": 30.25227,
+  "lng": 77.0487,
+  "source": "OpenStreetMap contributors (ODbL)"
+ },
+ {
   "slug": "mmimsr-hospital",
   "name": "MMIMSR Hospital",
   "category": "medical",
   "lat": 30.271797,
   "lng": 77.052689,
   "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
+ },
+ {
+  "slug": "mahalakshmi-filling-station",
+  "name": "Mahalakshmi Filling Station",
+  "category": "fuel",
+  "lat": 30.26815,
+  "lng": 77.05808,
+  "source": "OpenStreetMap contributors (ODbL)"
  },
  {
   "slug": "maharana-pratap-national-college",

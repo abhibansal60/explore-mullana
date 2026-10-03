@@ -18,6 +18,15 @@ const kinds = {
 };
 const whenSort = [...events].sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? "")));
 const spot = (slug?: string) => all.find((s) => s.slug === slug);
+// The guide pages, in the order a newcomer needs them.
+const guide = [
+  ["/helplines/", "Helplines", "ज़रूरी नंबर", "112, ambulance, women, cyber fraud, bijli"],
+  ["/festivals/", "Festivals and melas", "त्योहार और मेले", "Navratri at Mata Bala Sundari, and the year ahead"],
+  ["/mmdu/", "New at MMDU", "एमएमडीयू में नए हैं?", "Your first week: SIM, bank, xerox, food, doctor"],
+  ["/getting-here/", "Getting here", "कैसे पहुँचें", "Trains, buses and distances to nearby cities"],
+  ["/around/", "Day trips", "आसपास घूमें", "Kurukshetra, Kalesar, Adi Badri and more"],
+  ["/about/", "About Mullana", "मुलाना के बारे में", "The town, its temple and its university"],
+];
 const points = all.map((s) => ({
   slug: s.slug, name: s.name, color: categories[s.category].color, lat: s.lat, lng: s.lng, v: "phones" in s ? 1 : 0,
 }));
@@ -40,6 +49,10 @@ const points = all.map((s) => ({
       <div class="grip" aria-hidden="true"></div>
       <section class="today" id="today" aria-labelledby="today-h" hidden>
         <h2 id="today-h" class="grid-h">Today in Mullana <span id="today-date" class="muted"></span></h2>
+        <div class="wx" id="wx" hidden>
+          <span class="wt" id="wx-t"></span>
+          <span class="wd"><b id="wx-sky"></b><span id="wx-more"></span><span id="wx-air"></span></span>
+        </div>
         <div class="tcards">
           {whenSort.map((ev) => {
             const k = kinds[ev.kind];
@@ -82,6 +95,12 @@ const points = all.map((s) => ({
               <span class="hi" lang="hi">{categories[k].hi}</span>
               <span class="meta"><span>{count(k)} {count(k) === 1 ? "place" : "places"}</span><span class="tile-open"></span></span>
             </a>
+          ))}
+        </nav>
+        <h2 class="grid-h">Know Mullana</h2>
+        <nav class="guide" aria-label="Guide">
+          {guide.map(([href, en, hi, what]) => (
+            <a href={href}><span class="en">{en} <span lang="hi">{hi}</span></span><span class="what">{what}</span></a>
           ))}
         </nav>
         <div class="addcard">
@@ -174,6 +193,10 @@ const points = all.map((s) => ({
   .tlinks { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 10px; }
   .tmap { min-height: 40px; font-size: 14.5px; }
   .tsrc { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; font-size: 14.5px; text-underline-offset: 3px; }
+  .wx { display: flex; align-items: center; gap: 14px; margin: 0 0 12px; }
+  .wt { font-weight: 750; font-variation-settings: "wdth" 78; font-size: 44px; line-height: 1; }
+  .wd { display: flex; flex-direction: column; font-size: 14.5px; color: var(--muted); line-height: 1.35; }
+  .wd b { color: var(--ink); font-weight: 600; font-size: 15.5px; }
   .tadd { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
   .tadd a { display: inline-block; padding: 6px 0; text-underline-offset: 3px; }
 
@@ -188,6 +211,11 @@ const points = all.map((s) => ({
   .tile i { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--cat); }
   .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari", var(--font); padding-left: 18px; }
   .tile .meta { color: var(--muted); font-size: 13.5px; padding-left: 18px; }
+  .guide { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .guide a { display: flex; flex-direction: column; gap: 1px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .guide .en { font-weight: 650; font-size: 17px; }
+  .guide [lang="hi"] { font: 400 15px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 6px; }
+  .guide .what { color: var(--muted); font-size: 14.5px; }
   .addcard { margin: 18px 0 8px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
   .addcard p { margin: 0 0 12px; max-width: 46ch; }
 
@@ -216,8 +244,9 @@ const points = all.map((s) => ({
 </style>
 
 <script>
-  import { isOpen, markOpenBadges } from "../open";
+  import { isOpen, markOpenBadges, time12 } from "../open";
   import { distLabel, metres } from "../geo";
+  import { airBand, loadWeather } from "../weather";
   import { filterMap, initMap, set3D, showMe, showPin, showTown } from "../map";
 
   markOpenBadges();
@@ -247,6 +276,16 @@ const points = all.map((s) => ({
       c.querySelector(".twhen")!.textContent = label + at;
     });
     $("today").hidden = !shown;
+    loadWeather()
+      .then((w) => {
+        $("wx-t").textContent = `${w.temp}°`;
+        $("wx-sky").textContent = w.rain ? `${w.sky}, rain likely around ${time12(w.rain)}` : w.sky;
+        $("wx-more").textContent = `High ${w.max}°, low ${w.min}°. Sunrise ${time12(w.sunrise)}, sunset ${time12(w.sunset)}`;
+        if (w.pm25 != null) $("wx-air").textContent = `Air ${airBand(w.pm25).toLowerCase()}, PM2.5 ${w.pm25}`;
+        $("wx").hidden = false;
+        $("today").hidden = false;
+      })
+      .catch(() => {});
     $("today-date").textContent = ist(now, { weekday: "long", day: "numeric", month: "long" }).replace(",", "");
   })();
   const q = $("q") as HTMLInputElement;
@@ -399,6 +438,8 @@ const points = all.map((s) => ({
     if (map) showTown(map);
   });
 
+  // /?q=sim opens with that search, so guide pages can link straight to a search.
+  q.value = new URLSearchParams(location.search).get("q") ?? "";
   fromHash();
 
   function pick(slug: string) {

@@ -1,0 +1,86 @@
+---
+import Page from "../Page.astro";
+import Icon from "../Icon.astro";
+
+// National and Haryana numbers only: all free, all answer 24 hours unless marked.
+const groups: { h: string; items: [string, string, string][] }[] = [
+  {
+    h: "Emergency",
+    items: [
+      ["112", "Emergency", "Police, fire and ambulance in one number. Works without balance or SIM. Haryana's ERV vehicles come from here."],
+      ["108", "Ambulance", "Free government ambulance to the nearest hospital."],
+      ["101", "Fire", "Fire brigade."],
+      ["102", "Mother and child ambulance", "For pregnant women and newborns, free."],
+    ],
+  },
+  {
+    h: "Women, children, students and elders",
+    items: [
+      ["1091", "Women in distress", "Police helpline for women."],
+      ["181", "Women helpline", "Counselling, legal help and shelter for women facing violence."],
+      ["1098", "Childline", "A child in danger, missing, or working when they should be in school."],
+      ["18001805522", "Anti-ragging", "For students. UGC's national helpline, also at antiragging.in. Every complaint reaches the college and the UGC."],
+      ["14567", "Elder line", "Help for senior citizens: pension, abuse, health, legal."],
+    ],
+  },
+  {
+    h: "Fraud and money",
+    items: [
+      ["1930", "Cyber fraud", "Lost money to a UPI, OTP or online scam? Call within the first hour, the bank can still freeze it. Also report at cybercrime.gov.in."],
+    ],
+  },
+  {
+    h: "Health",
+    items: [
+      ["104", "Health advice", "Medical advice over the phone from the state health department."],
+      ["14416", "Tele-MANAS", "Free mental health counselling, any time, in Hindi and English."],
+    ],
+  },
+  {
+    h: "Bijli, gas and roads",
+    items: [
+      ["1912", "Electricity complaint", "Power cut or a fallen wire. Mullana is served by UHBVN."],
+      ["1906", "LPG leak", "Gas leak emergency for any company's cylinder."],
+      ["1033", "Highway help", "Accidents and breakdowns on national highways."],
+      ["139", "Railway enquiry", "Train running status, PNR and complaints."],
+    ],
+  },
+  {
+    h: "Farmers",
+    items: [["18001801551", "Kisan Call Centre", "Crop, seed, fertiliser and weather questions, in Hindi. 6 am to 10 pm."]],
+  },
+];
+const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)} ${n.slice(7)}` : n);
+---
+<Page
+  title="Helplines"
+  hi="ज़रूरी नंबर"
+  intro="Tap a number to call. All of these are free."
+  description="Emergency and helpline numbers for Mullana and Haryana: 112, ambulance, women, child, cyber fraud, electricity and more."
+  path="/helplines/"
+  color="#b8322a"
+>
+  {groups.map((g) => (
+    <>
+      <h2>{g.h}</h2>
+      <ul class="rows">
+        {g.items.map(([n, name, what]) => (
+          <li class="line">
+            <a class:list={["num board", { long: n.length > 5 }]} href={`tel:${n}`} aria-label={`Call ${name}, ${n}`}><Icon name="call" />{show(n)}</a>
+            <span><b>{name}</b><span class="muted">{what}</span></span>
+          </li>
+        ))}
+      </ul>
+    </>
+  ))}
+  <p class="src">Numbers from the Government of India and Haryana helpline lists. If one doesn't connect, 112 always does.</p>
+</Page>
+
+<style>
+  .line { display: grid; grid-template-columns: 112px 1fr; gap: 12px; align-items: start; }
+  .num { display: inline-flex; align-items: center; gap: 6px; font-size: 26px; text-decoration: none; min-height: 40px; }
+  .num.long { font-size: 19px; white-space: nowrap; }
+  .num :global(svg) { width: 18px; height: 18px; flex: none; color: var(--muted); }
+  .line b { display: block; font-weight: 650; }
+  .line .muted { display: block; font-size: 15px; }
+</style>
