@@ -1,6 +1,12 @@
 ---
 import Page from "../Page.astro";
 import Icon from "../Icon.astro";
+import { directions, places } from "../data";
+
+// Where to go, not just whom to call.
+const care = ["mmimsr-hospital", "chc-mullana-government-health-centre", "mmimsr-blood-bank"]
+  .map((slug) => places.find((p) => p.slug === slug))
+  .filter((p) => p !== undefined);
 
 // National and Haryana numbers only.
 const groups: { h: string; items: [string, string, string, string][] }[] = [
@@ -57,7 +63,7 @@ const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)
   intro="Tap a number to call. If you are in danger, call 112 first."
   description="Emergency and helpline numbers for Mullana and Haryana: 112, ambulance, women, child, cyber fraud, electricity and more."
 >
-  {groups.map((g) => (
+  {groups.map((g, i) => (
     <>
       <h2>{g.h}</h2>
       <ul class="rows">
@@ -68,6 +74,19 @@ const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)
           </li>
         ))}
       </ul>
+      {i === 0 && (
+        <>
+          <h2>Hospitals in Mullana</h2>
+          <ul class="rows">
+            {care.map((p) => (
+              <li class="go">
+                <a href={`/place/${p.slug}/`}>{p.name}</a>
+                <a class="btn" href={directions(p)}><Icon name="route" />Directions</a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </>
   ))}
   <p class="src">National and Haryana helpline numbers as published by the services themselves. If a number doesn't connect, 112 always does. Spotted a number that has changed? Tell us below.</p>
@@ -79,6 +98,8 @@ const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)
   .num.long { font-size: 19px; white-space: nowrap; }
   .num :global(svg) { width: 18px; height: 18px; flex: none; color: var(--muted); }
   .line b { display: block; font-weight: 650; }
+  .go { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .go > a:first-child { font-weight: 650; text-underline-offset: 3px; }
   .line [lang="hi"] { font: 400 15px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 4px; }
   .line .muted { display: block; font-size: 15px; }
 </style>
