@@ -8,7 +8,7 @@ const claim = `Hi, I run ${place.name} in Mullana. I'd like to add our phone num
 <article class="row place" style={`--cat:${c.color}`} data-slug={place.slug} data-cat={place.category}
   data-search={searchText(place)} data-lat={place.lat} data-lng={place.lng}>
   <div class="main">
-    <h2>{place.name}</h2>
+    <h2><a href={`/place/${place.slug}/`}>{place.name}</a></h2>
     <span class="sub">
       <span class="catname">{c.en}</span>
       <span>Not checked yet</span>
@@ -23,5 +23,6 @@ const claim = `Hi, I run ${place.name} in Mullana. I'd like to add our phone num
 
 <style>
   h2 { font-size: 17px; font-weight: 650; line-height: 1.2; }
+  h2 a { text-decoration: none; }
   .claim { margin-left: auto; font-size: 13.5px; padding: 4px 0; color: var(--muted); text-underline-offset: 3px; }
 </style>

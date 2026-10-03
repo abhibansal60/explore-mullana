@@ -98,3 +98,8 @@ export const guide = [
   { slug: "around", en: "Day trips", hi: "आसपास घूमें", what: "Kurukshetra, Kalesar, Adi Badri and more", color: "#2e6b3a" },
   { slug: "about", en: "About Mullana", hi: "मुलाना के बारे में", what: "The town, its temple and its university", color: "#7a5a3c" },
 ];
+
+// Notes for public landmarks (temples, the university, the mandi), keyed by place slug.
+// `public` hides the "own this place?" prompt for places nobody owns privately.
+export type Landmark = { hi?: string; about: string; more?: string; source?: string; public?: boolean };
+export const landmarks: Record<string, Landmark> = JSON.parse(readFileSync("src/data/landmarks.json", "utf8"));

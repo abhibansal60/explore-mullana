@@ -1,0 +1,88 @@
+---
+import Layout from "../../Layout.astro";
+import Credits from "../../Credits.astro";
+import Icon from "../../Icon.astro";
+import { categories, directions, landmarks, places, shops, site, type Place } from "../../data";
+import { distLabel, metres } from "../../geo";
+
+export function getStaticPaths() {
+  return places.map((place) => ({ params: { slug: place.slug }, props: { place } }));
+}
+const { place } = Astro.props as { place: Place };
+const c = categories[place.category];
+const note = landmarks[place.slug];
+const path = `/place/${place.slug}/`;
+const claim = `Hi, I run ${place.name} in Mullana. I'd like to add our phone number and hours to Explore Mullana.`;
+const share = `${place.name}, Mullana. ${site.url}${path}`;
+// Five nearest other places, so a page is never a dead end.
+const here: [number, number] = [place.lat, place.lng];
+const near = [...shops, ...places]
+  .filter((p) => p.slug !== place.slug)
+  .map((p) => ({ p, m: metres(here, [p.lat, p.lng]) }))
+  .sort((a, b) => a.m - b.m)
+  .slice(0, 5);
+const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/place/${p.slug}/`);
+---
+<Layout title={`${place.name}, Mullana`} description={note?.about ?? `${c.en} in Mullana, with directions.`} path={path}>
+  <main style={`--cat:${c.color}`}>
+    <a class="back" href={`/#${place.category}`}><Icon name="back" />{c.en}</a>
+    <header class="sign">
+      <h1 class="board">{place.name}</h1>
+      {note?.hi && <p class="hi" lang="hi">{note.hi}</p>}
+      <p class="cat">{c.en} <span lang="hi">{c.hi}</span></p>
+    </header>
+
+    {note && <p class="about">{note.about}</p>}
+    {note?.more && <p class="more">{note.more}</p>}
+
+    <div class="acts">
+      <a class="btn primary" data-tap="directions" href={directions(place)}><Icon name="route" />Directions</a>
+      <a class="btn" data-tap="share" href={`https://wa.me/?text=${encodeURIComponent(share)}`}><Icon name="share" />Share</a>
+    </div>
+
+    {!note?.public && (
+      <div class="claim">
+        <p><b>Not checked yet.</b> We found this place on open map data, so there's no phone number or hours here until the owner says yes.</p>
+        <a class="btn" data-tap="claim" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(claim)}`}><Icon name="chat" />Own this place? Add your details</a>
+      </div>
+    )}
+
+    <h2>Nearby</h2>
+    <ul class="near">
+      {near.map(({ p, m }) => (
+        <li style={`--cat:${categories[p.category].color}`}>
+          <a href={href(p)}>{p.name}</a><span>{distLabel(m)}</span>
+        </li>
+      ))}
+    </ul>
+
+    <p class="src">Location: {place.source}.{note?.source && <> About: <a href={note.source}>source</a>.</>}</p>
+    <Credits />
+  </main>
+</Layout>
+
+<style>
+  main { max-width: 560px; margin: 0 auto; padding: max(12px, env(safe-area-inset-top)) 16px 0; }
+  .back { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; color: var(--muted); text-decoration: none; font-size: 16px; }
+  .back :global(svg) { width: 18px; height: 18px; }
+  .sign { margin-top: 10px; border-top: 10px solid var(--cat); border-radius: 4px 4px 0 0; padding-top: 14px; }
+  h1 { font-size: clamp(34px, 10vw, 52px); margin: 0; }
+  .hi { margin: 6px 0 0; font: 600 21px/1.3 "Anek Devanagari", var(--font); }
+  .cat { margin: 8px 0 0; color: var(--muted); font-size: 17px; }
+  .cat span { margin-left: 8px; font-family: "Anek Devanagari", var(--font); }
+  .about { font-size: 19px; margin: 16px 0 0; max-width: 44ch; }
+  .more { margin: 10px 0 0; max-width: 60ch; }
+  .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 22px; }
+  .acts .primary { min-height: 52px; font-size: 17px; }
+  .acts .btn { min-height: 52px; }
+  .claim { margin-top: 22px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--sheet); }
+  .claim p { margin: 0 0 12px; font-size: 15.5px; }
+  .claim b { font-weight: 650; }
+  h2 { font-size: 21px; margin: 28px 0 6px; }
+  .near { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .near li { position: relative; display: flex; justify-content: space-between; gap: 12px; padding: 11px 0 11px 14px; border-bottom: 1px solid var(--line); }
+  .near li::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 2px; background: var(--cat); }
+  .near a { font-weight: 600; text-underline-offset: 3px; }
+  .near span { color: var(--muted); font-size: 14.5px; white-space: nowrap; }
+  .src { color: var(--muted); font-size: 13.5px; margin-top: 18px; }
+</style>
