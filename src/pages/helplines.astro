@@ -1,0 +1,105 @@
+---
+import Page from "../Page.astro";
+import Icon from "../Icon.astro";
+import { directions, places } from "../data";
+
+// Where to go, not just whom to call.
+const care = ["mmimsr-hospital", "chc-mullana-government-health-centre", "mmimsr-blood-bank"]
+  .map((slug) => places.find((p) => p.slug === slug))
+  .filter((p) => p !== undefined);
+
+// National and Haryana numbers only.
+const groups: { h: string; items: [string, string, string, string][] }[] = [
+  {
+    h: "Emergency",
+    items: [
+      ["112", "Emergency", "आपातकाल", "Police, fire and ambulance in one number. Works without balance or SIM. Haryana's ERV vehicles come from here."],
+      ["108", "Ambulance", "एम्बुलेंस", "Free government ambulance to the nearest hospital."],
+      ["101", "Fire", "फ़ायर ब्रिगेड", "Fire brigade."],
+      ["102", "Mother and child ambulance", "जननी एम्बुलेंस", "For pregnant women and newborns, free."],
+    ],
+  },
+  {
+    h: "Women, children, students and elders",
+    items: [
+      ["1091", "Women in distress", "महिला हेल्पलाइन (पुलिस)", "Police helpline for women."],
+      ["181", "Women helpline", "महिला हेल्पलाइन", "Counselling, legal help and shelter for women facing violence."],
+      ["1098", "Childline", "चाइल्डलाइन", "A child in danger, missing, or working when they should be in school."],
+      ["18001805522", "Anti-ragging", "रैगिंग विरोधी", "For students. UGC's national helpline, also at antiragging.in. Every complaint reaches the college and the UGC."],
+      ["14567", "Elder line", "बुज़ुर्गों के लिए", "Help for senior citizens: pension, abuse, health, legal."],
+    ],
+  },
+  {
+    h: "Fraud and money",
+    items: [
+      ["1930", "Cyber fraud", "साइबर ठगी", "Lost money to a UPI, OTP or online scam? Call within the first hour, the bank can still freeze it. Also report at cybercrime.gov.in."],
+    ],
+  },
+  {
+    h: "Health",
+    items: [
+      ["104", "Health advice", "स्वास्थ्य सलाह", "Medical advice over the phone from the state health department."],
+      ["14416", "Tele-MANAS", "मानसिक स्वास्थ्य", "Free mental health counselling, any time, in Hindi and English."],
+    ],
+  },
+  {
+    h: "Bijli, gas and roads",
+    items: [
+      ["1912", "Electricity complaint", "बिजली शिकायत", "Power cut or a fallen wire. Mullana is served by UHBVN."],
+      ["1906", "LPG leak", "गैस लीक", "Gas leak emergency for any company's cylinder."],
+      ["1033", "Highway help", "हाईवे सहायता", "Accidents and breakdowns on national highways."],
+      ["139", "Railway enquiry", "रेलवे पूछताछ", "Train running status, PNR and complaints."],
+    ],
+  },
+  {
+    h: "Farmers",
+    items: [["18001801551", "Kisan Call Centre", "किसान कॉल सेंटर", "Crop, seed, fertiliser and weather questions, in Hindi. 6 am to 10 pm."]],
+  },
+];
+const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)} ${n.slice(7)}` : n);
+---
+<Page
+  slug="helplines"
+  intro="Tap a number to call. If you are in danger, call 112 first."
+  description="Emergency and helpline numbers for Mullana and Haryana: 112, ambulance, women, child, cyber fraud, electricity and more."
+>
+  {groups.map((g, i) => (
+    <>
+      <h2>{g.h}</h2>
+      <ul class="rows">
+        {g.items.map(([n, name, hi, what]) => (
+          <li class="line">
+            <a class:list={["num board", { long: n.length > 5 }]} href={`tel:${n}`} aria-label={`Call ${name}, ${n}`}><Icon name="call" />{show(n)}</a>
+            <span><b>{name} <span lang="hi">{hi}</span></b><span class="muted">{what}</span></span>
+          </li>
+        ))}
+      </ul>
+      {i === 0 && (
+        <>
+          <h2>Hospitals in Mullana</h2>
+          <ul class="rows">
+            {care.map((p) => (
+              <li class="go">
+                <a href={`/place/${p.slug}/`}>{p.name}</a>
+                <a class="btn" href={directions(p)}><Icon name="route" />Directions</a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </>
+  ))}
+  <p class="src">National and Haryana helpline numbers as published by the services themselves. If a number doesn't connect, 112 always does. Spotted a number that has changed? Tell us below.</p>
+</Page>
+
+<style>
+  .line { display: grid; grid-template-columns: 112px 1fr; gap: 12px; align-items: start; }
+  .num { display: inline-flex; align-items: center; gap: 6px; font-size: 26px; text-decoration: none; min-height: 40px; }
+  .num.long { font-size: 19px; white-space: nowrap; }
+  .num :global(svg) { width: 18px; height: 18px; flex: none; color: var(--muted); }
+  .line b { display: block; font-weight: 650; }
+  .go { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .go > a:first-child { font-weight: 650; text-underline-offset: 3px; }
+  .line [lang="hi"] { font: 400 15px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 4px; }
+  .line .muted { display: block; font-size: 15px; }
+</style>

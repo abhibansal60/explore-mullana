@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 // @ts-ignore plain .mjs
-import { cleanPhones, parseCoords, slugify, rowToShop } from "../scripts/sheet.mjs";
+import { cleanPhones, parseCoords, slugify, rowToEvent, rowToShop } from "../scripts/sheet.mjs";
 
 const row = {
   name: "Test Shop", category: "food", about: "x", owner: "y", phones: "9813127207",
@@ -40,4 +40,25 @@ test("rejects bad rows", () => {
 test("by: trimmed credit, empty when absent", () => {
   assert.equal(rowToShop({ ...row, by: "  Rohit " }).by, "Rohit");
   assert.equal(rowToShop(row).by, "");
+});
+
+const ev = { title: " Mata ka jagran ", kind: "religious", date: "2026-10-17", end: "", time: "21:00", place: "Shiv Mandir", link: "", by: "Rohit" };
+
+test("event rows become events", () => {
+  assert.deepEqual(rowToEvent(ev), {
+    id: "mata-ka-jagran-2026-10-17", title: "Mata ka jagran", date: "2026-10-17", time: "21:00",
+    place: "Shiv Mandir", kind: "religious", by: "Rohit",
+  });
+  const multi = rowToEvent({ ...ev, end: "2026-10-19", time: "", link: "https://www.instagram.com/p/x/" });
+  assert.equal(multi.endDate, "2026-10-19");
+  assert.equal(multi.time, undefined);
+  assert.deepEqual(multi.source, { name: "Details", url: "https://www.instagram.com/p/x/" });
+});
+
+test("rejects bad event rows", () => {
+  assert.throws(() => rowToEvent({ ...ev, kind: "party" }), /unknown kind/);
+  assert.throws(() => rowToEvent({ ...ev, date: "17/10/2026" }), /YYYY-MM-DD/);
+  assert.throws(() => rowToEvent({ ...ev, end: "2026-10-01" }), /last day/);
+  assert.throws(() => rowToEvent({ ...ev, link: "javascript:alert(1)" }), /https/);
+  assert.throws(() => rowToEvent({ ...ev, place: " " }), /place/);
 });

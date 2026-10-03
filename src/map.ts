@@ -7,6 +7,14 @@ type Point = { slug: string; name: string; color: string; lat: number; lng: numb
 const CENTER: [number, number] = [77.047, 30.2755];
 const dark = () => matchMedia("(prefers-color-scheme: dark)").matches || isNight();
 
+const selectors = new WeakMap<MLMap, (slug: string, center: [number, number]) => void>();
+// Same as tapping the pin: highlight it, fly there, open its row.
+export function showPin(map: MLMap, slug: string, lng: number, lat: number) {
+  const select = selectors.get(map);
+  select?.(slug, [lng, lat]);
+  return !!select; // false until the map has loaded
+}
+
 export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: string) => void) {
   // Loaded only after the list is on screen, so the list never waits on WebGL.
   const [maplibregl, { default: workerUrl }] = await Promise.all([
@@ -71,14 +79,17 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
     });
 
     let picked: string | undefined;
+    const select = (slug: string, center: [number, number]) => {
+      if (picked) map.setFeatureState({ source: "shops", id: picked }, { picked: false });
+      picked = slug;
+      map.setFeatureState({ source: "shops", id: picked }, { picked: true });
+      map.flyTo({ center, zoom: Math.max(map.getZoom(), 17), speed: 0.9 });
+      onPick(slug);
+    };
+    selectors.set(map, select);
     map.on("click", "shops", (e) => {
       const f = e.features?.[0];
-      if (!f) return;
-      if (picked) map.setFeatureState({ source: "shops", id: picked }, { picked: false });
-      picked = f.properties.slug;
-      map.setFeatureState({ source: "shops", id: picked }, { picked: true });
-      map.flyTo({ center: (f.geometry as any).coordinates, zoom: Math.max(map.getZoom(), 17), speed: 0.9 });
-      onPick(f.properties.slug);
+      if (f) select(f.properties.slug, (f.geometry as any).coordinates);
     });
 
     // Arrival: drop in from above the district onto the market, once.

@@ -1,0 +1,56 @@
+---
+import Page from "../Page.astro";
+import Icon from "../Icon.astro";
+
+// Directions go by name: Google Maps finds the temple or garden gate better than a pin we guessed.
+const directions = (t: { name: string; q?: string }) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(t.q ?? `${t.name}, Haryana`)}`;
+// Driving distances from Mullana (OpenStreetMap routing), nearest first.
+const trips = [
+  { name: "Barara", hi: "बराड़ा", km: 4, what: "Come Dussehra, Barara burns one of the tallest Ravan effigies in India. The rest of the year it's the nearest railway station and a bigger market.", src: "https://en.wikipedia.org/wiki/Barara" },
+  { name: "Sadhaura", hi: "साढौरा", km: 27, what: "An old town at the foot of the Shivaliks, on the way to Adi Badri.", src: "" },
+  { name: "Jagadhri and Yamunanagar", hi: "जगाधरी", km: 30, what: "The brass and plywood city: utensil bazaars, big markets and the district's malls.", src: "https://en.wikipedia.org/wiki/Jagadhri" },
+  { name: "Adi Badri", hi: "आदि बद्री", km: 43, what: "Where the Saraswati is said to leave the hills. Temples in the Shivalik foothills and a quiet day out.", src: "" },
+  { name: "Kapal Mochan", hi: "कपाल मोचन", km: 45, what: "Sacred tanks, a Mahadev temple and a gurdwara at Bilaspur. Its Kartik Purnima mela in November draws lakhs.", src: "https://en.wikipedia.org/wiki/Kapal_Mochan" },
+  { name: "Sheikh Chilli's Tomb, Thanesar", hi: "शेख चिल्ली का मकबरा", km: 53, what: "A Mughal-era tomb and garden in Kurukshetra, a short walk from the old city.", src: "https://en.wikipedia.org/wiki/Sheikh_Chilli's_Tomb" },
+  { name: "Brahma Sarovar, Kurukshetra", hi: "ब्रह्म सरोवर", km: 55, what: "One of India's largest sacred tanks, the heart of Kurukshetra and the Gita Mahotsav.", src: "https://en.wikipedia.org/wiki/Brahma_Sarovar" },
+  { name: "Mansa Devi, Panchkula", q: "Mata Mansa Devi Mandir, Panchkula", hi: "मनसा देवी", km: 64, what: "The big Devi temple above Panchkula, crowded through both Navratris.", src: "https://en.wikipedia.org/wiki/Mata_Mansa_Devi_Mandir" },
+  { name: "Morni Hills", hi: "मोरनी हिल्स", km: 69, what: "Haryana's only hill station: lakes, a fort and winding roads through the Shivaliks.", src: "" },
+  { name: "Kalesar National Park", hi: "कलेसर", km: 70, what: "Sal forest on the Yamuna, with birds, elephants passing through and forest rest houses.", src: "https://en.wikipedia.org/wiki/Kalesar_National_Park" },
+  { name: "Pinjore Gardens", q: "Yadavindra Gardens, Pinjore", hi: "पिंजौर गार्डन", km: 74, what: "Terraced Mughal gardens with fountains, lit up in the evening.", src: "https://en.wikipedia.org/wiki/Yadavindra_Gardens" },
+];
+---
+<Page
+  slug="around"
+  intro="Places worth a Sunday from Mullana, nearest first. Distances are by road."
+  description="Day trips from Mullana and MMDU: Barara, Kapal Mochan, Adi Badri, Kurukshetra, Morni Hills, Kalesar, Pinjore and more, with distances and directions."
+>
+  <ul class="rows trips">
+    {trips.map((t) => (
+      <li>
+        <div class="top">
+          <h2 class="board">{t.name}</h2>
+          <span class="km board">{t.km} km</span>
+        </div>
+        <p class="hi" lang="hi">{t.hi}</p>
+        <p>{t.what}</p>
+        <div class="go">
+          <a class="btn" href={directions(t)}><Icon name="route" />Directions</a>
+          {t.src && <a class="src" href={t.src}>Read more</a>}
+        </div>
+      </li>
+    ))}
+  </ul>
+  <p class="src">Distances from OpenStreetMap routing, give or take 2 km. Descriptions from Wikipedia where linked.</p>
+</Page>
+
+<style>
+  .trips li { padding: 16px 0; }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .trips h2 { margin: 0; font-size: 26px; }
+  .km { font-size: 20px; color: var(--muted); white-space: nowrap; }
+  .trips .hi { margin: 2px 0 6px; color: var(--muted); font: 400 16px "Anek Devanagari", var(--font); }
+  .trips p { margin: 0; }
+  .go { display: flex; align-items: center; gap: 16px; margin-top: 10px; }
+  .go .src { font-size: 14.5px; font-weight: 600; }
+</style>

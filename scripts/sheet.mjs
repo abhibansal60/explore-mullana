@@ -2,7 +2,7 @@
 // Usage: npm run sheet   (URL from SHEET_URL or .sheet-url; optional OUT for the output path)
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
-import { categories } from "../src/data/index.ts";
+import { categories, kinds } from "../src/data/index.ts";
 
 const UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
 const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -74,12 +74,41 @@ export const rowToShop = (row, location = row.location) => {
   };
 };
 
+const YMD = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+// Pure: an approved event row -> Event (the shape of src/data/events.json). Throws on the first problem.
+export const rowToEvent = (row) => {
+  const title = String(row.title ?? "").trim();
+  if (!title) throw new Error("missing title");
+  if (!(row.kind in kinds)) throw new Error(`unknown kind "${row.kind}"`);
+  if (!YMD.test(row.date ?? "")) throw new Error(`date must be YYYY-MM-DD (got "${row.date}")`);
+  if (row.end && (!YMD.test(row.end) || row.end < row.date)) throw new Error(`bad last day "${row.end}"`);
+  if (row.time && !HHMM.test(row.time)) throw new Error(`time must be HH:MM (got "${row.time}")`);
+  const place = String(row.place ?? "").trim();
+  if (!place) throw new Error("missing place");
+  const link = String(row.link ?? "").trim();
+  if (link && !/^https:\/\//i.test(link)) throw new Error(`link must start with https:// (got "${link}")`);
+  const by = String(row.by ?? "").trim();
+  return {
+    id: `${slugify(title)}-${row.date}`,
+    title,
+    date: row.date,
+    ...(row.end && row.end !== row.date ? { endDate: row.end } : {}),
+    ...(row.time ? { time: row.time } : {}),
+    place,
+    kind: row.kind,
+    ...(link ? { source: { name: "Details", url: link } } : {}),
+    ...(by ? { by } : {}),
+  };
+};
+
 const main = async () => {
   const url = process.env.SHEET_URL || (existsSync(".sheet-url") ? readFileSync(".sheet-url", "utf8").trim() : "");
   if (!url) throw new Error("Set SHEET_URL or put the web app URL in .sheet-url");
   const res = await fetch(url, { redirect: "follow", headers: { "user-agent": UA } });
   if (!res.ok) throw new Error(`Sheet request failed: HTTP ${res.status}`);
-  const rows = (await res.json()).shops;
+  const body = await res.json();
+  const rows = body.shops;
   if (!Array.isArray(rows)) throw new Error('Response has no "shops" array');
 
   const shops = [];
@@ -110,6 +139,24 @@ const main = async () => {
   }
   writeFileSync(out, JSON.stringify(shops, null, 2) + "\n");
   console.log(`${shops.length} shops -> ${out.replace(/^.*\/(src\/data\/)/, "$1")}`);
+
+  // Events from the second Form, once setupEvents() has run. A bad row stops only the events.
+  if (!Array.isArray(body.events)) return;
+  const bad = [];
+  const events = body.events.flatMap((row) => {
+    try {
+      return [rowToEvent(row)];
+    } catch (e) {
+      bad.push(`${row.title || "(no title)"}: ${e.message}`);
+      return [];
+    }
+  });
+  if (bad.length) {
+    console.error(bad.map((e) => `  - ${e}`).join("\n"));
+    throw new Error(`${bad.length} bad event row(s); events not written`);
+  }
+  writeFileSync("src/data/events-community.json", JSON.stringify(events, null, 2) + "\n");
+  console.log(`${events.length} events -> src/data/events-community.json`);
 };
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

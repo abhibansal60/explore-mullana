@@ -9,6 +9,9 @@
 // rows, and only the public columns, ever leave the Sheet. A contributor's name
 // is shown as a credit; their number stays private.
 
+// Events ("Today in Mullana") use a second Form and Sheet: run setupEvents() once,
+// then deploy a new version of the web app. Approved event rows come back as `events`.
+
 // Keys must match `categories` in src/data/index.ts.
 const CATEGORIES = [
   ["food", "Food & chai (खाना और चाय)"],
@@ -91,6 +94,79 @@ function setup() {
   Logger.log("Sheet: " + ss.getUrl());
 }
 
+// Keys must match `kinds` in src/data/index.ts.
+const KINDS = [
+  ["religious", "Temple or gurudwara (mandir, jagran, kirtan, path)"],
+  ["campus", "MMDU or a school"],
+  ["market", "Market or mandi"],
+  ["community", "Something else in town (camp, match, sale, opening)"],
+];
+const E = {
+  title: "What's happening?",
+  kind: "What kind of event?",
+  date: "Date",
+  end: "Last day, if it runs for more than one day",
+  time: "Starts at",
+  place: "Where?",
+  link: "A link with details",
+  by: "Your name",
+  byPhone: "Your WhatsApp number",
+};
+
+function setupEvents() {
+  const ss = SpreadsheetApp.create("Explore Mullana events");
+  const form = FormApp.create("Tell Explore Mullana what's happening")
+    .setDescription(
+      "A jagran, a mela, a college fest, a blood donation camp, a new shop opening: tell us and it can show up " +
+        "under Today in Mullana on mullana.abhibansal.dev. Nothing goes live until it has been checked.",
+    )
+    .setCollectEmail(false);
+  form.addTextItem().setTitle(E.title).setHelpText("A few words, e.g. Mata ka jagran.").setRequired(true);
+  form.addListItem().setTitle(E.kind).setChoiceValues(KINDS.map((k) => k[1])).setRequired(true);
+  form.addDateItem().setTitle(E.date).setRequired(true);
+  form.addDateItem().setTitle(E.end);
+  form.addTimeItem().setTitle(E.time);
+  form.addTextItem().setTitle(E.place).setHelpText("e.g. Shiv Mandir, Ward 5").setRequired(true);
+  form.addTextItem().setTitle(E.link).setHelpText("Optional: an Instagram post, a poster on Drive, a website.");
+  form.addTextItem().setTitle(E.by).setHelpText("Shown as a credit.").setRequired(true);
+  form.addTextItem().setTitle(E.byPhone).setHelpText("Private. Only used if we need to check something.").setRequired(true);
+
+  form.setDestination(FormApp.DestinationType.SPREADSHEET, ss.getId());
+  SpreadsheetApp.flush();
+  const sheet = responses_(ss);
+  const col = sheet.getLastColumn() + 1;
+  sheet.getRange(1, col).setValue("Approved").setFontWeight("bold");
+  sheet.getRange(2, col, 999, 1).insertCheckboxes();
+  PropertiesService.getScriptProperties().setProperty("EVENTS_SHEET_ID", ss.getId());
+  const blank = ss.getSheetByName("Sheet1");
+  if (blank) ss.deleteSheet(blank);
+
+  Logger.log("Events form: " + form.getPublishedUrl());
+  Logger.log("Events sheet: " + ss.getUrl());
+}
+
+function events_() {
+  const id = PropertiesService.getScriptProperties().getProperty("EVENTS_SHEET_ID");
+  if (!id) return [];
+  const [head, ...rows] = responses_(SpreadsheetApp.openById(id)).getDataRange().getValues();
+  const cell = (r, title) => (head.indexOf(title) < 0 ? "" : r[head.indexOf(title)]);
+  const ymd = (v) => (v instanceof Date ? Utilities.formatDate(v, "Asia/Kolkata", "yyyy-MM-dd") : String(v).trim());
+  const hhmm = (v) => (v instanceof Date ? Utilities.formatDate(v, "Asia/Kolkata", "HH:mm") : String(v).slice(0, 5));
+  const kindOf = (label) => (KINDS.find((k) => k[1] === label) || [label])[0];
+  return rows
+    .filter((r) => cell(r, "Approved") === true)
+    .map((r) => ({
+      title: String(cell(r, E.title)).trim(),
+      kind: kindOf(cell(r, E.kind)),
+      date: ymd(cell(r, E.date)),
+      end: cell(r, E.end) ? ymd(cell(r, E.end)) : "",
+      time: cell(r, E.time) ? hhmm(cell(r, E.time)) : "",
+      place: String(cell(r, E.place)).trim(),
+      link: String(cell(r, E.link)).trim(),
+      by: String(cell(r, E.by)).trim(),
+    }));
+}
+
 function responses_(ss) {
   return ss.getSheets().find((s) => s.getFormUrl()) || ss.getSheets()[0];
 }
@@ -125,5 +201,5 @@ function doGet() {
       slug: String(cell(r, "Slug")).trim(),
       by: String(cell(r, Q.by)).trim(),
     }));
-  return ContentService.createTextOutput(JSON.stringify({ shops })).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify({ shops, events: events_() })).setMimeType(ContentService.MimeType.JSON);
 }

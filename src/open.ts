@@ -25,3 +25,20 @@ export function isNight(now = new Date()) {
   const t = `${h}:${m}`;
   return t >= "18:30" || t < "06:00";
 }
+
+// "08:00" -> "8 am", "21:30" -> "9:30 pm"
+export const time12 = (hhmm: string) => {
+  const [h, m] = hhmm.split(":").map(Number);
+  const h12 = h % 12 || 12;
+  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${h < 12 ? "am" : "pm"}`;
+};
+
+// Today in Mullana as "YYYY-MM-DD", built from parts so no locale's date format can change it.
+export function istDate(now = new Date()) {
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat("en", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" })
+      .formatToParts(now)
+      .map((x) => [x.type, x.value]),
+  );
+  return `${p.year}-${p.month}-${p.day}`;
+}
