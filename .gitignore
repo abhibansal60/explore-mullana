@@ -3,6 +3,8 @@ dist/
 .astro/
 # Real shop data (phone numbers) never enters the repo.
 src/data/shops.json
+# Community events pulled from the Sheet, like shops.json.
+src/data/events-community.json
 public/og/
 .sheet-url
 .wrangler/

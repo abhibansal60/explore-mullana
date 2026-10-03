@@ -67,6 +67,7 @@ export type Event = {
   note?: string; // one line of what to expect
   source?: { name: string; url: string };
   sample?: true;
+  by?: string; // contributor credit for community events
 };
 export const kinds = {
   festival: { name: "Festival", color: "#a86a12" },
@@ -75,7 +76,12 @@ export const kinds = {
   market: { name: "Market", color: "#2e6b3a" },
   community: { name: "Community", color: "var(--ink)" },
 };
-export const events: Event[] = JSON.parse(readFileSync("src/data/events.json", "utf8"));
+// Festivals are curated in events.json; approved community events come from the Sheet (npm run sheet).
+const community = "src/data/events-community.json";
+export const events: Event[] = [
+  ...JSON.parse(readFileSync("src/data/events.json", "utf8")),
+  ...(existsSync(community) ? JSON.parse(readFileSync(community, "utf8")) : []),
+];
 
 export const monthLabel = (ym: string) =>
   new Date(`${ym}-01T00:00:00`).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
@@ -95,6 +101,8 @@ export const site = {
   reportWhatsApp: "917988979932",
   // Google Form for suggesting a missing shop.
   addFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScEuSJpiYXkC19pRzMMXokWsqeKQH_kKTj8GHhF5dtNIOTq1w/viewform",
+  // Google Form for events, from setupEvents() in apps-script/Code.gs. Empty sends people to WhatsApp instead.
+  addEventUrl: "",
 };
 
 // The guide pages, in the order a newcomer needs them. `color` is the page's top band.

@@ -52,6 +52,7 @@ const points = all.map((s) => ({
                 <h3 class="board">{ev.title}</h3>
                 {ev.titleHi && <p class="thi" lang="hi">{ev.titleHi}</p>}
                 {ev.place && <p class="tplace">{ev.place}</p>}
+                {ev.by && <p class="tplace">Added by {ev.by}</p>}
                 <div class="tlinks">
                   {at && <button class="btn tmap" data-pin={at.slug} data-lat={at.lat} data-lng={at.lng}>Show on map</button>}
                   {ev.source && <a class="tsrc" href={ev.source.url} target="_blank" rel="noopener">Source</a>}
@@ -60,7 +61,7 @@ const points = all.map((s) => ({
             );
           })}
         </div>
-        <p class="tadd"><a href="/festivals/">All festivals and melas this year</a><br /><a href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us on WhatsApp</a></p>
+        <p class="tadd"><a href="/festivals/">All festivals and melas this year</a><br /><a href={site.addEventUrl || `https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us</a></p>
       </section>
       <label class="search">
         <Icon name="search" />

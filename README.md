@@ -41,4 +41,5 @@ Basemap: OpenFreeMap / OpenMapTiles, © OpenStreetMap contributors. Buildings: O
 ## Adding shops and counting taps
 
 - Shops are added through a Google Form. Its responses land in a private Sheet, and a listing goes live only after its "Approved" box is ticked. `apps-script/Code.gs` creates the Form and Sheet and serves the approved rows. `npm run sheet` pulls them into `shops.json`.
+- Events work the same way. Run `setupEvents()` once in the Apps Script project to create the events Form and Sheet, deploy a new version of the web app, and put the events Form's link in `site.addEventUrl` (`src/data/index.ts`). Tick "Approved" on an event row, and `npm run sheet` writes it to `src/data/events-community.json` (git-ignored). Festivals and big days are curated by hand in `src/data/events.json`.
 - `npm run taps` prints this month's Call, WhatsApp, Directions, Reviews, Share and Claim taps per shop (`npm run taps -- 2026-09` for another month). Only the shop and the kind of tap are counted, no IP or device. Counts live in the Cloudflare KV namespace `explore-mullana-taps`, bound as `TAPS` in `wrangler.toml`.

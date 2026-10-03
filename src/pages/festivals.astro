@@ -1,6 +1,6 @@
 ---
 import Page from "../Page.astro";
-import { events, kinds, time12 } from "../data";
+import { events, kinds, site, time12 } from "../data";
 
 const sorted = events.filter((e) => !e.sample).sort((a, b) => a.date.localeCompare(b.date));
 const month = (ymd: string) => new Date(ymd + "T06:00:00Z").toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
@@ -28,6 +28,7 @@ const span = (a: string, b?: string) =>
               {e.titleHi && <span class="hi" lang="hi">{e.titleHi}</span>}
               <span class="muted">{[span(e.date, e.endDate), e.time && time12(e.time), e.place].filter(Boolean).join(", ")}</span>
               {e.note && <span class="note">{e.note}</span>}
+              {e.by && <span class="muted">Added by {e.by}</span>}
               {e.source && <a class="src" href={e.source.url} target="_blank" rel="noopener">{e.source.name}</a>}
             </span>
           </li>
@@ -35,7 +36,7 @@ const span = (a: string, b?: string) =>
       </ul>
     </section>
   ))}
-  <p class="src">Festival dates from the Government of India holiday list and the Hindu calendar (drikpanchang.com) for Ambala. Something missing, like a jagran or a mela in your mohalla? Tell us with "Report a mistake" below.</p>
+  <p class="src">Festival dates from the Hindu calendar at drikpanchang.com (worked out for Delhi; Ambala has the same days). Something missing, like a jagran or a mela in your mohalla? <a href={site.addEventUrl || `https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`}>Tell us</a>.</p>
 </Page>
 
 <style>
