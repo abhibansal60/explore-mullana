@@ -2,6 +2,8 @@
 
 A free map and directory of shops and places in Mullana (Ambala, Haryana) and around MMDU. It shows opening hours, open-now status, call, WhatsApp and directions buttons, and a 3D view of the town's buildings.
 
+"Today in Mullana" on the home page shows the weather and air, the day's tithi with the next Ekadashi, Amavasya and Purnima, and the festivals and events of the next two weeks, with a button to share it all on WhatsApp. Guide pages cover helplines, festivals and melas, a first-week guide for new MMDU students, getting here, day trips and the town itself. The site installs to a phone's home screen and works offline.
+
 ## Start here: paste this to your agent
 
 ```text

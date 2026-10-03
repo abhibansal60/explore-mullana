@@ -62,6 +62,7 @@ const points = all.map((s) => ({
             );
           })}
         </div>
+        <a class="btn tshare" id="tshare" href="#"><Icon name="share" />Share today on WhatsApp</a>
         <p class="tadd"><a href="/festivals/">All festivals and melas this year</a><br /><a href={site.addEventUrl || `https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us</a></p>
       </section>
       <label class="search">
@@ -194,6 +195,7 @@ const points = all.map((s) => ({
   .pc { margin: 0 0 12px; font-size: 15px; line-height: 1.4; }
   .pc b { font: 600 17px "Anek Devanagari", var(--font); }
   .pc .muted { display: block; font-size: 14.5px; white-space: normal; }
+  .tshare { margin: 12px 0 4px; }
   .tadd { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
   .tadd a { display: inline-block; padding: 6px 0; text-underline-offset: 3px; }
 
@@ -290,6 +292,16 @@ const points = all.map((s) => ({
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([n, d]) => `${n} ${short(d)}`);
     $("pc-next").textContent = `Next: ${coming.join(", ")}`;
+    const share = () => {
+      const lines = [`Today in Mullana, ${$("today-date").textContent}`];
+      if (!$("wx").hidden) lines.push(`${$("wx-t").textContent} ${$("wx-sky").textContent}. ${$("wx-air").textContent}`.trim());
+      lines.push(`${t.hi} (${t.en})`);
+      const next = [...document.querySelectorAll<HTMLElement>(".tcard:not([hidden])")].slice(0, 3)
+        .map((c) => `${c.querySelector("h3")!.textContent} ${c.querySelector(".twhen")!.textContent}`);
+      if (next.length) lines.push(`Coming up: ${next.join("; ")}`);
+      lines.push(location.origin + "/");
+      ($("tshare") as HTMLAnchorElement).href = `https://wa.me/?text=${encodeURIComponent(lines.join("\n"))}`;
+    };
     $("today").hidden = false;
     loadWeather()
       .then((w) => {
@@ -298,10 +310,11 @@ const points = all.map((s) => ({
         $("wx-more").textContent = `High ${w.max}°, low ${w.min}°. Sunrise ${time12(w.sunrise)}, sunset ${time12(w.sunset)}`;
         if (w.pm25 != null) $("wx-air").textContent = `Air ${airBand(w.pm25).toLowerCase()}, PM2.5 ${w.pm25}`;
         $("wx").hidden = false;
-        $("today").hidden = false;
+        share();
       })
       .catch(() => {});
     $("today-date").textContent = ist(now, { weekday: "long", day: "numeric", month: "long" }).replace(",", "");
+    share();
   }
   renderToday();
   document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && renderToday());
