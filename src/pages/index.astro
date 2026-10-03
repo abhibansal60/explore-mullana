@@ -99,6 +99,13 @@ const points = all.map((s) => ({
           <a class="back" id="back" href="/"><Icon name="back" />All categories</a>
           <div class="ltitle"><h2 id="l-title"></h2><span id="l-count" class="muted"></span></div>
         </div>
+        <div id="gmatch">
+          {guide.map((g) => (
+            <a class="gm" href={`/${g.slug}/`} data-search={`${g.en} ${g.hi} ${g.what} ${g.keys}`.toLowerCase()} style={`--cat:${g.color}`} hidden>
+              <b>{g.en}</b><span>{g.what}</span>
+            </a>
+          ))}
+        </div>
         <div id="list" class="group">
           {shops.map((shop) => <ShopCard shop={shop} />)}
         </div>
@@ -196,6 +203,10 @@ const points = all.map((s) => ({
   .tile i { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--cat); }
   .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari", var(--font); padding-left: 18px; }
   .tile .meta { color: var(--muted); font-size: 13.5px; padding-left: 18px; }
+  .gm { position: relative; display: flex; flex-direction: column; margin: 8px 0; padding: 12px 14px 12px 18px; border: 1px solid var(--line); border-radius: 8px; text-decoration: none; background: var(--paper); }
+  .gm::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 2px; background: var(--cat); }
+  .gm b { font-weight: 650; }
+  .gm span { color: var(--muted); font-size: 14.5px; }
   .guide { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
   .guide a { display: flex; flex-direction: column; gap: 1px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
   .guide .en { font-weight: 650; font-size: 17px; }
@@ -326,7 +337,13 @@ const points = all.map((s) => ({
         if (open) openCount++;
       }
     }
-    empty.hidden = visible.length > 0;
+    // Guide pages answer searches like "train" or "112" that no shop does.
+    let guideHits = 0;
+    document.querySelectorAll<HTMLElement>(".gm").forEach((g) => {
+      g.hidden = !terms.length || !terms.every((t) => g.dataset.search!.includes(t));
+      if (!g.hidden) guideHits++;
+    });
+    empty.hidden = visible.length > 0 || guideHits > 0;
     moreH.hidden = !rows.some((r) => r.classList.contains("place") && !r.hidden);
     stoneN.textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}`;
     stoneOpen.textContent = openCount ? `${openCount} open now` : "";

@@ -99,12 +99,12 @@ export const site = {
 
 // The guide pages, in the order a newcomer needs them. `color` is the page's top band.
 export const guide = [
-  { slug: "helplines", en: "Helplines", hi: "ज़रूरी नंबर", what: "112, ambulance, women, cyber fraud, bijli", color: "#b8322a" },
-  { slug: "festivals", en: "Festivals and melas", hi: "त्योहार और मेले", what: "Navratri at Mata Bala Sundari, and the year ahead", color: "#d9822b" },
-  { slug: "mmdu", en: "New at MMDU", hi: "एमएमडीयू में नए हैं?", what: "Your first week: SIM, bank, xerox, food, doctor", color: "#2f5d8a" },
-  { slug: "getting-here", en: "Getting here", hi: "कैसे पहुँचें", what: "Trains, buses and distances to nearby cities", color: "#c79500" },
-  { slug: "around", en: "Day trips", hi: "आसपास घूमें", what: "Kurukshetra, Kalesar, Adi Badri and more", color: "#2e6b3a" },
-  { slug: "about", en: "About Mullana", hi: "मुलाना के बारे में", what: "The town, its temple and its university", color: "#7a5a3c" },
+  { slug: "helplines", keys: "helpline emergency police ambulance fire 112 108 100 101 1091 1098 1930 1912 cyber fraud scam bijli electricity light women child number numbers ragging madad", en: "Helplines", hi: "ज़रूरी नंबर", what: "112, ambulance, women, cyber fraud, bijli", color: "#b8322a" },
+  { slug: "festivals", keys: "festival festivals mela navratri dussehra diwali holi lohri teej karwa chauth rakhi janmashtami shivratri baisakhi gurpurab event events tyohar calendar", en: "Festivals and melas", hi: "त्योहार और मेले", what: "Navratri at Mata Bala Sundari, and the year ahead", color: "#d9822b" },
+  { slug: "mmdu", keys: "mmdu university college student students hostel admission new sim bank fresher mmimsr campus", en: "New at MMDU", hi: "एमएमडीयू में नए हैं?", what: "Your first week: SIM, bank, xerox, food, doctor", color: "#2f5d8a" },
+  { slug: "getting-here", keys: "train trains railway station bus buses airport ambala barara jagadhri yamunanagar chandigarh delhi distance route how reach", en: "Getting here", hi: "कैसे पहुँचें", what: "Trains, buses and distances to nearby cities", color: "#c79500" },
+  { slug: "around", keys: "trip trips picnic ghumna visit kurukshetra kalesar morni pinjore adi badri kapal mochan sadhaura weekend", en: "Day trips", hi: "आसपास घूमें", what: "Kurukshetra, Kalesar, Adi Badri and more", color: "#2e6b3a" },
+  { slug: "about", keys: "about history census population pin code pincode 133203 std weather climate devi garh", en: "About Mullana", hi: "मुलाना के बारे में", what: "The town, its temple and its university", color: "#7a5a3c" },
 ];
 
 // Notes for public landmarks (temples, the university, the mandi), keyed by place slug.
