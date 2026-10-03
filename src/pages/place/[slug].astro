@@ -26,7 +26,8 @@ const fmt = (ymd: string) =>
   new Date(ymd + "T06:00:00Z").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).replace(/,/g, "");
 const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/place/${p.slug}/`);
 ---
-<Layout title={`${place.name}, Mullana`} description={note?.about ?? `${c.en} in Mullana, with directions.`} path={path}>
+<Layout title={`${place.name}, Mullana`} description={note?.about ?? `${c.en} in Mullana, with directions.`} path={path}
+  image={note?.public ? `/og/place-${place.slug}.png` : undefined}>
   <main style={`--cat:${c.color}`}>
     <a class="back" href={`/#${place.category}`}><Icon name="back" />{c.en}</a>
     <header class="sign">

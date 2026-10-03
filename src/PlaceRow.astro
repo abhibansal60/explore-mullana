@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro";
-import { categories, directions, searchText, site, type Place } from "./data";
+import { categories, directions, landmarks, searchText, site, type Place } from "./data";
 const { place } = Astro.props as { place: Place };
 const c = categories[place.category];
 const claim = `Hi, I run ${place.name} in Mullana. I'd like to add our phone number and hours to Explore Mullana.`;
@@ -11,9 +11,9 @@ const claim = `Hi, I run ${place.name} in Mullana. I'd like to add our phone num
     <h2><a href={`/place/${place.slug}/`}>{place.name}</a></h2>
     <span class="sub">
       <span class="catname">{c.en}</span>
-      <span>Not checked yet</span>
+      {!landmarks[place.slug]?.public && <span>Not checked yet</span>}
       <span class="dist" hidden></span>
-      <a class="claim" data-tap="claim" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(claim)}`}>Own this place?</a>
+      {!landmarks[place.slug]?.public && <a class="claim" data-tap="claim" href={`https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent(claim)}`}>Own this place?</a>}
     </span>
   </div>
   <div class="acts">
