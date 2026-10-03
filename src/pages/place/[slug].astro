@@ -79,8 +79,9 @@ const href = (p: { slug: string }) => ("phones" in p ? `/shop/${p.slug}/` : `/pl
 </Layout>
 
 <script>
+  import { istDate } from "../../open";
   // Hide what's over (IST); drop the section when nothing is left.
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const today = istDate();
   const evs = [...document.querySelectorAll<HTMLElement>(".ev")];
   evs.forEach((e) => (e.hidden = e.dataset.end! < today));
   const soon = document.getElementById("soon");

@@ -14,7 +14,7 @@ const span = (a: string, b?: string) =>
 <Page
   slug="festivals"
   intro="Festivals, melas and big days in Mullana for the year ahead. Dates follow the Hindu calendar, so check with the mandir close to the day."
-  description="Festivals and melas in Mullana: Navratri at Mata Bala Sundari Mandir, Dussehra, Diwali, Lohri, Holi, Baisakhi, Teej and more, with dates."
+  description="Festivals and melas in Mullana: Navratri, Dussehra, Diwali, Lohri, Holi, Baisakhi, Teej and more, with dates."
 >
   {months.map((m) => (
     <section class="month" data-month>
@@ -53,8 +53,9 @@ const span = (a: string, b?: string) =>
 </style>
 
 <script>
+  import { istDate } from "../open";
   // Hide what's over (IST). The page is built ahead of time, so this runs on the phone.
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const today = istDate();
   document.querySelectorAll<HTMLElement>(".ev").forEach((e) => (e.hidden = e.dataset.end! < today));
   document.querySelectorAll<HTMLElement>("[data-month]").forEach((m) => (m.hidden = !m.querySelector(".ev:not([hidden])")));
 </script>

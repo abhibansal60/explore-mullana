@@ -2,7 +2,7 @@
 import Page from "../Page.astro";
 import Icon from "../Icon.astro";
 
-// National and Haryana numbers only: all free, all answer 24 hours unless marked.
+// National and Haryana numbers only.
 const groups: { h: string; items: [string, string, string][] }[] = [
   {
     h: "Emergency",
@@ -54,7 +54,7 @@ const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)
 ---
 <Page
   slug="helplines"
-  intro="Tap a number to call. All of these are free."
+  intro="Tap a number to call. If you are in danger, call 112 first."
   description="Emergency and helpline numbers for Mullana and Haryana: 112, ambulance, women, child, cyber fraud, electricity and more."
 >
   {groups.map((g) => (
@@ -70,7 +70,7 @@ const show = (n: string) => (n.length === 11 ? `${n.slice(0, 4)} ${n.slice(4, 7)
       </ul>
     </>
   ))}
-  <p class="src">Numbers from the Government of India and Haryana helpline lists. If one doesn't connect, 112 always does.</p>
+  <p class="src">National and Haryana helpline numbers as published by the services themselves. If a number doesn't connect, 112 always does. Spotted a number that has changed? Tell us below.</p>
 </Page>
 
 <style>

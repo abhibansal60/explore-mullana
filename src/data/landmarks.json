@@ -1,9 +1,10 @@
 {
  "mata-bala-sundari-mandir": {
   "hi": "माता बाला सुंदरी मंदिर",
-  "about": "Mullana's best-known temple, to the Devi as Bala Sundari. It is at its busiest in both Navratris.",
+  "about": "Mullana's best-known temple, to the Devi as Bala Sundari. The mandir posts its aarti times and Navratri programme on Instagram at @mata.bala.sunderi.mandir.",
   "more": "Its history isn't written down anywhere we could find. If you know the story of the mandir, tap Report a mistake below and tell us. We'll add it with your name.",
-  "public": true
+  "public": true,
+  "source": "https://www.instagram.com/mata.bala.sunderi.mandir/"
  },
  "maharishi-markandeshwar-university-mmdu": {
   "hi": "महर्षि मार्कंडेश्वर विश्वविद्यालय",
@@ -35,7 +36,7 @@
  },
  "devi-mandir": {
   "hi": "देवी मंदिर",
-  "about": "A Devi temple in Mullana, busy through Navratri.",
+  "about": "A Devi temple in Mullana.",
   "public": true
  },
  "gurudwara-shri-guru-ravidas": {

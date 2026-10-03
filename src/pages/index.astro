@@ -241,7 +241,7 @@ const points = all.map((s) => ({
 </style>
 
 <script>
-  import { isOpen, markOpenBadges, time12 } from "../open";
+  import { isOpen, istDate, markOpenBadges, time12 } from "../open";
   import { distLabel, metres } from "../geo";
   import { airBand, loadWeather } from "../weather";
   import { filterMap, initMap, set3D, showMe, showPin, showTown } from "../map";
@@ -250,11 +250,11 @@ const points = all.map((s) => ({
   const $ = (id: string) => document.getElementById(id)!;
 
   // Today in Mullana: all dates in IST. Past events hide, and no upcoming event hides the section.
-  (() => {
+  // Runs again when the app comes back to the front, so an app left open overnight moves on to the new day.
+  function renderToday() {
     const ist = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", ...o });
     const now = new Date();
-    const ymd = (d: Date) => ist(d, { year: "numeric", month: "2-digit", day: "2-digit" }).split("/").reverse().join("-");
-    const today = ymd(now);
+    const today = istDate(now);
     const day = (s: string) => Date.parse(s + "T00:00:00Z") / 864e5;
     const hhmm = ist(now, { hour: "2-digit", minute: "2-digit", hour12: false }).replace(/^24/, "00");
     let shown = 0;
@@ -286,7 +286,9 @@ const points = all.map((s) => ({
       })
       .catch(() => {});
     $("today-date").textContent = ist(now, { weekday: "long", day: "numeric", month: "long" }).replace(",", "");
-  })();
+  }
+  renderToday();
+  document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && renderToday());
   const q = $("q") as HTMLInputElement;
   const moreH = $("more-h");
   const rows = [...document.querySelectorAll<HTMLElement>(".row")];
@@ -341,7 +343,8 @@ const points = all.map((s) => ({
     // Guide pages answer searches like "train" or "112" that no shop does.
     let guideHits = 0;
     document.querySelectorAll<HTMLElement>(".gm").forEach((g) => {
-      g.hidden = !terms.length || !terms.every((t) => g.dataset.search!.includes(t));
+      const words = g.dataset.search!.split(/\s+/);
+      g.hidden = term.length < 2 || !terms.every((t) => words.some((w) => w.startsWith(t)));
       if (!g.hidden) guideHits++;
     });
     empty.hidden = visible.length > 0 || guideHits > 0;
@@ -400,7 +403,8 @@ const points = all.map((s) => ({
     apply();
   }
   addEventListener("hashchange", fromHash);
-  const clearHash = () => history.pushState(null, "", location.pathname + location.search);
+  // Also drops ?q=, so a reload after reset doesn't bring an old search back.
+  const clearHash = () => history.pushState(null, "", location.pathname);
 
   q.addEventListener("input", apply);
   openBtn.addEventListener("click", () => {
@@ -429,7 +433,7 @@ const points = all.map((s) => ({
     openOnly = false;
     openBtn.setAttribute("aria-pressed", "false");
     rows.forEach((r) => r.classList.remove("picked"));
-    if (location.hash) clearHash();
+    if (location.hash || location.search) clearHash();
     setNear(false);
   }
   $("back").addEventListener("click", (e) => {
