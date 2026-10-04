@@ -7,9 +7,9 @@ const fonts = "https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wgh
 const html = (w) => `<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="${fonts}">
 <style>
   * { box-sizing: border-box; margin: 0; }
-  body { width: 100vw; height: 100vh; background: #fafaf8; display: grid; place-items: center; }
-  .stone { --w: ${w}vmin; width: var(--w); padding-bottom: calc(var(--w) * 0.09); text-align: center; overflow: hidden; background: #fff; color: #1c1b19;
-    border-radius: calc(var(--w) / 2) calc(var(--w) / 2) calc(var(--w) * 0.065) calc(var(--w) * 0.065); outline: calc(var(--w) * 0.012) solid #1c1b19; outline-offset: -1px; }
+  body { width: 100vw; height: 100vh; background: #f7f1e6; display: grid; place-items: center; }
+  .stone { --w: ${w}vmin; width: var(--w); padding-bottom: calc(var(--w) * 0.09); text-align: center; overflow: hidden; background: #fffcf6; color: #2b1d13;
+    border-radius: calc(var(--w) / 2) calc(var(--w) / 2) calc(var(--w) * 0.065) calc(var(--w) * 0.065); outline: calc(var(--w) * 0.012) solid #2b1d13; outline-offset: -1px; }
   .dome { height: calc(var(--w) * 0.33); background: #f2b705; margin-bottom: calc(var(--w) * 0.07); }
   .hi { font: 700 calc(var(--w) * 0.2)/1.15 "Anek Devanagari", sans-serif; }
 </style><div class="stone"><div class="dome"></div><div class="hi" lang="hi">मुलाना</div></div>`;

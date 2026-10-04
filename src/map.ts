@@ -34,6 +34,11 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true, showZoom: false }), "top-right");
 
   map.on("load", () => {
+    // Warm the grey base map to match the site's limewash paper and field greens.
+    const tint: Record<string, string> = dark()
+      ? { background: "#1f1915", landuse_residential: "#261f1a", park: "#1f2619", landuse_park: "#1f2619", landcover_wood: "#1f2619", water: "#1b2a30", building: "#2e2620" }
+      : { background: "#f1e9da", landuse_residential: "#ece2d0", park: "#dfe6c8", landcover_wood: "#d8e2c2", water: "#bcd5dc", building: "#e6dac6" };
+    for (const [id, c] of Object.entries(tint)) if (map.getLayer(id)) map.setPaintProperty(id, id === "background" ? "background-color" : "fill-color", c);
     map.addSource("shops", {
       type: "geojson",
       promoteId: "slug",
@@ -72,8 +77,8 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
         "text-max-width": 8,
       },
       paint: {
-        "text-color": dark() ? "#efece6" : "#1c1b19",
-        "text-halo-color": dark() ? "#1b1b19" : "#ffffff",
+        "text-color": dark() ? "#f4ebdf" : "#2b1d13",
+        "text-halo-color": dark() ? "#1c1612" : "#ffffff",
         "text-halo-width": 1.6,
       },
     });
@@ -114,8 +119,8 @@ export function showMe(map: MLMap, lng: number, lat: number) {
   if (src) src.setData(data);
   else {
     map.addSource("me", { type: "geojson", data });
-    map.addLayer({ id: "me-halo", type: "circle", source: "me", paint: { "circle-radius": 18, "circle-color": "#1f5aa6", "circle-opacity": 0.18 } });
-    map.addLayer({ id: "me", type: "circle", source: "me", paint: { "circle-radius": 7, "circle-color": "#1f5aa6", "circle-stroke-width": 2.5, "circle-stroke-color": "#fff" } });
+    map.addLayer({ id: "me-halo", type: "circle", source: "me", paint: { "circle-radius": 18, "circle-color": "#1d64b0", "circle-opacity": 0.18 } });
+    map.addLayer({ id: "me", type: "circle", source: "me", paint: { "circle-radius": 7, "circle-color": "#1d64b0", "circle-stroke-width": 2.5, "circle-stroke-color": "#fff" } });
   }
   map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), 15.5) });
 }
@@ -137,7 +142,7 @@ export function set3D(map: MLMap, on: boolean) {
         type: "fill-extrusion",
         source: "buildings",
         paint: {
-          "fill-extrusion-color": dark() ? "#3a3935" : "#dcd8cf",
+          "fill-extrusion-color": dark() ? "#3b3129" : "#e2d6c2",
           "fill-extrusion-height": ["get", "h"],
           "fill-extrusion-opacity": 0.92,
         },

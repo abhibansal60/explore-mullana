@@ -17,8 +17,8 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1b1b19" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f1e6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1612" media="(prefers-color-scheme: dark)" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -55,21 +55,23 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
 
 <style is:global>
   :root {
-    --paper: #fafaf8;
-    --sheet: #ffffff;
-    --ink: #1c1b19;
-    --muted: #68645c;
-    --line: #e6e3dc;
+    /* Limewashed wall, painted-board ink, temple maroon for actions. */
+    --paper: #f7f1e6;
+    --sheet: #fffcf6;
+    --ink: #2b1d13;
+    --muted: #73624f;
+    --line: #e8dcc8;
     --stone: #f2b705; /* Haryana kilometre-stone yellow */
-    --open: #1e7a3a;
-    --focus: #1f5aa6;
+    --brand: #8c1d2c;
+    --open: #1d7a40;
+    --focus: #1d64b0;
     --font: "Anek Latin", "Anek Devanagari", system-ui, sans-serif;
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #1b1b19; --sheet: #232320; --ink: #efece6; --muted: #a39e94;
-      --line: #36352f; --open: #5cc27a; --focus: #7fb0ff;
+      --paper: #1c1612; --sheet: #26201a; --ink: #f4ebdf; --muted: #b0a291;
+      --line: #3b3129; --brand: #ec8d8f; --open: #6cc68a; --focus: #86b6f0;
     }
   }
   * { box-sizing: border-box; }
@@ -78,7 +80,7 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
     margin: 0; background: var(--paper); color: var(--ink);
     font: 400 17px/1.45 var(--font); font-variation-settings: "wdth" 100;
   }
-  a { color: inherit; }
+  a { color: inherit; text-decoration-color: color-mix(in srgb, var(--brand) 55%, transparent); text-underline-offset: 3px; }
   :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   [hidden] { display: none !important; }
 
@@ -92,7 +94,7 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
     font: 600 15px/1 var(--font); text-decoration: none; cursor: pointer; white-space: nowrap;
   }
   .btn svg { width: 18px; height: 18px; flex: none; }
-  .btn.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn.primary { background: var(--brand); color: var(--sheet); border-color: var(--brand); }
   .btn:active { transform: translateY(1px); }
 
   /* Icon-only action button used in list rows. */
@@ -101,7 +103,7 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
     border-radius: 8px; border: 1px solid var(--line); background: var(--sheet); color: var(--ink);
   }
   .ib svg { width: 20px; height: 20px; }
-  .ib.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .ib.primary { background: var(--brand); color: var(--sheet); border-color: var(--brand); }
   .ib:active { transform: translateY(1px); }
 
   /* Compact list row: name and status on the left, icon buttons on the right. */
