@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "tsx scripts/og.mjs && astro build",
     "og": "tsx scripts/og.mjs",
+    "icons": "tsx scripts/icons.mjs",
     "sheet": "tsx scripts/sheet.mjs",
     "preview": "astro preview",
     "buildings": "python3 scripts/buildings.py",

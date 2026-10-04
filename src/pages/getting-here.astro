@@ -1,0 +1,52 @@
+---
+import Page from "../Page.astro";
+
+// Driving distances from the village centre, from OpenStreetMap routing. Roughly ±2 km.
+const away: [string, number, string][] = [
+  ["MMDU campus", 3, "On the highway, south-west of the village"],
+  ["Barara", 4, "Nearest railway station (RAA)"],
+  ["Saha", 15, ""],
+  ["Ambala Cantt", 24, "Railway junction (UMB), about 35 minutes"],
+  ["Yamunanagar and Jagadhri", 30, "Railway station YJUD"],
+  ["Ambala City", 33, "District headquarters"],
+  ["Kurukshetra", 55, ""],
+  ["Chandigarh airport", 64, ""],
+  ["Panchkula", 64, ""],
+  ["Chandigarh", 71, ""],
+  ["Delhi", 229, "About 4 hours by road"],
+];
+---
+<Page
+  slug="getting-here"
+  intro="Mullana sits on the Ambala to Jagadhri highway, in Ambala district. PIN 133203."
+  description="How to reach Mullana and MMDU: nearest railway stations (Barara, Ambala Cantt), buses on the Ambala–Jagadhri highway, Chandigarh airport, and road distances."
+>
+  <h2>By train</h2>
+  <ul class="rows">
+    <li><b>Barara (RAA), 4 km.</b> The nearest station, on the Ambala to Saharanpur line. Local and passenger trains to Ambala, Jagadhri and Saharanpur.</li>
+    <li><b>Ambala Cantt (UMB), 24 km.</b> One of north India's biggest junctions: Shatabdi, Vande Bharat and trains to Delhi, Punjab, J&K, Mumbai and the east. Most students arrive here.</li>
+    <li><b>Yamunanagar–Jagadhri (YJUD), about 30 km.</b> Handy for trains toward Saharanpur, Dehradun and UP.</li>
+  </ul>
+  <p>Train running status: call <a href="tel:139">139</a>.</p>
+
+  <h2>By bus</h2>
+  <p>Haryana Roadways and private buses run the Ambala Cantt to Jagadhri highway through Saha and Mullana, past the MMDU gate. From Ambala Cantt, take any bus to Jagadhri or Yamunanagar and ask for Mullana. From Chandigarh, come via Ambala; a few buses run through to Yamunanagar.</p>
+
+  <h2>By air</h2>
+  <p>Chandigarh International Airport is about 64 km, an hour and a half by taxi. Delhi airport is about 4 hours by road.</p>
+
+  <h2>How far is it?</h2>
+  <ul class="rows dist">
+    {away.map(([to, km, what]) => (
+      <li><span><b>{to}</b>{what && <span class="muted">{what}</span>}</span><span class="km board">{km} km</span></li>
+    ))}
+  </ul>
+  <p class="src">Distances by road from OpenStreetMap routing, give or take 2 km. Station codes from Indian Railways. Highway from Wikipedia. Know the bus timings? Send them with "Report a mistake" below and we'll add them.</p>
+</Page>
+
+<style>
+  .rows b { font-weight: 650; }
+  .dist li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .dist .muted { display: block; font-size: 14.5px; }
+  .km { font-size: 22px; white-space: nowrap; }
+</style>

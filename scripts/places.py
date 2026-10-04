@@ -64,6 +64,13 @@ PICK = {
     "MM Continental": ("places", "MM Continental hotel"),
 }
 
+# Public places Overture lacks, hand-picked from OpenStreetMap (ODbL): (category, name, lat, lng).
+OSM = [
+    ("medical", "CHC Mullana (government health centre)", 30.27179, 77.0546),
+    ("medical", "MMIMSR Blood Bank", 30.25227, 77.0487),
+    ("fuel", "Mahalakshmi Filling Station", 30.26815, 77.05808),
+]
+
 
 def slug(name):
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
@@ -90,6 +97,9 @@ def main(src):
             "lng": round(p["lng"], 6),
             "source": f"Overture Maps ({p['src']}, {p['lic']})",
         })
+    for cat, name, lat, lng in OSM:
+        out.append({"slug": slug(name), "name": name, "category": cat, "lat": lat, "lng": lng,
+                    "source": "OpenStreetMap contributors (ODbL)"})
     missing = set(PICK) - {p["nm"] for p in places}
     assert not missing, f"not in export: {missing}"
     out.sort(key=lambda p: p["name"])

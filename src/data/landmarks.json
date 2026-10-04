@@ -1,0 +1,60 @@
+{
+ "mata-bala-sundari-mandir": {
+  "hi": "माता बाला सुंदरी मंदिर",
+  "about": "Mullana's best-known temple, to the Devi as Bala Sundari. The mandir posts its aarti times and Navratri programme on Instagram at @mata.bala.sunderi.mandir.",
+  "more": "Its history isn't written down anywhere we could find. If you know the story of the mandir, tap Report a mistake below and tell us. We'll add it with your name.",
+  "public": true,
+  "source": "https://www.instagram.com/mata.bala.sunderi.mandir/"
+ },
+ "maharishi-markandeshwar-university-mmdu": {
+  "hi": "महर्षि मार्कंडेश्वर विश्वविद्यालय",
+  "about": "Maharishi Markandeshwar (Deemed to be University), founded in 1993 as an engineering college. Medicine, dentistry, nursing, pharmacy, engineering, management, law and agriculture on one campus.",
+  "more": "Admissions: 01731 274475, toll-free 1800 274 0240.",
+  "source": "https://www.mmumullana.org/about-us",
+  "public": true
+ },
+ "mmimsr-hospital": {
+  "hi": "एमएमआईएमएसआर अस्पताल",
+  "about": "MM Institute of Medical Sciences and Research, the university's teaching hospital. For an ambulance, call 108 or 112.",
+  "source": "https://mmimsr.mmumullana.org",
+  "public": true
+ },
+ "mmimsr-blood-bank": {
+  "about": "The blood bank at the MMIMSR hospital on the MMDU campus.",
+  "public": true
+ },
+ "chc-mullana-government-health-centre": {
+  "hi": "सामुदायिक स्वास्थ्य केंद्र मुलाना",
+  "about": "The government Community Health Centre for Mullana and the villages around it.",
+  "public": true
+ },
+ "new-grain-market-anaj-mandi": {
+  "hi": "नई अनाज मंडी",
+  "about": "Mullana's grain market. Wheat from April, then mustard, maize and sunflower in their seasons.",
+  "source": "https://acrop.app/mandi/haryana/ambala/mullana",
+  "public": true
+ },
+ "devi-mandir": {
+  "hi": "देवी मंदिर",
+  "about": "A Devi temple in Mullana.",
+  "public": true
+ },
+ "gurudwara-shri-guru-ravidas": {
+  "hi": "गुरुद्वारा श्री गुरु रविदास",
+  "about": "Gurudwara dedicated to Guru Ravidas.",
+  "public": true
+ },
+ "shiva-statue": {
+  "hi": "शिव प्रतिमा",
+  "about": "A large statue of Shiva, a Mullana landmark.",
+  "public": true
+ },
+ "mmdu-academic-block": {
+  "about": "One of the academic blocks on the MMDU campus.",
+  "public": true
+ },
+ "mmdu-department-of-law": {
+  "about": "MMDU's Department of Law.",
+  "public": true
+ }
+}

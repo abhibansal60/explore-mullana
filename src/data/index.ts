@@ -39,12 +39,7 @@ export const categories: Record<string, { en: string; hi: string; keys: string; 
   places: { en: "Places", hi: "जगहें", keys: "mandir temple park gurudwara gate", color: "#7a5a3c" },
 };
 
-// "08:00" -> "8 am", "21:30" -> "9:30 pm"
-export const time12 = (hhmm: string) => {
-  const [h, m] = hhmm.split(":").map(Number);
-  const h12 = h % 12 || 12;
-  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${h < 12 ? "am" : "pm"}`;
-};
+export { time12 } from "../open";
 
 // shops.json is git-ignored so phone numbers stay out of the public repo.
 // Resolved from the project root: import.meta.url points into the build output.
@@ -57,6 +52,36 @@ export type Place = { slug: string; name: string; category: string; lat: number;
 export const places: Place[] = JSON.parse(readFileSync("src/data/places.json", "utf8")).filter(
   (p: Place) => !shops.some((s) => s.name.toLowerCase() === p.name.toLowerCase()),
 );
+
+// Public info only. `sample` items are placeholders for previews.
+export type Event = {
+  id: string;
+  title: string;
+  titleHi?: string;
+  date: string; // YYYY-MM-DD
+  time?: string; // HH:MM
+  endDate?: string;
+  place?: string; // left out when it's all of Mullana
+  slug?: string;
+  kind: keyof typeof kinds;
+  note?: string; // one line of what to expect
+  source?: { name: string; url: string };
+  sample?: true;
+  by?: string; // contributor credit for community events
+};
+export const kinds = {
+  festival: { name: "Festival", color: "#a86a12" },
+  religious: { name: "Temple", color: "#d9822b" },
+  campus: { name: "Campus", color: "#2f5d8a" },
+  market: { name: "Market", color: "#2e6b3a" },
+  community: { name: "Community", color: "var(--ink)" },
+};
+// Festivals are curated in events.json; approved community events come from the Sheet (npm run sheet).
+const community = "src/data/events-community.json";
+export const events: Event[] = [
+  ...JSON.parse(readFileSync("src/data/events.json", "utf8")),
+  ...(existsSync(community) ? JSON.parse(readFileSync(community, "utf8")) : []),
+];
 
 export const monthLabel = (ym: string) =>
   new Date(`${ym}-01T00:00:00`).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
@@ -76,4 +101,21 @@ export const site = {
   reportWhatsApp: "917988979932",
   // Google Form for suggesting a missing shop.
   addFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScEuSJpiYXkC19pRzMMXokWsqeKQH_kKTj8GHhF5dtNIOTq1w/viewform",
+  // Google Form for events, from setupEvents() in apps-script/Code.gs. Empty sends people to WhatsApp instead.
+  addEventUrl: "",
 };
+
+// The guide pages, in the order a newcomer needs them. `color` is the page's top band.
+export const guide = [
+  { slug: "helplines", keys: "helpline emergency police ambulance fire 112 108 100 101 1091 1098 1930 1912 cyber fraud scam bijli electricity women child number numbers ragging madad", en: "Helplines", hi: "ज़रूरी नंबर", what: "112, ambulance, women, cyber fraud, bijli", color: "#b8322a" },
+  { slug: "festivals", keys: "festival festivals mela navratri dussehra diwali holi lohri teej karwa chauth rakhi janmashtami shivratri baisakhi gurpurab event events tyohar calendar", en: "Festivals and melas", hi: "त्योहार और मेले", what: "Navratri, Dussehra, Diwali and the year ahead", color: "#d9822b" },
+  { slug: "mmdu", keys: "mmdu university college student students hostel admission new sim bank fresher mmimsr campus", en: "New at MMDU", hi: "एमएमडीयू में नए हैं?", what: "Your first week: SIM, bank, xerox, food, doctor", color: "#2f5d8a" },
+  { slug: "getting-here", keys: "train trains railway station bus buses airport ambala barara jagadhri yamunanagar chandigarh delhi distance route how reach", en: "Getting here", hi: "कैसे पहुँचें", what: "Trains, buses and distances to nearby cities", color: "#c79500" },
+  { slug: "around", keys: "trip trips picnic ghumna visit kurukshetra kalesar morni pinjore adi badri kapal mochan sadhaura weekend", en: "Day trips", hi: "आसपास घूमें", what: "Kurukshetra, Kalesar, Adi Badri and more", color: "#2e6b3a" },
+  { slug: "about", keys: "about history census population pin code pincode 133203 std weather climate devi garh", en: "About Mullana", hi: "मुलाना के बारे में", what: "The town, its temple and its university", color: "#7a5a3c" },
+];
+
+// Notes for public landmarks (temples, the university, the mandi), keyed by place slug.
+// `public` hides the "own this place?" prompt for places nobody owns privately.
+export type Landmark = { hi?: string; about: string; more?: string; source?: string; public?: boolean };
+export const landmarks: Record<string, Landmark> = JSON.parse(readFileSync("src/data/landmarks.json", "utf8"));

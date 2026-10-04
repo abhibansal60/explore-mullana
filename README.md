@@ -2,6 +2,8 @@
 
 A free map and directory of shops and places in Mullana (Ambala, Haryana) and around MMDU. It shows opening hours, open-now status, call, WhatsApp and directions buttons, and a 3D view of the town's buildings.
 
+"Today in Mullana" on the home page shows the weather and air, the day's tithi with the next Ekadashi, Amavasya and Purnima, and the festivals and events of the next two weeks, with a button to share it all on WhatsApp. Guide pages cover helplines, festivals and melas, a first-week guide for new MMDU students, getting here, day trips and the town itself. The site installs to a phone's home screen and works offline.
+
 ## Start here: paste this to your agent
 
 ```text
@@ -41,4 +43,5 @@ Basemap: OpenFreeMap / OpenMapTiles, © OpenStreetMap contributors. Buildings: O
 ## Adding shops and counting taps
 
 - Shops are added through a Google Form. Its responses land in a private Sheet, and a listing goes live only after its "Approved" box is ticked. `apps-script/Code.gs` creates the Form and Sheet and serves the approved rows. `npm run sheet` pulls them into `shops.json`.
+- Events work the same way. Run `setupEvents()` once in the Apps Script project to create the events Form and Sheet, deploy a new version of the web app, and put the events Form's link in `site.addEventUrl` (`src/data/index.ts`). Tick "Approved" on an event row, and `npm run sheet` writes it to `src/data/events-community.json` (git-ignored). Festivals and big days are curated by hand in `src/data/events.json`.
 - `npm run taps` prints this month's Call, WhatsApp, Directions, Reviews, Share and Claim taps per shop (`npm run taps -- 2026-09` for another month). Only the shop and the kind of tap are counted, no IP or device. Counts live in the Cloudflare KV namespace `explore-mullana-taps`, bound as `TAPS` in `wrangler.toml`.
