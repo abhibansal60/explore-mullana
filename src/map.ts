@@ -7,11 +7,11 @@ type Point = { slug: string; name: string; color: string; lat: number; lng: numb
 const CENTER: [number, number] = [77.047, 30.2755];
 const dark = () => matchMedia("(prefers-color-scheme: dark)").matches || isNight();
 
-const selectors = new WeakMap<MLMap, (slug: string, center: [number, number]) => void>();
-// Same as tapping the pin: highlight it, fly there, open its row.
+const selectors = new WeakMap<MLMap, (slug: string, center: [number, number], stay?: boolean) => void>();
+// Highlight a pin and fly there, without leaving the map (tapping the pin itself opens its row).
 export function showPin(map: MLMap, slug: string, lng: number, lat: number) {
   const select = selectors.get(map);
-  select?.(slug, [lng, lat]);
+  select?.(slug, [lng, lat], true);
   return !!select; // false until the map has loaded
 }
 
@@ -34,10 +34,10 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true, showZoom: false }), "top-right");
 
   map.on("load", () => {
-    // Warm the grey base map to match the site's limewash paper and field greens.
+    // Fields green and canals blue, so the grey base map reads as farm country.
     const tint: Record<string, string> = dark()
-      ? { background: "#1f1915", landuse_residential: "#261f1a", park: "#1f2619", landuse_park: "#1f2619", landcover_wood: "#1f2619", water: "#1b2a30", building: "#2e2620" }
-      : { background: "#f1e9da", landuse_residential: "#ece2d0", park: "#dfe6c8", landcover_wood: "#d8e2c2", water: "#bcd5dc", building: "#e6dac6" };
+      ? { background: "#171816", landuse_residential: "#1d1e1b", park: "#1b241b", landuse_park: "#1b241b", landcover_wood: "#1b241b", water: "#16252b", building: "#262724" }
+      : { background: "#eeeee8", landuse_residential: "#e7e7e0", park: "#d9e5cc", landcover_wood: "#d1dfc3", water: "#bcd3dc", building: "#e0e0d8" };
     for (const [id, c] of Object.entries(tint)) if (map.getLayer(id)) map.setPaintProperty(id, id === "background" ? "background-color" : "fill-color", c);
     map.addSource("shops", {
       type: "geojson",
@@ -77,19 +77,19 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
         "text-max-width": 8,
       },
       paint: {
-        "text-color": dark() ? "#f4ebdf" : "#2b1d13",
-        "text-halo-color": dark() ? "#1c1612" : "#ffffff",
+        "text-color": dark() ? "#edede8" : "#1f1f1c",
+        "text-halo-color": dark() ? "#141513" : "#ffffff",
         "text-halo-width": 1.6,
       },
     });
 
     let picked: string | undefined;
-    const select = (slug: string, center: [number, number]) => {
+    const select = (slug: string, center: [number, number], stay = false) => {
       if (picked) map.setFeatureState({ source: "shops", id: picked }, { picked: false });
       picked = slug;
       map.setFeatureState({ source: "shops", id: picked }, { picked: true });
       map.flyTo({ center, zoom: Math.max(map.getZoom(), 17), speed: 0.9 });
-      onPick(slug);
+      if (!stay) onPick(slug);
     };
     selectors.set(map, select);
     map.on("click", "shops", (e) => {
@@ -142,7 +142,7 @@ export function set3D(map: MLMap, on: boolean) {
         type: "fill-extrusion",
         source: "buildings",
         paint: {
-          "fill-extrusion-color": dark() ? "#3b3129" : "#e2d6c2",
+          "fill-extrusion-color": dark() ? "#3a3b37" : "#dcdcd4",
           "fill-extrusion-height": ["get", "h"],
           "fill-extrusion-opacity": 0.92,
         },

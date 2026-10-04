@@ -17,80 +17,85 @@ const points = all.map((s) => ({
 }));
 ---
 <Layout title="Explore Mullana" description="Shops, food and places in Mullana and around MMDU, with opening hours, call, WhatsApp and directions.">
-  <div class="app">
-    <div class="stage">
-      <div id="map" data-points={JSON.stringify(points)}></div>
-      <button class="stone" id="home" aria-label="Show all of Mullana">
-        <span class="dome"></span>
-        <span class="hi" lang="hi">मुलाना</span>
-        <span class="en">Mullana</span>
-        <span class="n" id="stone-n">{all.length} places</span>
-        <span class="n open" id="stone-open"></span>
-      </button>
-      <button id="three" class="btn map-btn" hidden><Icon name="cube" /><span>3D</span></button>
-    </div>
+  <div class="app" id="app">
+    <main class="feed">
+      <header class="top">
+        <button class="stone" id="home" aria-label="Back to the start">
+          <span class="dome"><span class="hi" lang="hi">मुलाना</span><span class="en">Mullana</span></span>
+          <span class="face"><span class="km" id="wx-t">0</span><span class="unit" id="wx-unit">km</span></span>
+        </button>
+        <div class="day" id="today">
+          <p class="date" id="today-date"></p>
+          <p class="pc"><b lang="hi" id="pc-hi"></b> <span id="pc-en"></span></p>
+          <p class="wx" id="wx" hidden><b id="wx-sky"></b><span id="wx-more"></span><span id="wx-air"></span></p>
+          <p class="count"><span id="stone-n">{all.length} places</span> <span id="stone-open" class="open"></span></p>
+        </div>
+      </header>
 
-    <section class="sheet" aria-label="Places">
-      <div class="grip" aria-hidden="true"></div>
-      <section class="today" id="today" aria-labelledby="today-h" hidden>
-        <h2 id="today-h" class="grid-h">Today in Mullana <span id="today-date" class="muted"></span></h2>
-        <div class="wx" id="wx" hidden>
-          <span class="wt" id="wx-t"></span>
-          <span class="wd"><b id="wx-sky"></b><span id="wx-more"></span><span id="wx-air"></span></span>
+      <div class="find">
+        <label class="search">
+          <Icon name="search" />
+          <input id="q" type="search" placeholder="Try chai, xerox, दवाई, 112" aria-label="Search Mullana" autocomplete="off" />
+        </label>
+        <div class="cats" role="group" aria-label="Filters">
+          <button class="tog" id="open-now" aria-pressed="false"><Icon name="clock" />Open now</button>
+          <button class="tog" id="near-me" aria-pressed="false"><Icon name="locate" /><span>Near me</span></button>
+          <button class="tog map-tog" id="map-open"><Icon name="map" />Map</button>
         </div>
-        <p class="pc" id="pc"><b lang="hi" id="pc-hi"></b> <span id="pc-en"></span><span id="pc-next" class="muted"></span></p>
-        <div class="tcards">
-          {whenSort.map((ev) => {
-            const k = kinds[ev.kind];
-            const at = spot(ev.slug);
-            return (
-              <article class="tcard" data-date={ev.date} data-end={ev.endDate ?? ev.date} data-time={ev.time} data-time-label={ev.time ? time12(ev.time) : undefined} hidden>
-                <div class="tmeta">
-                  <span class="tkind"><i style={`background:${k.color}`}></i>{k.name}</span>
-                  {ev.sample && <span class="tsample">Sample</span>}
-                </div>
-                <p class="twhen"></p>
-                <h3 class="board">{ev.title}</h3>
-                {ev.titleHi && <p class="thi" lang="hi">{ev.titleHi}</p>}
-                {ev.place && <p class="tplace">{ev.place}</p>}
-                {ev.by && <p class="tplace">Added by {ev.by}</p>}
-                <div class="tlinks">
-                  {at && <button class="btn tmap" data-pin={at.slug} data-lat={at.lat} data-lng={at.lng}>Show on map</button>}
-                  {ev.source && <a class="tsrc" href={ev.source.url} target="_blank" rel="noopener">Source</a>}
-                </div>
-              </article>
-            );
-          })}
-        </div>
-        <a class="btn tshare" id="tshare" href="#"><Icon name="share" />Share today on WhatsApp</a>
-        <p class="tadd"><a href="/festivals/">All festivals and melas this year</a><br /><a href={site.addEventUrl || `https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Something happening in Mullana? Tell us</a></p>
-      </section>
-      <label class="search">
-        <Icon name="search" />
-        <input id="q" type="search" placeholder="Try chai, xerox, दवाई" aria-label="Search places" autocomplete="off" />
-      </label>
-      <div class="cats" role="group" aria-label="Filters">
-        <button class="tog" id="open-now" aria-pressed="false"><Icon name="clock" />Open now</button>
-        <button class="tog" id="near-me" aria-pressed="false"><Icon name="locate" /><span>Near me</span></button>
       </div>
 
       <div id="home-view">
+        <section aria-labelledby="soon-h">
+          <h2 class="grid-h" id="soon-h">Coming up</h2>
+          <p class="pc-next muted" id="pc-next"></p>
+          <div class="tcards">
+            {whenSort.map((ev) => {
+              const k = kinds[ev.kind];
+              const at = spot(ev.slug);
+              return (
+                <article class="tcard" style={`--cat:${k.color}`} data-date={ev.date} data-end={ev.endDate ?? ev.date} data-time={ev.time} data-time-label={ev.time ? time12(ev.time) : undefined} hidden>
+                  <p class="twhen"></p>
+                  <h3 class="board">{ev.title}</h3>
+                  {ev.titleHi && <p class="thi" lang="hi">{ev.titleHi}</p>}
+                  <p class="tplace">{[k.name, ev.place].filter(Boolean).join(", ")}{ev.sample && " (sample)"}</p>
+                  {ev.by && <p class="tplace">Added by {ev.by}</p>}
+                  <div class="tlinks">
+                    {at && <button class="btn tmap" data-pin={at.slug} data-lat={at.lat} data-lng={at.lng}><Icon name="map" />On the map</button>}
+                    {ev.source && <a class="tsrc" href={ev.source.url} target="_blank" rel="noopener">Source</a>}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+          <div class="tfoot">
+            <a class="btn" id="tshare" href="#"><Icon name="share" />Share today on WhatsApp</a>
+            <a class="tlink" href="/festivals/">All festivals this year</a>
+            <a class="tlink" href={site.addEventUrl || `https://wa.me/${site.reportWhatsApp}?text=${encodeURIComponent("Event for Explore Mullana: ")}`} target="_blank" rel="noopener">Tell us about an event</a>
+          </div>
+        </section>
+
         <h2 class="grid-h">What do you need?</h2>
         <nav class="tiles" aria-label="Categories">
           {used.map((k) => (
             <a class="tile" href={`#${k}`} data-cat={k} style={`--cat:${categories[k].color}`}>
-              <span class="en"><i></i>{categories[k].en}</span>
+              <span class="en">{categories[k].en}</span>
               <span class="hi" lang="hi">{categories[k].hi}</span>
               <span class="meta"><span>{count(k)} {count(k) === 1 ? "place" : "places"}</span><span class="tile-open"></span></span>
             </a>
           ))}
         </nav>
+
         <h2 class="grid-h">Know Mullana</h2>
-        <nav class="guide" aria-label="Guide">
+        <nav class="signs" aria-label="Guide">
           {guide.map(({ slug, en, hi, what }) => (
-            <a href={`/${slug}/`}><span class="en">{en} <span lang="hi">{hi}</span></span><span class="what">{what}</span></a>
+            <a class:list={["sign", { alarm: slug === "helplines" }]} href={`/${slug}/`}>
+              <span class="en board">{en}</span>
+              <span class="hi" lang="hi">{hi}</span>
+              <span class="what">{what}</span>
+            </a>
           ))}
         </nav>
+
         <div class="addcard">
           <p>Know a shop that's missing? Add it in a minute. Only add numbers the owner agreed to share.</p>
           <a class="btn primary" href={site.addFormUrl} target="_blank" rel="noopener">Add a shop</a>
@@ -99,7 +104,7 @@ const points = all.map((s) => ({
 
       <div id="list-view" hidden>
         <div class="lhead">
-          <a class="back" id="back" href="/"><Icon name="back" />All categories</a>
+          <a class="back" id="back" href="/"><Icon name="back" />Everything</a>
           <div class="ltitle"><h2 id="l-title"></h2><span id="l-count" class="muted"></span></div>
         </div>
         <div id="gmatch">
@@ -119,132 +124,146 @@ const points = all.map((s) => ({
         <p id="empty" class="empty" hidden>Nothing matches that yet. Try a shorter word, or clear the filters.</p>
       </div>
       <Credits />
-    </section>
+    </main>
+
+    <div class="stage" id="stage">
+      <div id="map" data-points={JSON.stringify(points)}></div>
+      <button class="btn map-btn map-close" id="map-close"><Icon name="close" />Close map</button>
+      <button id="three" class="btn map-btn" hidden><Icon name="cube" /><span>3D</span></button>
+    </div>
   </div>
 </Layout>
 
 <style>
-  .stage { position: sticky; top: 0; height: 42svh; z-index: 0; }
-  #map { position: absolute; inset: 0; background: var(--line); }
-  .sheet {
-    position: relative; z-index: 1; margin-top: -28px; min-height: 60svh;
-    background: var(--sheet); border-radius: 18px 18px 0 0; padding: 6px 16px 0;
-    box-shadow: 0 -1px 0 var(--line), 0 -8px 24px rgb(0 0 0 / 0.06);
-  }
-  .grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); margin: 4px auto 12px; }
+  .feed { padding: 0 16px; max-width: 640px; }
 
-  /* The one flourish: a Haryana kilometre stone holding the town's name. */
+  /* The one flourish: the town's kilometre stone. Today's temperature sits where the distance would. */
+  .top { display: grid; grid-template-columns: 118px 1fr; gap: 16px; align-items: end; padding: max(18px, env(safe-area-inset-top)) 0 18px; }
   .stone {
-    position: absolute; top: max(14px, env(safe-area-inset-top)); left: 14px; z-index: 2;
-    width: 92px; padding: 0 0 8px; text-align: center; overflow: hidden; border: 0; cursor: pointer; font: inherit;
-    background: #fffcf6; color: #2b1d13; border-radius: 46px 46px 6px 6px;
-    box-shadow: 0 1px 0 rgb(0 0 0 / 0.12), 0 6px 18px rgb(0 0 0 / 0.14);
+    display: flex; flex-direction: column; width: 118px; padding: 0; border: 0; cursor: pointer; font: inherit; text-align: center;
+    background: #fff; color: #1f1f1c; border-radius: 59px 59px 6px 6px; overflow: hidden;
+    box-shadow: inset 0 0 0 1.5px #1f1f1c22, 0 10px 0 -4px var(--line);
   }
-  .dome { display: block; height: 30px; background: var(--stone); margin-bottom: 6px; }
-  .stone .hi { display: block; font: 700 17px/1.1 "Anek Devanagari", var(--font); }
-  .stone .en { display: block; font-weight: 700; font-size: 15px; font-variation-settings: "wdth" 80; }
-  .stone .n { display: block; font-size: 12.5px; color: #73624f; margin-top: 3px; }
+  .dome { display: flex; flex-direction: column; justify-content: flex-end; height: 74px; padding-bottom: 6px; background: var(--stone); }
+  .stone .hi { font: 700 22px/1.05 "Anek Devanagari", var(--font); }
+  .stone .en { font-weight: 750; font-size: 15px; font-variation-settings: "wdth" 80; line-height: 1.1; }
+  .face { display: flex; align-items: baseline; justify-content: center; gap: 3px; padding: 10px 0 12px; background: #fff; }
+  .km { font-weight: 750; font-variation-settings: "wdth" 72; font-size: 46px; line-height: 0.9; }
+  .unit { font-weight: 650; font-size: 15px; color: #62625b; }
+  .day { padding-bottom: 4px; min-width: 0; }
+  .day p { margin: 0; }
+  .date { font-weight: 700; font-size: 19px; line-height: 1.2; }
+  .pc { margin-top: 4px !important; font-size: 15px; }
+  .pc b { font: 600 16px "Anek Devanagari", var(--font); }
+  .wx { margin-top: 4px !important; font-size: 14.5px; color: var(--muted); line-height: 1.35; }
+  .wx b, .wx span { display: block; }
+  .wx b { color: var(--ink); font-weight: 600; }
+  .count { margin-top: 6px !important; font-size: 14px; color: var(--muted); }
+  .count .open { color: var(--open); font-weight: 600; }
 
-  .map-btn { position: absolute; right: 12px; bottom: 44px; z-index: 2; box-shadow: 0 4px 14px rgb(0 0 0 / 0.14); }
-  .map-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-
+  .find { position: sticky; top: 0; z-index: 5; margin: 0 -16px; padding: 8px 16px 10px; background: var(--paper); }
   .search {
-    display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 50px;
-    border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--muted);
+    display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 52px;
+    border: 2px solid var(--ink); border-radius: 8px; background: var(--sheet); color: var(--muted);
   }
   .search :global(svg) { width: 20px; height: 20px; flex: none; }
   .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--ink); font: 400 17px var(--font); }
-  .search:focus-within { border-color: var(--ink); }
-
-  .cats { display: flex; gap: 8px; margin: 12px 0 4px; flex-wrap: wrap; }
+  .search:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .cats { display: flex; gap: 8px; margin-top: 10px; }
   .tog {
-    flex: none; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px;
-    border: 1px solid var(--ink); border-radius: 6px; background: var(--sheet); color: var(--ink);
-    font: 600 15px var(--font); cursor: pointer;
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 10px;
+    border: 1px solid var(--line); border-radius: 6px; background: var(--sheet); color: var(--ink);
+    font: 600 15px var(--font); cursor: pointer; white-space: nowrap;
   }
-  .tog :global(svg) { width: 17px; height: 17px; }
-  .tog[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .tog :global(svg) { width: 17px; height: 17px; flex: none; }
+  .tog[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 
-  #today-h { color: var(--brand); }
-  .today .grid-h { margin-top: 8px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .today .muted { font-size: 14px; font-weight: 400; white-space: normal; }
+  .grid-h { font-size: 22px; font-weight: 700; margin: 26px 0 10px; line-height: 1.2; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .pc-next { margin: -6px 0 12px; }
+
   .tcards {
     display: flex; gap: 10px; margin: 0 -16px; padding: 0 16px 4px; overflow-x: auto;
     scroll-snap-type: x mandatory; scroll-padding-left: 16px; scrollbar-width: none;
   }
   .tcards::-webkit-scrollbar { display: none; }
+  /* A notice pinned to the board: a strip of its kind's colour across the top. */
   .tcard {
-    flex: none; width: 78%; scroll-snap-align: start; display: flex; flex-direction: column; gap: 4px;
-    padding: 14px; border: 1px solid color-mix(in srgb, var(--stone) 45%, var(--line)); border-radius: 8px;
-    background: color-mix(in srgb, var(--stone) 10%, var(--sheet));
+    flex: none; width: 74%; scroll-snap-align: start; display: flex; flex-direction: column; gap: 3px;
+    padding: 12px 14px 14px; border-radius: 6px; background: var(--sheet); border-top: 6px solid var(--cat);
+    box-shadow: 0 0 0 1px var(--line);
   }
-  .tmeta { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; color: var(--muted); }
-  .tkind { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink); }
-  .tkind i { width: 10px; height: 10px; border-radius: 3px; flex: none; }
-  .tsample { padding: 1px 7px; border: 1px solid var(--muted); border-radius: 4px; font-size: 12.5px; line-height: 1.4; }
   .tcard p { margin: 0; }
-  .twhen { font-size: 15px; font-weight: 600; margin-top: 6px !important; }
-  .tcard h3 { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+  .twhen { font-size: 15px; font-weight: 700; color: var(--cat); }
+  .tcard h3 { margin: 2px 0 0; font-size: 24px; overflow-wrap: anywhere; }
   .thi { font: 400 15px/1.3 "Anek Devanagari", var(--font); color: var(--muted); }
-  .tplace { font-size: 14.5px; color: var(--muted); }
+  .tplace { font-size: 14px; color: var(--muted); }
   .tlinks { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 10px; }
   .tmap { min-height: 40px; font-size: 14.5px; }
-  .tsrc { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; font-size: 14.5px; text-underline-offset: 3px; }
-  .wx { display: flex; align-items: center; gap: 14px; margin: 0 0 12px; }
-  .wt { font-weight: 750; font-variation-settings: "wdth" 78; font-size: 44px; line-height: 1; }
-  .wd { display: flex; flex-direction: column; font-size: 14.5px; color: var(--muted); line-height: 1.35; }
-  .wd b { color: var(--ink); font-weight: 600; font-size: 15.5px; }
-  .pc { margin: 0 0 12px; font-size: 15px; line-height: 1.4; }
-  .pc b { font: 600 17px "Anek Devanagari", var(--font); }
-  .pc .muted { display: block; font-size: 14.5px; white-space: normal; }
-  .tshare { margin: 12px 0 4px; }
-  .tadd { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
-  .tadd a { display: inline-block; padding: 6px 0; text-underline-offset: 3px; }
+  .tsrc { display: inline-flex; align-items: center; min-height: 40px; font-weight: 600; font-size: 14.5px; }
+  .tfoot { display: flex; flex-wrap: wrap; align-items: center; column-gap: 18px; row-gap: 4px; margin-top: 12px; }
+  .tfoot .btn { margin-right: auto; }
+  .tlink { display: inline-flex; align-items: center; min-height: 40px; font-size: 14.5px; font-weight: 600; }
 
-  .grid-h { font-size: 22px; font-weight: 700; margin: 18px 0 10px; line-height: 1.2; }
-  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .tile {
-    display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 72px; padding: 10px 12px;
-    border: 1px solid color-mix(in srgb, var(--cat) 22%, var(--line)); border-radius: 8px;
-    background: color-mix(in srgb, var(--cat) 6%, var(--sheet)); color: var(--ink); text-decoration: none;
+    display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 76px; padding: 10px 12px 10px 15px;
+    border-radius: 6px; background: var(--sheet); color: var(--ink); text-decoration: none;
+    box-shadow: inset 5px 0 0 var(--cat), 0 0 0 1px var(--line);
   }
   .tile:active { transform: translateY(1px); }
-  .tile .en { display: flex; align-items: center; gap: 8px; font-weight: 650; font-size: 16px; line-height: 1.25; }
-  .tile i { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--cat); }
-  .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari", var(--font); padding-left: 18px; }
-  .tile .meta { color: var(--muted); font-size: 13.5px; padding-left: 18px; }
-  .gm { position: relative; display: flex; flex-direction: column; margin: 8px 0; padding: 12px 14px 12px 18px; border: 1px solid var(--line); border-radius: 8px; text-decoration: none; background: var(--paper); }
-  .gm::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 2px; background: var(--cat); }
+  .tile .en { font-weight: 650; font-size: 16px; line-height: 1.25; }
+  .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari", var(--font); }
+  .tile .meta { color: var(--muted); font-size: 13.5px; }
+
+  /* Guide pages as National Highway direction boards: white on green, with the inset white rule. */
+  .signs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .sign {
+    display: flex; flex-direction: column; gap: 2px; padding: 14px 14px 13px; border-radius: 6px; text-decoration: none;
+    background: var(--sign); color: #fff; outline: 2px solid #fff; outline-offset: -6px;
+  }
+  .sign.alarm { background: var(--alarm); }
+  .sign:active { transform: translateY(1px); }
+  .sign:focus-visible { outline-color: var(--stone); }
+  .sign .en { font-size: 22px; }
+  .sign .hi { font: 500 15px/1.25 "Anek Devanagari", var(--font); opacity: 0.92; }
+  .sign .what { font-size: 13.5px; line-height: 1.3; opacity: 0.85; margin-top: 4px; }
+
+  .gm { position: relative; display: flex; flex-direction: column; margin: 8px 0; padding: 12px 14px 12px 18px; border-radius: 6px; text-decoration: none; background: var(--sheet); box-shadow: inset 5px 0 0 var(--cat), 0 0 0 1px var(--line); }
   .gm b { font-weight: 650; }
   .gm span { color: var(--muted); font-size: 14.5px; }
-  .guide { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-  .guide a { display: flex; flex-direction: column; gap: 1px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
-  .guide .en { font-weight: 650; font-size: 17px; }
-  .guide [lang="hi"] { font: 400 15px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 6px; }
-  .guide .what { color: var(--muted); font-size: 14.5px; }
-  .addcard { margin: 18px 0 8px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+  .addcard { margin: 26px 0 8px; padding: 16px; border-radius: 6px; background: var(--sheet); box-shadow: 0 0 0 1px var(--line); }
   .addcard p { margin: 0 0 12px; max-width: 46ch; }
 
-  .lhead { margin: 14px 0 4px; }
-  .back { display: inline-flex; align-items: center; gap: 4px; min-height: 40px; font-weight: 600; font-size: 15px; text-underline-offset: 3px; }
+  .lhead { margin: 10px 0 4px; }
+  .back { display: inline-flex; align-items: center; gap: 4px; min-height: 40px; font-weight: 600; font-size: 15px; }
   .back :global(svg) { width: 18px; height: 18px; }
   .ltitle { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .ltitle h2 { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2; }
   .ltitle :global([lang="hi"]) { font: 400 17px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 8px; }
-  .muted { color: var(--muted); font-size: 14px; white-space: nowrap; }
-  .stone .open { color: #1d7a40; font-weight: 600; margin-top: 0; }
+  .ltitle .muted { white-space: nowrap; }
   .empty { color: var(--muted); padding: 24px 0; }
   .more-h { font-size: 20px; font-weight: 700; margin: 20px 0 4px; }
   .more-h span { display: block; font-size: 14px; font-weight: 400; color: var(--muted); margin-top: 2px; }
 
-  @media (min-width: 560px) and (max-width: 899px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  /* Phones: the map is a full-screen layer, opened on demand and only then downloaded. */
+  .stage { position: fixed; inset: 0; z-index: 20; background: var(--paper); visibility: hidden; }
+  .app.map-on .stage { visibility: visible; }
+  #map { position: absolute; inset: 0; background: var(--line); }
+  .map-btn { position: absolute; right: 12px; bottom: max(16px, env(safe-area-inset-bottom)); z-index: 2; box-shadow: 0 4px 14px rgb(0 0 0 / 0.14); }
+  .map-btn[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .map-close { left: 12px; right: auto; top: max(12px, env(safe-area-inset-top)); bottom: auto; }
+  #three { bottom: max(16px, env(safe-area-inset-bottom)); }
+
+  @media (min-width: 560px) { .tiles, .signs { grid-template-columns: repeat(3, minmax(0, 1fr)); } .tcard { width: 260px; } }
+  /* Wide screens: the page on the left, the map always beside it. */
   @media (min-width: 900px) {
-    .app { display: grid; grid-template-columns: 420px 1fr; height: 100svh; }
-    .stage { order: 2; position: relative; height: auto; }
-    .sheet { order: 1; margin: 0; border-radius: 0; overflow-y: auto; box-shadow: 1px 0 0 var(--line); padding-top: 18px; }
-    .grip { display: none; }
-    .tcard { width: 260px; }
-    .map-btn { bottom: 24px; }
+    .app { display: grid; grid-template-columns: minmax(480px, 600px) 1fr; }
+    .feed { max-width: none; padding: 0 24px; }
+    .find { margin: 0 -24px; padding: 8px 24px 10px; }
+    .stage { position: sticky; top: 0; height: 100svh; visibility: visible; z-index: 0; }
+    .map-tog, .map-close { display: none; }
+    .tcards { margin: 0 -24px; padding: 0 24px 4px; scroll-padding-left: 24px; }
   }
   #list-view.in-cat :global(.catname) { display: none; }
 </style>
@@ -309,6 +328,7 @@ const points = all.map((s) => ({
     loadWeather()
       .then((w) => {
         $("wx-t").textContent = `${w.temp}°`;
+        $("wx-unit").textContent = "";
         $("wx-sky").textContent = w.rain ? `${w.sky}, rain likely around ${time12(w.rain)}` : w.sky;
         $("wx-more").textContent = `High ${w.max}°, low ${w.min}°. Sunrise ${time12(w.sunrise)}, sunset ${time12(w.sunset)}`;
         if (w.pm25 != null) $("wx-air").textContent = `Air ${airBand(w.pm25).toLowerCase()}, PM2.5 ${w.pm25}`;
@@ -333,7 +353,6 @@ const points = all.map((s) => ({
   const nearLabel = nearBtn.querySelector("span")!;
   const homeView = $("home-view");
   const listView = $("list-view");
-  const sheet = document.querySelector<HTMLElement>(".sheet")!;
   // Category names come from the tiles, so the client never imports the data module.
   const categories: Record<string, { en: string; hi: string }> = {};
   document.querySelectorAll<HTMLElement>(".tile").forEach((t) => {
@@ -406,7 +425,6 @@ const points = all.map((s) => ({
     if (list !== inList) {
       inList = list;
       window.scrollTo({ top: 0, behavior: "smooth" });
-      sheet.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
@@ -475,7 +493,6 @@ const points = all.map((s) => ({
   $("home").addEventListener("click", () => {
     reset();
     window.scrollTo({ top: 0, behavior: "smooth" });
-    sheet.scrollTo({ top: 0, behavior: "smooth" });
     if (map) showTown(map);
   });
 
@@ -483,47 +500,78 @@ const points = all.map((s) => ({
   q.value = new URLSearchParams(location.search).get("q") ?? "";
   fromHash();
 
+  // Tapping a pin closes the map (on phones) and opens that place's row.
   function pick(slug: string) {
     const row = document.querySelector<HTMLElement>(`.row[data-slug="${slug}"]`);
     if (!row) return;
+    const fromMap = app.classList.contains("map-on");
+    app.classList.remove("map-on");
     // From the grid, open the pin's category first so its row exists on screen.
+    // The map's own history entry is replaced, so Back goes where it did before the map.
     if (listView.hidden) {
       cat = row.dataset.cat!;
-      history.pushState(null, "", `#${cat}`);
+      history[fromMap ? "replaceState" : "pushState"](null, "", `#${cat}`);
       apply();
-    }
+    } else if (fromMap) history.replaceState(null, "", location.href);
     rows.forEach((r) => r.classList.toggle("picked", r === row));
     row.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  // The map downloads only when first needed: always on wide screens, on phones when opened.
+  const app = $("app");
+  const el = $("map");
+  const wide = matchMedia("(min-width: 900px)");
+  let loading: Promise<Awaited<ReturnType<typeof initMap>> | undefined> | undefined;
+  function ensureMap() {
+    loading ??= initMap(el, JSON.parse(el.dataset.points!), pick)
+      .then((m) => {
+        map = m;
+        m.on("load", apply);
+        // 3D pulls ~1 MB of buildings, so only offer it on phones that can take it.
+        const mem = (navigator as any).deviceMemory;
+        const three = $("three") as HTMLButtonElement;
+        if (!mem || mem >= 3) {
+          three.hidden = false;
+          three.setAttribute("aria-pressed", "false");
+          three.addEventListener("click", () => {
+            const on = three.getAttribute("aria-pressed") !== "true";
+            set3D(m, on);
+            three.setAttribute("aria-pressed", String(on));
+            three.querySelector("span")!.textContent = on ? "2D" : "3D";
+          });
+        }
+        return m;
+      })
+      .catch((e) => {
+        console.error(e);
+        el.innerHTML = '<p style="padding:90px 20px 0;color:var(--muted)">The map needs a newer browser. Every place is in the list.</p>';
+        return undefined;
+      });
+    return loading;
+  }
+  // Opening the map adds a history entry, so the phone's Back button closes it.
+  function openMap() {
+    if (wide.matches) return ensureMap();
+    if (!app.classList.contains("map-on")) {
+      app.classList.add("map-on");
+      history.pushState({ map: 1 }, "", location.href);
+    }
+    return ensureMap().then((m) => (m?.resize(), m));
+  }
+  const closeMap = () => history.state?.map ? history.back() : app.classList.remove("map-on");
+  addEventListener("popstate", () => !history.state?.map && app.classList.remove("map-on"));
+  $("map-open").addEventListener("click", () => openMap());
+  $("map-close").addEventListener("click", closeMap);
+  addEventListener("keydown", (e) => e.key === "Escape" && app.classList.contains("map-on") && closeMap());
+  if (wide.matches) ensureMap();
+  wide.addEventListener("change", (e) => e.matches && ensureMap());
+
   document.querySelectorAll<HTMLElement>(".tmap").forEach((b) =>
-    b.addEventListener("click", () => {
-      const slug = b.dataset.pin!;
-      if (!(map && showPin(map, slug, +b.dataset.lng!, +b.dataset.lat!))) pick(slug);
+    b.addEventListener("click", async () => {
+      const m = await openMap();
+      const at = () => showPin(m!, b.dataset.pin!, +b.dataset.lng!, +b.dataset.lat!);
+      if (!m) pick(b.dataset.pin!);
+      else if (!at()) m.once("load", at);
     }),
   );
-
-  const el = $("map");
-  initMap(el, JSON.parse(el.dataset.points!), pick)
-    .then((m) => {
-      map = m;
-      m.on("load", apply);
-      // 3D pulls ~1 MB of buildings, so only offer it on phones that can take it.
-      const mem = (navigator as any).deviceMemory;
-      const three = $("three") as HTMLButtonElement;
-      if (!mem || mem >= 3) {
-        three.hidden = false;
-        three.setAttribute("aria-pressed", "false");
-        three.addEventListener("click", () => {
-          const on = three.getAttribute("aria-pressed") !== "true";
-          set3D(m, on);
-          three.setAttribute("aria-pressed", String(on));
-          three.querySelector("span")!.textContent = on ? "2D" : "3D";
-        });
-      }
-    })
-    .catch((e) => {
-      console.error(e);
-      el.innerHTML = '<p style="padding:90px 20px 0 120px;color:var(--muted)">The map needs a newer browser. Every place is listed below.</p>';
-    });
 </script>

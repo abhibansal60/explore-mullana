@@ -20,7 +20,7 @@ Success metric: people who come back each week, not the number of listings.
 - A phone number or owner name goes live only with the owner's consent. Unchecked places (from Overture Maps open data) show no phone.
 - No photos of people. Rooms/PGs are out of scope for now.
 - No paid features or ads without the owner's explicit OK.
-- Keep the design language: Anek type, signboard `.board` names, kilometre-stone home button, category colours, restrained palette. No emoji, no all-caps labels, no pills, no middle-dot separators.
+- Keep the design language: Anek type, signboard `.board` names, the kilometre-stone header (today's temperature where the km goes), NH-green direction boards for guide pages, category colours, restrained roadside palette (whitewash, stone yellow, sign green). Content first: on phones the map is a full-screen layer behind the Map button and loads only when opened. No emoji, no all-caps labels, no pills, no middle-dot separators.
 - Mobile first (mid-range Android, patchy 4G). The list must work without WebGL.
 - Model use: Opus plans, decides and reviews; Sonnet subagents do scoped build work.
 

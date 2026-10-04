@@ -17,18 +17,18 @@ const page = (band, body) => `<!doctype html><meta charset="utf-8">
 <link rel="stylesheet" href="${fonts}">
 <style>
   * { box-sizing: border-box; margin: 0; }
-  body { width: 1200px; height: 630px; background: #f7f1e6; color: #2b1d13; position: relative; overflow: hidden;
+  body { width: 1200px; height: 630px; background: #f2f2ee; color: #1f1f1c; position: relative; overflow: hidden;
     font: 400 32px/1.3 "Anek Latin", "Anek Devanagari", sans-serif; font-variation-settings: "wdth" 100; }
   .band { height: 44px; background: ${band}; }
   .main { position: absolute; left: 72px; right: 72px; top: 44px; bottom: 0; display: flex; flex-direction: column; justify-content: center; padding-bottom: 60px; }
   .title { font-weight: 750; font-variation-settings: "wdth" 78; line-height: 1.02; }
-  .muted { color: #73624f; }
+  .muted { color: #62625b; }
   .stone { position: absolute; right: 72px; bottom: 48px; width: calc(120px * var(--s)); text-align: center;
-    background: #fff; border: 3px solid #2b1d13; border-radius: calc(60px * var(--s)) calc(60px * var(--s)) 6px 6px;
+    background: #fff; border: 3px solid #1f1f1c; border-radius: calc(60px * var(--s)) calc(60px * var(--s)) 6px 6px;
     padding: calc(46px * var(--s)) 0 calc(14px * var(--s)); overflow: hidden; line-height: 1.1; }
-  .stone i { position: absolute; left: 0; right: 0; top: 0; height: calc(34px * var(--s)); background: #f2b705; border-bottom: 3px solid #2b1d13; }
+  .stone i { position: absolute; left: 0; right: 0; top: 0; height: calc(34px * var(--s)); background: #f2b705; border-bottom: 3px solid #1f1f1c; }
   .stone b { display: block; font-weight: 700; font-size: calc(26px * var(--s)); }
-  .stone span { display: block; font-size: calc(18px * var(--s)); color: #73624f; }
+  .stone span { display: block; font-size: calc(18px * var(--s)); color: #62625b; }
 </style>
 <div class="band"></div>
 ${body}`;
