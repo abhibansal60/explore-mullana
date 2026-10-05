@@ -1,18 +1,18 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 // @ts-ignore plain .mjs
-import { cleanPhones, parseCoords, slugify, rowToEvent, rowToShop } from "../scripts/sheet.mjs";
+import { cleanPhones, parseCoords, slugify, rowToEvent, rowToShop, resolveUrl } from "../scripts/sheet.mjs";
 
 const row = {
-  name: "Test Shop", category: "food", about: "x", owner: "y", phones: "9813127207",
+  name: "Test Shop", category: "food", about: "x", owner: "y", phones: "9999900001",
   whatsapp: true, location: "30.2766, 77.0477", open: "09:00", close: "21:00", verified: "2026-09", slug: "",
 };
 
 test("phones: +91, spaces, leading 0, multiple", () => {
-  assert.deepEqual(cleanPhones("+91 98131 27207"), ["9813127207"]);
-  assert.deepEqual(cleanPhones("09813127207"), ["9813127207"]);
-  assert.deepEqual(cleanPhones("9813127207, 8168190026 / 9896389996"), ["9813127207", "8168190026", "9896389996"]);
-  assert.deepEqual(cleanPhones("9813127207 8168190026"), ["9813127207", "8168190026"]);
+  assert.deepEqual(cleanPhones("+91 99999 00001"), ["9999900001"]);
+  assert.deepEqual(cleanPhones("09999900001"), ["9999900001"]);
+  assert.deepEqual(cleanPhones("9999900001, 9999900002 / 9999900003"), ["9999900001", "9999900002", "9999900003"]);
+  assert.deepEqual(cleanPhones("9999900001 9999900002"), ["9999900001", "9999900002"]);
   assert.deepEqual(cleanPhones("12345"), []);
 });
 
@@ -61,4 +61,12 @@ test("rejects bad event rows", () => {
   assert.throws(() => rowToEvent({ ...ev, end: "2026-10-01" }), /last day/);
   assert.throws(() => rowToEvent({ ...ev, link: "javascript:alert(1)" }), /https/);
   assert.throws(() => rowToEvent({ ...ev, place: " " }), /place/);
+});
+
+test("rowToShop rejects a slug that would break page paths and tap counts", () => {
+  assert.throws(() => rowToShop({ ...row, slug: "Raju Chai" }), /bad slug/);
+});
+
+test("resolveUrl only follows Google Maps links", async () => {
+  await assert.rejects(resolveUrl("http://169.254.169.254/latest"), /not a Google Maps link/);
 });

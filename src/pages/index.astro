@@ -145,7 +145,7 @@ const points = all.map((s) => ({
     box-shadow: inset 0 0 0 1.5px #1f1f1c22, 0 10px 0 -4px var(--line);
   }
   .dome { display: flex; flex-direction: column; justify-content: flex-end; height: 74px; padding-bottom: 6px; background: var(--stone); }
-  .stone .hi { font: 700 22px/1.05 "Anek Devanagari", var(--font); }
+  .stone .hi { font: 700 22px/1.05 "Anek Devanagari Variable", var(--font); }
   .stone .en { font-weight: 750; font-size: 15px; font-variation-settings: "wdth" 80; line-height: 1.1; }
   .face { display: flex; align-items: baseline; justify-content: center; gap: 3px; padding: 10px 0 12px; background: #fff; }
   .km { font-weight: 750; font-variation-settings: "wdth" 72; font-size: 46px; line-height: 0.9; }
@@ -154,7 +154,7 @@ const points = all.map((s) => ({
   .day p { margin: 0; }
   .date { font-weight: 700; font-size: 19px; line-height: 1.2; }
   .pc { margin-top: 4px !important; font-size: 15px; }
-  .pc b { font: 600 16px "Anek Devanagari", var(--font); }
+  .pc b { font: 600 16px "Anek Devanagari Variable", var(--font); }
   .wx { margin-top: 4px !important; font-size: 14.5px; color: var(--muted); line-height: 1.35; }
   .wx b, .wx span { display: block; }
   .wx b { color: var(--ink); font-weight: 600; }
@@ -196,7 +196,7 @@ const points = all.map((s) => ({
   .tcard p { margin: 0; }
   .twhen { font-size: 15px; font-weight: 700; color: var(--cat); }
   .tcard h3 { margin: 2px 0 0; font-size: 24px; overflow-wrap: anywhere; }
-  .thi { font: 400 15px/1.3 "Anek Devanagari", var(--font); color: var(--muted); }
+  .thi { font: 400 15px/1.3 "Anek Devanagari Variable", var(--font); color: var(--muted); }
   .tplace { font-size: 14px; color: var(--muted); }
   .tlinks { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 10px; }
   .tmap { min-height: 40px; font-size: 14.5px; }
@@ -213,7 +213,7 @@ const points = all.map((s) => ({
   }
   .tile:active { transform: translateY(1px); }
   .tile .en { font-weight: 650; font-size: 16px; line-height: 1.25; }
-  .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari", var(--font); }
+  .tile .hi { color: var(--muted); font: 400 14px/1.3 "Anek Devanagari Variable", var(--font); }
   .tile .meta { color: var(--muted); font-size: 13.5px; }
 
   /* Guide pages as National Highway direction boards: white on green, with the inset white rule. */
@@ -226,7 +226,7 @@ const points = all.map((s) => ({
   .sign:active { transform: translateY(1px); }
   .sign:focus-visible { outline-color: var(--stone); }
   .sign .en { font-size: 22px; }
-  .sign .hi { font: 500 15px/1.25 "Anek Devanagari", var(--font); opacity: 0.92; }
+  .sign .hi { font: 500 15px/1.25 "Anek Devanagari Variable", var(--font); opacity: 0.92; }
   .sign .what { font-size: 13.5px; line-height: 1.3; opacity: 0.85; margin-top: 4px; }
 
   .gm { position: relative; display: flex; flex-direction: column; margin: 8px 0; padding: 12px 14px 12px 18px; border-radius: 6px; text-decoration: none; background: var(--sheet); box-shadow: inset 5px 0 0 var(--cat), 0 0 0 1px var(--line); }
@@ -240,7 +240,7 @@ const points = all.map((s) => ({
   .back :global(svg) { width: 18px; height: 18px; }
   .ltitle { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .ltitle h2 { margin: 0; font-size: 22px; font-weight: 700; line-height: 1.2; }
-  .ltitle :global([lang="hi"]) { font: 400 17px "Anek Devanagari", var(--font); color: var(--muted); margin-left: 8px; }
+  .ltitle :global([lang="hi"]) { font: 400 17px "Anek Devanagari Variable", var(--font); color: var(--muted); margin-left: 8px; }
   .ltitle .muted { white-space: nowrap; }
   .empty { color: var(--muted); padding: 24px 0; }
   .more-h { font-size: 20px; font-weight: 700; margin: 20px 0 4px; }
@@ -449,7 +449,7 @@ const points = all.map((s) => ({
   // The hash is the category: #food opens it, no hash is the grid.
   function fromHash() {
     const h = location.hash.slice(1);
-    cat = h in categories ? h : "";
+    cat = Object.hasOwn(categories, h) ? h : "";
     apply();
   }
   addEventListener("hashchange", fromHash);

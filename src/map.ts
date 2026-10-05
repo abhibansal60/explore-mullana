@@ -21,7 +21,13 @@ export async function initMap(el: HTMLElement, points: Point[], onPick: (slug: s
     import("maplibre-gl"),
     // MapLibre 6 loads its worker from a sibling file; bundle it so the import resolves.
     import("maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url"),
-    import("maplibre-gl/dist/maplibre-gl.css"),
+    // ?url keeps the stylesheet out of every page's <head>: it loads only when the map opens.
+    import("maplibre-gl/dist/maplibre-gl.css?url").then(({ default: href }) => {
+      if (document.querySelector(`link[href="${href}"]`)) return;
+      const link = Object.assign(document.createElement("link"), { rel: "stylesheet", href });
+      document.head.append(link);
+      return new Promise((done) => (link.onload = link.onerror = done));
+    }),
   ]);
   maplibregl.setWorkerUrl(workerUrl);
   const map = new maplibregl.Map({
