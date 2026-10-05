@@ -1,8 +1,7 @@
 // Offline cache. Bump V to drop old caches.
-const V = "mullana-v2";
+const V = "mullana-v3";
 // Cached on install, with the CSS and JS they use, so they work offline from the first visit.
 const PRECACHE = ["/", "/helplines/"];
-const FONTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
 const put = (req, res) => res.ok && caches.open(V).then((c) => c.put(req, res.clone()));
 
@@ -35,17 +34,7 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
 
-  if (FONTS.includes(url.hostname)) {
-    // Stale-while-revalidate. The stylesheet link is crossorigin, so responses are not opaque.
-    e.respondWith(
-      caches.match(req).then((hit) => {
-        const net = fetch(req).then((res) => (put(req, res), res));
-        return hit || net;
-      }),
-    );
-    return;
-  }
-  if (url.origin !== location.origin) return; // tiles etc: straight to network
+  if (url.origin !== location.origin) return; // tiles, weather: straight to network
 
   if (req.mode === "navigate") {
     // Network first, but on 4G that hangs, fall back to the saved copy after 4 seconds.

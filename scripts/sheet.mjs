@@ -16,7 +16,7 @@ const clean10 = (s) => {
   return d.length === 10 ? d : "";
 };
 
-// "+91 98131 27207 / 81681 90026" -> ["9813127207", "8168190026"]
+// "+91 99999 00001 / 99999 00002" -> ["9999900001", "9999900002"]
 export const cleanPhones = (raw) =>
   String(raw ?? "")
     .split(/[,/;]+/)
@@ -39,14 +39,19 @@ export const parseCoords = (text) => {
 
 const isUrl = (s) => /^https?:\/\//i.test(s.trim());
 
-// Follows short-link redirects; returns the final URL text (HTML body is not needed).
-export const resolveUrl = async (url) => (await fetch(url, { redirect: "follow", headers: { "user-agent": UA } })).url;
+// Follows short-link redirects; returns the final URL text (HTML body is not needed). Only Google Maps links:
+// a contributor's Location must not make this machine fetch an arbitrary URL.
+const MAPS_HOSTS = /^(maps\.app\.goo\.gl|goo\.gl|(www\.)?google\.[a-z.]+|maps\.google\.[a-z.]+)$/i;
+export const resolveUrl = async (url) => {
+  if (!MAPS_HOSTS.test(new URL(url).hostname)) throw new Error(`location link is not a Google Maps link: ${url}`);
+  return (await fetch(url, { redirect: "follow", headers: { "user-agent": UA } })).url;
+};
 
 // Pure: row + the location text to parse (a resolved URL or plain coords) -> Shop. Throws on the first problem.
 export const rowToShop = (row, location = row.location) => {
   const name = String(row.name ?? "").trim();
   if (!name) throw new Error("missing name");
-  if (!(row.category in categories)) throw new Error(`unknown category "${row.category}"`);
+  if (!Object.hasOwn(categories, row.category)) throw new Error(`unknown category "${row.category}"`);
   const phones = cleanPhones(row.phones);
   if (!phones.length) throw new Error(`no valid 10-digit phone in "${row.phones}"`);
   const c = parseCoords(location);
@@ -56,7 +61,8 @@ export const rowToShop = (row, location = row.location) => {
   if (!HHMM.test(row.open ?? "") || !HHMM.test(row.close ?? "")) throw new Error(`hours must be HH:MM (got "${row.open}"-"${row.close}")`);
   if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(row.verified ?? "")) throw new Error(`verified must be YYYY-MM (got "${row.verified}")`);
   const slug = String(row.slug ?? "").trim() || slugify(name);
-  if (!slug) throw new Error("cannot derive a slug");
+  // Same rule as functions/api/tap.ts, so a hand-typed slug can't break the page path or tap counts.
+  if (!/^[a-z0-9-]{1,80}$/.test(slug)) throw new Error(`bad slug "${slug}" (use a-z, 0-9 and -)`);
   return {
     slug,
     name,
