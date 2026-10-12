@@ -71,7 +71,7 @@ export type Event = {
 };
 export const kinds = {
   festival: { name: "Festival", color: "#b45309" },
-  religious: { name: "Temple", color: "#d9660b" },
+  religious: { name: "Temple", color: "#bc580a" },
   campus: { name: "Campus", color: "#3346a8" },
   market: { name: "Market", color: "#3f7a1d" },
   community: { name: "Community", color: "var(--ink)" },
