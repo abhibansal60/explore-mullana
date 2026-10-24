@@ -1,0 +1,10 @@
+/* Anek Devanagari's Devanagari glyphs only, weight axis only (258 KB; the full font is 726 KB).
+   Its Latin files are left out: Latin text uses Anek Latin, and loading them made Latin text swap fonts twice. */
+@font-face {
+  font-family: "Anek Devanagari Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url("@fontsource-variable/anek-devanagari/files/anek-devanagari-devanagari-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+20F0, U+25CC, U+A830-A839, U+A8E0-A8FF, U+11B00-11B09;
+}

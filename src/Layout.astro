@@ -1,6 +1,8 @@
 ---
 import "@fontsource-variable/anek-latin/standard.css";
-import "@fontsource-variable/anek-devanagari/standard.css";
+import "./fonts.css";
+// Every page's text is Latin, so its font starts downloading with the HTML.
+import anekLatin from "@fontsource-variable/anek-latin/files/anek-latin-latin-standard-normal.woff2?url";
 import { site } from "./data";
 const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
 ---
@@ -21,6 +23,7 @@ const { title, description, path = "/", image = "/og/home.png" } = Astro.props;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#f2f2ee" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#141513" media="(prefers-color-scheme: dark)" />
+    <link rel="preload" href={anekLatin} as="font" type="font/woff2" crossorigin />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
