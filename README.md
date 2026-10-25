@@ -33,6 +33,7 @@ Don't deploy, push, or change DNS without asking me first.
 ```sh
 npm run dev      # local site
 npm test         # open-now logic
+npm run e2e      # search, categories, a shop page and the map in Chromium (after a build)
 npm run build    # static site in dist/
 ```
 

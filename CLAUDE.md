@@ -41,4 +41,4 @@ Success metric: people who come back each week, not the number of listings.
 
 ## Checks
 
-`npm test` (node:test via tsx) and `npm run build` must pass before any commit.
+`npm test` (node:test via tsx) and `npm run build` must pass before any commit. `npm run e2e` (after a build) checks search, categories, a shop page and the map in Chromium.

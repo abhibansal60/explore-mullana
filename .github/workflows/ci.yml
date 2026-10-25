@@ -23,3 +23,4 @@ jobs:
       # The build renders Open Graph images with Playwright's Chromium (scripts/og.mjs).
       - run: npx playwright install --with-deps chromium
       - run: npm run build
+      - run: npm run e2e
