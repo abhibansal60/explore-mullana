@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "buildings": "python3 scripts/buildings.py",
     "test": "tsx --test src/*.test.ts",
+    "e2e": "tsx --test e2e/*.test.ts",
     "taps": "node scripts/taps.mjs"
   },
   "keywords": [],
