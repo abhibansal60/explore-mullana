@@ -1,36 +1,37 @@
 ---
 import Page from "../Page.astro";
-import { places, shops } from "../data";
+import { places, shops, site } from "../data";
 
-// Link to a category only when it has places, else to a search on the home page.
+// Link to a category when it has places. An empty one would open "Nothing matches", so ask for a listing instead.
 const used = new Set([...shops, ...places].map((s) => s.category));
-const find = (cat: string, q: string) => (used.has(cat) ? `/#${cat}` : `/?q=${encodeURIComponent(q)}`);
+const find = (cat: string, label: string): [string, string] =>
+  used.has(cat) ? [`/#${cat}`, label] : [site.addFormUrl, "None listed yet. Know one? Add it"];
 
 const steps: { h: string; body: string; link?: [string, string] }[] = [
   {
     h: "Get a local SIM",
     body: "Carry your Aadhaar; the shop does an e-KYC with your thumbprint. A new SIM can take a few hours to start working. Ask seniors which network works best in your hostel block.",
-    link: [find("mobile", "mobile"), "Mobile and recharge shops"],
+    link: find("mobile", "Mobile and recharge shops"),
   },
   {
     h: "Open a bank account, or find an ATM",
     body: "Your fee receipts and scholarships often need a bank account. Take your Aadhaar, PAN (or Form 60), admission letter and two photos. Axis Bank has a branch and ATM in town.",
-    link: [find("bank", "atm"), "Banks and ATMs"],
+    link: find("bank", "Banks and ATMs"),
   },
   {
     h: "Find your xerox shop",
     body: "You will print and photocopy more than you expect: forms, assignments, notes before exams. The shops near the gate get a queue in exam week, so print the day before.",
-    link: [find("print", "xerox"), "Stationery and print"],
+    link: find("print", "Stationery and print"),
   },
   {
     h: "Know where to go when you're unwell",
     body: "MMIMSR, the university's teaching hospital, is on campus. The government community health centre (CHC Mullana) is in town. In an emergency, call 112 or 108.",
-    link: [find("medical", "dawai"), "Doctors, hospitals and chemists"],
+    link: find("medical", "Doctors, hospitals and chemists"),
   },
   {
     h: "Eat something that isn't mess food",
     body: "Chai stalls, bakeries and cafes around the market and the gate.",
-    link: [find("food", "chai"), "Food and chai"],
+    link: find("food", "Food and chai"),
   },
   {
     h: "Work out how you'll get home",
