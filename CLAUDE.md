@@ -42,3 +42,11 @@ Success metric: people who come back each week, not the number of listings.
 ## Checks
 
 `npm test` (node:test via tsx) and `npm run build` must pass before any commit. `npm run e2e` (after a build) checks search, categories, a shop page and the map in Chromium.
+
+## Working style (trial until 2026-11-08)
+
+Three lines from a post review, on trial in this repo only. Keep each one only if it visibly helps; otherwise delete it on 2026-11-08.
+
+- **Queue corrections.** When I add a tweak or correction mid-task, append it to your task list and finish the current item first. Stop at once only if I say "stop" or the direction is wrong.
+- **Batch multi-file changes.** Read what you need up front in one pass, make all the edits, then run the tests once. Test-first work is exempt; run tests between edits there.
+- **Diagnose mistakes, don't apologize.** When you make a mistake, state what happened, correct it, and name the cause: a missing, ambiguous or conflicting instruction, or a clear instruction you did not follow. If it's an instruction gap, propose a focused clarification and edit instruction files only when I ask. If the instruction was clear, say so plainly rather than inventing a gap.
