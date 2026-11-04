@@ -16,14 +16,6 @@
   "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
  },
  {
-  "slug": "ambala-trading-co",
-  "name": "Ambala Trading Co",
-  "category": "hardware",
-  "lat": 30.271936,
-  "lng": 77.052032,
-  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
- },
- {
   "slug": "arushi-csc-centre",
   "name": "Arushi CSC Centre",
   "category": "services",
@@ -173,14 +165,6 @@
   "category": "education",
   "lat": 30.272854,
   "lng": 77.049858,
-  "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
- },
- {
-  "slug": "jain-metal-plastic-store",
-  "name": "Jain Metal & Plastic Store",
-  "category": "general",
-  "lat": 30.271936,
-  "lng": 77.052032,
   "source": "Overture Maps (meta, CDLA-Permissive-2.0)"
  },
  {

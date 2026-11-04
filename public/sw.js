@@ -1,5 +1,5 @@
 // Offline cache. Bump V to drop old caches.
-const V = "mullana-v3";
+const V = "mullana-v4";
 // Cached on install, with the CSS and JS they use, so they work offline from the first visit.
 const PRECACHE = ["/", "/helplines/"];
 
