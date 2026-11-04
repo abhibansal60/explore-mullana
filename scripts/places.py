@@ -14,6 +14,8 @@ import re
 import sys
 from pathlib import Path
 
+# Issue #9: the two shops pinned to MMDU stay out of PICK until verified.
+# Original records and source names are in places-excluded.json (not rendered).
 PICK = {
     "Axis Bank Branch": ("bank", "Axis Bank"),
     "Axis Bank ATM": ("bank", "Axis Bank ATM"),
@@ -52,14 +54,12 @@ PICK = {
     "Devraj Fitness Club": ("sports", None),
     "School Times Books and Stationery": ("print", "School Times Books and Stationery"),
     "Nuvoco - Singla Traders": ("hardware", "Singla Traders"),
-    "Ambala Trading Co Mullana": ("hardware", "Ambala Trading Co"),
     "Savita Bharatgas Gramin Vitrak Mullana": ("services", "Savita Bharat Gas agency"),
     "Glamour INDIA": ("salon", "Glamour India"),
     "C3 Cake, Cafe & Crunch Mullana": ("food", "C3 Cake, Cafe & Crunch"),
     "Friend's Café & Burger": ("food", None),
     "Gulati Sweet Corner": ("food", None),
     "Arushi CSC Centre": ("services", None),
-    "Jain Metal & plastic store Mullana": ("general", "Jain Metal & Plastic Store"),
     "Saini Flower Decoration": ("services", None),
     "MM Continental": ("places", "MM Continental hotel"),
 }

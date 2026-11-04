@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "ambala-trading-co",
+    "name": "Ambala Trading Co",
+    "category": "hardware",
+    "lat": 30.271936,
+    "lng": 77.052032,
+    "source": "Overture Maps (meta, CDLA-Permissive-2.0)",
+    "source_name": "Ambala Trading Co Mullana"
+  },
+  {
+    "slug": "jain-metal-plastic-store",
+    "name": "Jain Metal & Plastic Store",
+    "category": "general",
+    "lat": 30.271936,
+    "lng": 77.052032,
+    "source": "Overture Maps (meta, CDLA-Permissive-2.0)",
+    "source_name": "Jain Metal & plastic store Mullana"
+  }
+]

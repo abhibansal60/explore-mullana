@@ -94,3 +94,25 @@ test("the map opens full screen on a phone and the Back button closes it", async
   assert.equal(await page.locator("#stage").isVisible(), false);
   assert.deepEqual(page.errors, []);
 });
+
+test("unverified campus shop pins have no directory rows, pages or sitemap entries", async () => {
+  const page = await phone();
+  await page.goto(base + "/");
+  const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
+  for (const [slug, name] of [
+    ["ambala-trading-co", "Ambala Trading Co"],
+    ["jain-metal-plastic-store", "Jain Metal & Plastic Store"],
+  ]) {
+    await page.fill("#q", name);
+    assert.equal(await shown(page), 0);
+    assert.ok(!(await page.content()).includes(slug)); // also absent from embedded map data
+    assert.ok(!sitemap.includes(`/place/${slug}/`));
+    assert.equal((await fetch(`${base}/place/${slug}/`)).status, 404);
+  }
+  // The ruling keeps the other campus listings and their original location.
+  await page.fill("#q", "DBMCI");
+  assert.equal(await shown(page), 1);
+  await page.goto(base + "/place/dbmci/");
+  assert.match((await page.locator('[data-tap="directions"]').getAttribute("href"))!, /destination=30\.271936,77\.052032/);
+  assert.deepEqual(page.errors, []);
+});
