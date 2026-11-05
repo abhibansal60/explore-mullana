@@ -1,5 +1,5 @@
 // Offline cache. Bump V to drop old caches.
-const V = "mullana-v4";
+const V = "mullana-v5";
 // Cached on install, with the CSS and JS they use, so they work offline from the first visit.
 const PRECACHE = ["/", "/helplines/"];
 
@@ -40,7 +40,7 @@ self.addEventListener("fetch", (e) => {
     // Network first, but on 4G that hangs, fall back to the saved copy after 4 seconds.
     const net = fetch(req).then((res) => (put(req, res), res));
     const saved = () => caches.match(req).then((hit) => hit || caches.match("/"));
-    const slow = new Promise((ok) => setTimeout(ok, 4000)).then(() => caches.match(req)).then((hit) => hit || net);
+    const slow = new Promise((ok) => setTimeout(ok, 4000)).then(saved).then((hit) => hit || net);
     e.respondWith(Promise.race([net, slow]).catch(saved));
   } else if (url.pathname.startsWith("/_astro/")) {
     // ponytail: old hashed files pile up across deploys; bump V to clear them if the cache ever gets big.
