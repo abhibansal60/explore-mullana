@@ -116,3 +116,30 @@ test("unverified campus shop pins have no directory rows, pages or sitemap entri
   assert.match((await page.locator('[data-tap="directions"]').getAttribute("href"))!, /destination=30\.271936,77\.052032/);
   assert.deepEqual(page.errors, []);
 });
+
+test("a stalled uncached navigation falls back to the offline directory", async () => {
+  const page = await phone();
+  const context = page.context();
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  let stalled = false;
+  try {
+    await page.goto(base + "/");
+    await page.evaluate(async () => { await navigator.serviceWorker.ready; });
+    await page.waitForFunction(() => !!navigator.serviceWorker.controller);
+    // Context routing intercepts the worker's network fetch, leaving it pending past four seconds.
+    await context.route("**/around/", async (route) => {
+      stalled = true;
+      await held;
+      await route.abort().catch(() => {});
+    });
+    const response = await page.goto(base + "/around/", { timeout: 8000 });
+    assert.equal(stalled, true);
+    assert.equal(response?.fromServiceWorker(), true);
+    assert.equal(await page.locator("#q").isVisible(), true);
+    assert.deepEqual(page.errors, []);
+  } finally {
+    release();
+    await context.close();
+  }
+});
